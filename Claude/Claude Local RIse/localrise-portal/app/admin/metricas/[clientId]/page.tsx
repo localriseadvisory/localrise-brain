@@ -2,6 +2,7 @@
 import { useState, useEffect, use } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']
 
@@ -20,7 +21,10 @@ export default function MetricasClientePage({ params }: { params: Promise<{ clie
   const supabase = createClient()
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [syncing, setSyncing] = useState(false)
+  const [syncResult, setSyncResult] = useState<{ resultados: Record<string, string>; erros: Record<string, string> } | null>(null)
   const [clientName, setClientName] = useState('')
+  const [hasIntegration, setHasIntegration] = useState(false)
   const [tab, setTab] = useState<Tab>('gbp')
   const [mes, setMes] = useState(new Date().getMonth() + 1)
   const [ano, setAno] = useState(new Date().getFullYear())
@@ -35,6 +39,9 @@ export default function MetricasClientePage({ params }: { params: Promise<{ clie
       setLoading(true)
       const { data: client } = await supabase.from('clients').select('name').eq('id', clientId).single()
       setClientName(client?.name ?? '')
+
+      const { data: integ } = await supabase.from('client_integrations').select('id').eq('client_id', clientId).single()
+      setHasIntegration(!!integ)
 
       const [{ data: gbpData }, { data: igData }, { data: siteData }, { data: adsData }] = await Promise.all([
         supabase.from('metrics_gbp').select('*').eq('client_id', clientId).eq('mes', mes).eq('ano', ano).single(),
@@ -51,6 +58,25 @@ export default function MetricasClientePage({ params }: { params: Promise<{ clie
     }
     load()
   }, [clientId, mes, ano])
+
+  async function handleSync() {
+    setSyncing(true)
+    setSyncResult(null)
+    try {
+      const res = await fetch(`/api/sync/${clientId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mes, ano }),
+      })
+      const data = await res.json()
+      setSyncResult(data)
+      // Recarregar dados após sync
+      window.location.reload()
+    } catch {
+      setSyncResult({ resultados: {}, erros: { geral: 'Erro de conexão ao sincronizar.' } })
+      setSyncing(false)
+    }
+  }
 
   async function handleSave() {
     setSaving(true)
@@ -85,13 +111,25 @@ export default function MetricasClientePage({ params }: { params: Promise<{ clie
 
   return (
     <div style={{ padding: '32px 40px', maxWidth: 800 }}>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white">{clientName}</h1>
-        <p className="text-sm mt-1" style={{ color: '#555' }}>Inserir métricas mensais</p>
+      <div className="flex items-start justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-white">{clientName}</h1>
+          <p className="text-sm mt-1" style={{ color: '#555' }}>Inserir métricas mensais</p>
+        </div>
+        <Link href={`/admin/integracoes/${clientId}`}
+          className="text-xs px-3 py-2 rounded-xl transition-opacity hover:opacity-80 flex items-center gap-1.5"
+          style={{
+            background: hasIntegration ? 'rgba(34,197,94,0.08)' : 'rgba(227,27,35,0.08)',
+            color: hasIntegration ? '#22C55E' : '#E31B23',
+            border: `1px solid ${hasIntegration ? 'rgba(34,197,94,0.15)' : 'rgba(227,27,35,0.15)'}`,
+          }}>
+          <span>{hasIntegration ? '✓' : '⚙'}</span>
+          {hasIntegration ? 'Integrações configuradas' : 'Configurar integrações'}
+        </Link>
       </div>
 
-      {/* Seletor mês/ano */}
-      <div className="flex gap-3 mb-6">
+      {/* Seletor mês/ano + botão Sincronizar */}
+      <div className="flex gap-3 mb-4">
         <select value={mes} onChange={e => setMes(Number(e.target.value))}
           className="px-4 py-2.5 rounded-xl border text-white text-sm outline-none"
           style={{ background: '#111111', borderColor: '#222' }}>
@@ -103,7 +141,46 @@ export default function MetricasClientePage({ params }: { params: Promise<{ clie
           {[2024, 2025, 2026].map(a => <option key={a} value={a}>{a}</option>)}
         </select>
         {loading && <span className="text-sm self-center" style={{ color: '#555' }}>Carregando...</span>}
+        {hasIntegration && (
+          <button onClick={handleSync} disabled={syncing}
+            className="ml-auto px-5 py-2.5 rounded-xl text-sm font-semibold text-white flex items-center gap-2 transition-opacity hover:opacity-90 disabled:opacity-50"
+            style={{ background: 'linear-gradient(135deg, #1a3a1a, #1e3a1e)', border: '1px solid #22C55E' }}>
+            {syncing ? (
+              <>
+                <span className="inline-block animate-spin">⟳</span> Sincronizando...
+              </>
+            ) : (
+              <><span>⟳</span> Sincronizar dados</>
+            )}
+          </button>
+        )}
       </div>
+
+      {/* Resultado da sincronização */}
+      {syncResult && (
+        <div className="rounded-xl p-4 mb-4 border" style={{ background: '#0f0f0f', borderColor: '#1e1e1e' }}>
+          {Object.keys(syncResult.resultados).length > 0 && (
+            <div className="mb-2">
+              <p className="text-xs font-semibold mb-1.5" style={{ color: '#22C55E' }}>Sincronizado com sucesso:</p>
+              {Object.entries(syncResult.resultados).map(([k, v]) => (
+                <p key={k} className="text-xs" style={{ color: '#888' }}>
+                  <span className="font-semibold text-white capitalize">{k}</span>: {v}
+                </p>
+              ))}
+            </div>
+          )}
+          {Object.keys(syncResult.erros).length > 0 && (
+            <div>
+              <p className="text-xs font-semibold mb-1.5" style={{ color: '#EF4444' }}>Erros:</p>
+              {Object.entries(syncResult.erros).map(([k, v]) => (
+                <p key={k} className="text-xs" style={{ color: '#888' }}>
+                  <span className="font-semibold text-white capitalize">{k}</span>: {v}
+                </p>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex gap-1 mb-6 p-1 rounded-xl" style={{ background: '#111111', border: '1px solid #1e1e1e' }}>

@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import { IconUsers, IconTrendingUp } from '@/components/icons'
+import { IconUsers, IconTrendingUp, IconCheck } from '@/components/icons'
 
 export default async function AdminPage() {
   const supabase = await createClient()
@@ -8,6 +8,12 @@ export default async function AdminPage() {
     .from('clients')
     .select('*')
     .order('created_at', { ascending: false })
+
+  // Buscar quais clientes já têm integrações configuradas
+  const { data: integrations } = await supabase
+    .from('client_integrations')
+    .select('client_id')
+  const integrationSet = new Set((integrations ?? []).map((i: { client_id: string }) => i.client_id))
 
   const statusColor: Record<string, string> = {
     ativo: '#22C55E',
@@ -77,12 +83,24 @@ export default async function AdminPage() {
                     </span>
                   </td>
                   <td className="px-4 py-3.5">
-                    <Link href={`/admin/metricas/${client.id}`}
-                      className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition-colors hover:opacity-80"
-                      style={{ background: '#181818', color: '#3B82F6', border: '1px solid #1e1e1e' }}>
-                      <IconTrendingUp size={12} color="#3B82F6" />
-                      Métricas
-                    </Link>
+                    <div className="flex items-center gap-2">
+                      <Link href={`/admin/metricas/${client.id}`}
+                        className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition-colors hover:opacity-80"
+                        style={{ background: '#181818', color: '#3B82F6', border: '1px solid #1e1e1e' }}>
+                        <IconTrendingUp size={12} color="#3B82F6" />
+                        Métricas
+                      </Link>
+                      <Link href={`/admin/integracoes/${client.id}`}
+                        className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition-colors hover:opacity-80"
+                        style={{
+                          background: '#181818',
+                          color: integrationSet.has(client.id) ? '#22C55E' : '#555',
+                          border: '1px solid #1e1e1e',
+                        }}>
+                        <IconCheck size={12} color={integrationSet.has(client.id) ? '#22C55E' : '#555'} />
+                        {integrationSet.has(client.id) ? 'Integrado' : 'Integrar'}
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               ))}
