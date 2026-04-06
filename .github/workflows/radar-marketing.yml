@@ -1,0 +1,91 @@
+name: Radar de Marketing LocalRise
+
+on:
+  schedule:
+    - cron: '0 11 * * *'  # 08:00 BRT (UTC-3), todo dia
+  workflow_dispatch:       # permite rodar manualmente pelo GitHub
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar Claude CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Rodar Radar de Marketing
+        working-directory: "Claude/Claude Local RIse"
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude --dangerously-skip-permissions -p "$(cat .claude/commands/radar-marketing.md)"
+
+      - name: Enviar email com anexos
+        working-directory: "Claude/Claude Local RIse"
+        env:
+          GMAIL_USER: contato@localriseadvisory.com
+          GMAIL_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: |
+          python3 << 'PYEOF'
+          import smtplib, os
+          from email.mime.multipart import MIMEMultipart
+          from email.mime.text import MIMEText
+          from email.mime.base import MIMEBase
+          from email import encoders
+          from datetime import datetime
+
+          data    = datetime.now().strftime('%Y-%m-%d')
+          user    = os.environ['GMAIL_USER']
+          pwd     = os.environ['GMAIL_PASSWORD']
+          base    = 'conteudo/radar-marketing'
+
+          arquivos = {
+              'resumo':     f'{base}/resumos/resumo-executivo-{data}.md',
+              'pauta':      f'{base}/pautas-designer/pauta-designer-{data}.md',
+              'carrosseis': f'{base}/carrosseis/ideias-carrosseis-{data}.md',
+              'diario':     f'{base}/diario/radar-marketing-{data}.md',
+          }
+
+          def ler(path):
+              return open(path, encoding='utf-8').read() if os.path.exists(path) else 'Arquivo nao gerado.'
+
+          resumo = ler(arquivos['resumo'])
+          pauta  = ler(arquivos['pauta'])
+
+          msg = MIMEMultipart()
+          msg['From']    = f'LocalRise Advisory <{user}>'
+          msg['To']      = 'contato@localriseadvisory.com, lezesdzn@gmail.com'
+          msg['Subject'] = f'Radar de Marketing LocalRise - {data}'
+
+          body = (
+              f'Bom dia!\n\nO Radar de Marketing foi executado automaticamente hoje ({data}).\n\n'
+              f'=== RESUMO EXECUTIVO ===\n\n{resumo}\n\n'
+              f'=== PAUTA PARA O DESIGNER ===\n\n{pauta}\n\n'
+              f'Sistema automatico LocalRise Advisory'
+          )
+          msg.attach(MIMEText(body, 'plain', 'utf-8'))
+
+          for path in arquivos.values():
+              if os.path.exists(path):
+                  with open(path, 'rb') as f:
+                      part = MIMEBase('application', 'octet-stream')
+                      part.set_payload(f.read())
+                      encoders.encode_base64(part)
+                      part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(path)}')
+                      msg.attach(part)
+
+          with smtplib.SMTP('smtp.gmail.com', 587) as s:
+              s.starttls()
+              s.login(user, pwd)
+              s.sendmail(user, ['contato@localriseadvisory.com', 'lezesdzn@gmail.com'], msg.as_string())
+
+          print('Email enviado com sucesso!')
+          PYEOF
