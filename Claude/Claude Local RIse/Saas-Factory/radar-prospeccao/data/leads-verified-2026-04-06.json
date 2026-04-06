@@ -1,0 +1,438 @@
+{
+  "metadata": {
+    "versao": "2.0",
+    "timestamp_coleta": "2026-04-06T14:00:00-03:00",
+    "url_origem": "https://www.tcheofertas.com.br/ofertas/gastronomia",
+    "total_restaurantes": 18,
+    "aviso": "DADOS DE LISTAGEM VERIFICADOS via scraping direto. DADOS DE ENRIQUECIMENTO (GBP, Site, Instagram) são ESTIMATIVAS — requerem validação manual antes de uso comercial.",
+    "legenda_status": {
+      "VERIFICADO": "Coletado diretamente da fonte primária (Tchê Ofertas)",
+      "ESTIMADO": "Gerado por heurística — NÃO verificado em fonte real",
+      "REQUER_VERIFICAÇÃO": "Campo vazio aguardando validação manual"
+    }
+  },
+  "restaurantes": [
+    {
+      "id": "001",
+      "dados_verificados": {
+        "nome": "Don Aurélio",
+        "cidade": "Porto Alegre",
+        "estado": "RS",
+        "categoria": "Pizza / Rodízio / Sushi",
+        "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-pizza/porto-alegre/restaurante-e-pizzaria-don-aurelio/rodizio-pizzas-buffet-sushi-refri-desconto-promocao",
+        "preco_oferta": "R$ 97,90",
+        "ranking_plataforma": "1º mais vendido em Pizzas",
+        "ativo_plataforma": true,
+        "status": "VERIFICADO"
+      },
+      "dados_enriquecimento": {
+        "aviso": "ESTIMADOS — não verificados em fonte real",
+        "gbp": {
+          "existe": null,
+          "nota": null,
+          "total_avaliacoes": null,
+          "score_gbp": null,
+          "status": "REQUER_VERIFICAÇÃO",
+          "como_verificar": "Buscar 'Don Aurélio pizzaria Porto Alegre' no Google Maps"
+        },
+        "site": {
+          "existe": null,
+          "url": null,
+          "score_site": null,
+          "status": "REQUER_VERIFICAÇÃO",
+          "como_verificar": "Buscar site oficial no Google"
+        },
+        "instagram": {
+          "existe": null,
+          "handle": null,
+          "seguidores": null,
+          "status": "REQUER_VERIFICAÇÃO",
+          "como_verificar": "Buscar @donaurelio no Instagram"
+        }
+      },
+      "score_oportunidade": {
+        "valor": null,
+        "verificado": false,
+        "nota": "Score só pode ser calculado após validação dos dados de enriquecimento"
+      }
+    },
+    {
+      "id": "002",
+      "dados_verificados": {
+        "nome": "Restaurante Panorama Gastronômico",
+        "cidade": "Porto Alegre",
+        "estado": "RS",
+        "categoria": "Buffet",
+        "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-buffet/restaurante-panorama-gastronomico/buffet-de-pratos-quentes-desconto-promocao",
+        "preco_oferta": "R$ 63,00",
+        "ranking_plataforma": "1º mais vendido em Buffet",
+        "ativo_plataforma": true,
+        "status": "VERIFICADO"
+      },
+      "dados_enriquecimento": {
+        "aviso": "ESTIMADOS — não verificados em fonte real",
+        "gbp": { "existe": null, "nota": null, "total_avaliacoes": null, "score_gbp": null, "status": "REQUER_VERIFICAÇÃO", "como_verificar": "Buscar 'Panorama Gastronômico Porto Alegre' no Google Maps" },
+        "site": { "existe": null, "url": null, "score_site": null, "status": "REQUER_VERIFICAÇÃO" },
+        "instagram": { "existe": null, "handle": null, "seguidores": null, "status": "REQUER_VERIFICAÇÃO" }
+      },
+      "score_oportunidade": { "valor": null, "verificado": false }
+    },
+    {
+      "id": "003",
+      "dados_verificados": {
+        "nome": "Guardiões da Pizza",
+        "cidade": "Porto Alegre",
+        "estado": "RS",
+        "categoria": "Pizza / Rodízio",
+        "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-pizza/porto-alegre/guardioes-da-pizza/rodizio-de-pizzas-refri-liberado-desconto-promocao",
+        "preco_oferta": "R$ 85,90",
+        "ranking_plataforma": "2º mais vendido em Pizzas",
+        "ativo_plataforma": true,
+        "status": "VERIFICADO"
+      },
+      "dados_enriquecimento": {
+        "aviso": "ESTIMADOS",
+        "gbp": { "existe": null, "nota": null, "total_avaliacoes": null, "score_gbp": null, "status": "REQUER_VERIFICAÇÃO", "como_verificar": "Buscar 'Guardiões da Pizza Porto Alegre' no Google Maps" },
+        "site": { "existe": null, "url": null, "score_site": null, "status": "REQUER_VERIFICAÇÃO" },
+        "instagram": { "existe": null, "handle": null, "seguidores": null, "status": "REQUER_VERIFICAÇÃO" }
+      },
+      "score_oportunidade": { "valor": null, "verificado": false }
+    },
+    {
+      "id": "004",
+      "dados_verificados": {
+        "nome": "Marquês Pizzaria",
+        "cidade": "Porto Alegre",
+        "bairro": "Moinhos de Vento",
+        "estado": "RS",
+        "categoria": "Pizza / Rodízio",
+        "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-pizza/porto-alegre/moinhos-de-vento/marques-pizzaria/rodizio-pizzas-calzones-fritas-desconto-promocao",
+        "preco_oferta": "R$ 89,90",
+        "ranking_plataforma": null,
+        "ativo_plataforma": true,
+        "status": "VERIFICADO"
+      },
+      "dados_enriquecimento": {
+        "aviso": "ESTIMADOS",
+        "gbp": { "existe": null, "nota": null, "total_avaliacoes": null, "score_gbp": null, "status": "REQUER_VERIFICAÇÃO", "como_verificar": "Buscar 'Marquês Pizzaria Moinhos Porto Alegre' no Google Maps" },
+        "site": { "existe": null, "url": null, "score_site": null, "status": "REQUER_VERIFICAÇÃO" },
+        "instagram": { "existe": null, "handle": null, "seguidores": null, "status": "REQUER_VERIFICAÇÃO" }
+      },
+      "score_oportunidade": { "valor": null, "verificado": false }
+    },
+    {
+      "id": "005",
+      "dados_verificados": {
+        "nome": "Ottcho Gastronomia",
+        "cidade": "Porto Alegre",
+        "estado": "RS",
+        "categoria": "Buffet",
+        "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-buffet/porto-alegre/ottcho-gastronomia/buffet-livre-suco-liberado-desconto-promocao",
+        "preco_oferta": "R$ 53,90",
+        "ranking_plataforma": "2º mais vendido em Buffet",
+        "ativo_plataforma": true,
+        "status": "VERIFICADO"
+      },
+      "dados_enriquecimento": {
+        "aviso": "ESTIMADOS",
+        "gbp": { "existe": null, "nota": null, "total_avaliacoes": null, "score_gbp": null, "status": "REQUER_VERIFICAÇÃO" },
+        "site": { "existe": null, "url": null, "score_site": null, "status": "REQUER_VERIFICAÇÃO" },
+        "instagram": { "existe": null, "handle": null, "seguidores": null, "status": "REQUER_VERIFICAÇÃO" }
+      },
+      "score_oportunidade": { "valor": null, "verificado": false }
+    },
+    {
+      "id": "006",
+      "dados_verificados": {
+        "nome": "Guacamole Cocina Mexicana",
+        "cidade": "Porto Alegre",
+        "estado": "RS",
+        "categoria": "Mexicana",
+        "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-outros/porto-alegre/guacamole-cocina-mexicana/combo-nachos-tacos-quesadilla-burrito-desconto-promocao",
+        "preco_oferta": "R$ 129,50",
+        "ranking_plataforma": null,
+        "ofertas_adicionais": ["Rodízio Mexicano — R$ 89,90"],
+        "ativo_plataforma": true,
+        "status": "VERIFICADO"
+      },
+      "dados_enriquecimento": {
+        "aviso": "ESTIMADOS",
+        "gbp": { "existe": null, "nota": null, "total_avaliacoes": null, "score_gbp": null, "status": "REQUER_VERIFICAÇÃO" },
+        "site": { "existe": null, "url": null, "score_site": null, "status": "REQUER_VERIFICAÇÃO" },
+        "instagram": { "existe": null, "handle": null, "seguidores": null, "status": "REQUER_VERIFICAÇÃO" }
+      },
+      "score_oportunidade": { "valor": null, "verificado": false }
+    },
+    {
+      "id": "007",
+      "dados_verificados": {
+        "nome": "Estância Churrascaria",
+        "cidade": "Porto Alegre",
+        "estado": "RS",
+        "categoria": "Churrasco",
+        "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-churrasco/porto-alegre/estancia-churrascaria/espeto-corrido-desconto-promocao",
+        "preco_oferta": "R$ 59,90",
+        "ranking_plataforma": "2º mais vendido em Churrasco",
+        "ativo_plataforma": true,
+        "status": "VERIFICADO"
+      },
+      "dados_enriquecimento": {
+        "aviso": "ESTIMADOS",
+        "gbp": { "existe": null, "nota": null, "total_avaliacoes": null, "score_gbp": null, "status": "REQUER_VERIFICAÇÃO" },
+        "site": { "existe": null, "url": null, "score_site": null, "status": "REQUER_VERIFICAÇÃO" },
+        "instagram": { "existe": null, "handle": null, "seguidores": null, "status": "REQUER_VERIFICAÇÃO" }
+      },
+      "score_oportunidade": { "valor": null, "verificado": false }
+    },
+    {
+      "id": "008",
+      "dados_verificados": {
+        "nome": "Parrilla Del Sur",
+        "cidade": "Porto Alegre",
+        "bairro": "Petrópolis",
+        "estado": "RS",
+        "categoria": "Carnes / Uruguaia",
+        "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-carnes/porto-alegre/petropolis/parrilla-del-sur/entrecot-desconto-promocao",
+        "preco_oferta": "R$ 53,90",
+        "ranking_plataforma": null,
+        "ativo_plataforma": true,
+        "status": "VERIFICADO"
+      },
+      "dados_enriquecimento": {
+        "aviso": "ESTIMADOS",
+        "gbp": { "existe": null, "nota": null, "total_avaliacoes": null, "score_gbp": null, "status": "REQUER_VERIFICAÇÃO" },
+        "site": { "existe": null, "url": null, "score_site": null, "status": "REQUER_VERIFICAÇÃO" },
+        "instagram": { "existe": null, "handle": null, "seguidores": null, "status": "REQUER_VERIFICAÇÃO" }
+      },
+      "score_oportunidade": { "valor": null, "verificado": false }
+    },
+    {
+      "id": "009",
+      "dados_verificados": {
+        "nome": "Marciano's Burguer",
+        "cidade": "Porto Alegre",
+        "bairro": "Centro Histórico",
+        "estado": "RS",
+        "categoria": "Hambúrguer / Lanches",
+        "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-lanches/porto-alegre/centro-historico/marcianos-burguer/rodizio-de-mini-hamburgueres-desconto-promocao",
+        "preco_oferta": "R$ 64,90",
+        "ranking_plataforma": null,
+        "ativo_plataforma": true,
+        "status": "VERIFICADO"
+      },
+      "dados_enriquecimento": {
+        "aviso": "ESTIMADOS",
+        "gbp": { "existe": null, "nota": null, "total_avaliacoes": null, "score_gbp": null, "status": "REQUER_VERIFICAÇÃO" },
+        "site": { "existe": null, "url": null, "score_site": null, "status": "REQUER_VERIFICAÇÃO" },
+        "instagram": { "existe": null, "handle": null, "seguidores": null, "status": "REQUER_VERIFICAÇÃO" }
+      },
+      "score_oportunidade": { "valor": null, "verificado": false }
+    },
+    {
+      "id": "010",
+      "dados_verificados": {
+        "nome": "Terra do Churrasco",
+        "cidade": "Porto Alegre",
+        "estado": "RS",
+        "categoria": "Churrasco",
+        "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-churrasco/porto-alegre/terra-do-churrasco/rodizio-de-churrasco-com-acompanhamentos-saladas-desconto-promocao",
+        "preco_oferta": "R$ 99,90",
+        "ranking_plataforma": "3º mais vendido em Churrasco",
+        "ativo_plataforma": true,
+        "status": "VERIFICADO"
+      },
+      "dados_enriquecimento": {
+        "aviso": "ESTIMADOS",
+        "gbp": { "existe": null, "nota": null, "total_avaliacoes": null, "score_gbp": null, "status": "REQUER_VERIFICAÇÃO" },
+        "site": { "existe": null, "url": null, "score_site": null, "status": "REQUER_VERIFICAÇÃO" },
+        "instagram": { "existe": null, "handle": null, "seguidores": null, "status": "REQUER_VERIFICAÇÃO" }
+      },
+      "score_oportunidade": { "valor": null, "verificado": false }
+    },
+    {
+      "id": "011",
+      "dados_verificados": {
+        "nome": "Cidade Zaandam Boulevard Laçador",
+        "cidade": "Porto Alegre",
+        "estado": "RS",
+        "categoria": "Café Colonial / Fondue / Culinária Holandesa",
+        "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-outros/porto-alegre/cidade-zaandam-boulevard-lacador/cafe-colonial-holances-desconto-promocao",
+        "preco_oferta": "R$ 109,00",
+        "ranking_plataforma": null,
+        "ofertas_adicionais": [
+          "Almoço Holandês — R$ 109,00",
+          "Fondue — R$ 139,00",
+          "Fogo Nórdico — R$ 139,00"
+        ],
+        "ativo_plataforma": true,
+        "status": "VERIFICADO"
+      },
+      "dados_enriquecimento": {
+        "aviso": "ESTIMADOS",
+        "gbp": { "existe": null, "nota": null, "total_avaliacoes": null, "score_gbp": null, "status": "REQUER_VERIFICAÇÃO" },
+        "site": { "existe": null, "url": null, "score_site": null, "status": "REQUER_VERIFICAÇÃO" },
+        "instagram": { "existe": null, "handle": null, "seguidores": null, "status": "REQUER_VERIFICAÇÃO" }
+      },
+      "score_oportunidade": { "valor": null, "verificado": false }
+    },
+    {
+      "id": "012",
+      "dados_verificados": {
+        "nome": "Trigo Pizzaria",
+        "cidade": "Porto Alegre",
+        "estado": "RS",
+        "categoria": "Pizza Artesanal / Longa Fermentação",
+        "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-pizza/porto-alegre/trigo-pizzaria/rodizio-pizza-massa-longa-fermentacao-desconto-promocao",
+        "preco_oferta": "R$ 89,90",
+        "ranking_plataforma": null,
+        "ativo_plataforma": true,
+        "status": "VERIFICADO"
+      },
+      "dados_enriquecimento": {
+        "aviso": "ESTIMADOS",
+        "gbp": { "existe": null, "nota": null, "total_avaliacoes": null, "score_gbp": null, "status": "REQUER_VERIFICAÇÃO" },
+        "site": { "existe": null, "url": null, "score_site": null, "status": "REQUER_VERIFICAÇÃO" },
+        "instagram": { "existe": null, "handle": null, "seguidores": null, "status": "REQUER_VERIFICAÇÃO" }
+      },
+      "score_oportunidade": { "valor": null, "verificado": false }
+    },
+    {
+      "id": "013",
+      "dados_verificados": {
+        "nome": "Assado Raiz Parrilla",
+        "cidade": "Porto Alegre",
+        "estado": "RS",
+        "categoria": "Carnes / Parrilla",
+        "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-carnes/porto-alegre/assado-raiz/assado-escolha-entre-costelao-entrana-bife-de-chorizo-ou-entrecot-mais-tabua-mais-acompanhamentos-desconto-promocao",
+        "preco_oferta": "R$ 99,90",
+        "ranking_plataforma": null,
+        "ativo_plataforma": true,
+        "status": "VERIFICADO"
+      },
+      "dados_enriquecimento": {
+        "aviso": "ESTIMADOS",
+        "gbp": { "existe": null, "nota": null, "total_avaliacoes": null, "score_gbp": null, "status": "REQUER_VERIFICAÇÃO" },
+        "site": { "existe": null, "url": null, "score_site": null, "status": "REQUER_VERIFICAÇÃO" },
+        "instagram": { "existe": null, "handle": null, "seguidores": null, "status": "REQUER_VERIFICAÇÃO" }
+      },
+      "score_oportunidade": { "valor": null, "verificado": false }
+    },
+    {
+      "id": "014",
+      "dados_verificados": {
+        "nome": "Churrascaria Passoquinha",
+        "cidade": "Canoas",
+        "estado": "RS",
+        "categoria": "Churrasco / Rodízio",
+        "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-churrasco/canoas/restaurante-churrascaria-passoquinha/rodizio-executivo-desconto-promocao",
+        "preco_oferta": "R$ 54,90",
+        "ranking_plataforma": "1º mais vendido em Churrasco — EXCLUSIVO",
+        "ativo_plataforma": true,
+        "status": "VERIFICADO"
+      },
+      "dados_enriquecimento": {
+        "aviso": "ESTIMADOS",
+        "gbp": { "existe": null, "nota": null, "total_avaliacoes": null, "score_gbp": null, "status": "REQUER_VERIFICAÇÃO", "como_verificar": "Buscar 'Passoquinha Churrascaria Canoas' no Google Maps" },
+        "site": { "existe": null, "url": null, "score_site": null, "status": "REQUER_VERIFICAÇÃO" },
+        "instagram": { "existe": null, "handle": null, "seguidores": null, "status": "REQUER_VERIFICAÇÃO" }
+      },
+      "score_oportunidade": { "valor": null, "verificado": false }
+    },
+    {
+      "id": "015",
+      "dados_verificados": {
+        "nome": "Trattoria do Sabor",
+        "cidade": "Canoas",
+        "estado": "RS",
+        "categoria": "Pizza / Massas",
+        "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-pizza/canoas/trattoria-do-sabor/rodizio-pizzas-lasanhas-massas-refri-liberado-desconto-promocao",
+        "preco_oferta": "R$ 64,90",
+        "ranking_plataforma": null,
+        "ativo_plataforma": true,
+        "status": "VERIFICADO"
+      },
+      "dados_enriquecimento": {
+        "aviso": "ESTIMADOS",
+        "gbp": { "existe": null, "nota": null, "total_avaliacoes": null, "score_gbp": null, "status": "REQUER_VERIFICAÇÃO" },
+        "site": { "existe": null, "url": null, "score_site": null, "status": "REQUER_VERIFICAÇÃO" },
+        "instagram": { "existe": null, "handle": null, "seguidores": null, "status": "REQUER_VERIFICAÇÃO" }
+      },
+      "score_oportunidade": { "valor": null, "verificado": false }
+    },
+    {
+      "id": "016",
+      "dados_verificados": {
+        "nome": "Mano's Pizzaria",
+        "cidade": "Canoas",
+        "estado": "RS",
+        "categoria": "Pizza / Rodízio",
+        "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-pizza/canoas/manos-pizzaria/rodizio-pizzas-refri-livre-lasanha-sorvetes-desconto-promocao",
+        "preco_oferta": "R$ 65,90",
+        "ranking_plataforma": null,
+        "ativo_plataforma": true,
+        "status": "VERIFICADO"
+      },
+      "dados_enriquecimento": {
+        "aviso": "ESTIMADOS",
+        "gbp": { "existe": null, "nota": null, "total_avaliacoes": null, "score_gbp": null, "status": "REQUER_VERIFICAÇÃO" },
+        "site": { "existe": null, "url": null, "score_site": null, "status": "REQUER_VERIFICAÇÃO" },
+        "instagram": { "existe": null, "handle": null, "seguidores": null, "status": "REQUER_VERIFICAÇÃO" }
+      },
+      "score_oportunidade": { "valor": null, "verificado": false }
+    },
+    {
+      "id": "017",
+      "dados_verificados": {
+        "nome": "Restaurante O Bifão",
+        "cidade": "Novo Hamburgo",
+        "estado": "RS",
+        "categoria": "Churrasco / Bifes",
+        "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-churrasco/novo-hamburgo/o-bifao/rodizio-de-bifes-desconto-promocao",
+        "preco_oferta": "R$ 79,90",
+        "ranking_plataforma": "EXCLUSIVO",
+        "ofertas_adicionais": [
+          "Travessa do Bifão — R$ 82,90",
+          "Tradicional Bifão (3 pessoas) — R$ 55,80"
+        ],
+        "ativo_plataforma": true,
+        "status": "VERIFICADO"
+      },
+      "dados_enriquecimento": {
+        "aviso": "ESTIMADOS",
+        "gbp": { "existe": null, "nota": null, "total_avaliacoes": null, "score_gbp": null, "status": "REQUER_VERIFICAÇÃO" },
+        "site": { "existe": null, "url": null, "score_site": null, "status": "REQUER_VERIFICAÇÃO" },
+        "instagram": { "existe": null, "handle": null, "seguidores": null, "status": "REQUER_VERIFICAÇÃO" }
+      },
+      "score_oportunidade": { "valor": null, "verificado": false }
+    },
+    {
+      "id": "018",
+      "dados_verificados": {
+        "nome": "Guardiões da Pizza — Alvorada",
+        "cidade": "Alvorada",
+        "estado": "RS",
+        "categoria": "Pizza / Rodízio",
+        "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-pizza/alvorada/guardioes-da-pizza/rodizio-de-pizzas-refri-liberado-desconto-promocao",
+        "preco_oferta": "R$ 69,90",
+        "ranking_plataforma": "3º mais vendido em Pizzas",
+        "ativo_plataforma": true,
+        "status": "VERIFICADO"
+      },
+      "dados_enriquecimento": {
+        "aviso": "ESTIMADOS",
+        "gbp": { "existe": null, "nota": null, "total_avaliacoes": null, "score_gbp": null, "status": "REQUER_VERIFICAÇÃO" },
+        "site": { "existe": null, "url": null, "score_site": null, "status": "REQUER_VERIFICAÇÃO" },
+        "instagram": { "existe": null, "handle": null, "seguidores": null, "status": "REQUER_VERIFICAÇÃO" }
+      },
+      "score_oportunidade": { "valor": null, "verificado": false }
+    }
+  ],
+  "removidos": [
+    {
+      "nome": "Zimmer7",
+      "cidade": "Novo Hamburgo",
+      "motivo": "Não aparece na listagem atual de 2026-04-06. Presente na coleta anterior.",
+      "status": "REMOVIDO_DA_BASE"
+    }
+  ]
+}
