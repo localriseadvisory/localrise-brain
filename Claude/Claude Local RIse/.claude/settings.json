@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -d */)",
+      "Bash(npx create-next-app@latest localrise-portal --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\")",
+      "Bash(npm --version)",
+      "Bash(where node:*)",
+      "mcp__claude_ai_Supabase__list_organizations",
+      "mcp__claude_ai_Supabase__get_cost",
+      "mcp__claude_ai_Supabase__confirm_cost",
+      "mcp__claude_ai_Supabase__create_project",
+      "mcp__claude_ai_Supabase__get_project_url",
+      "mcp__claude_ai_Supabase__get_publishable_keys",
+      "Bash(npx create-next-app@latest localrise-portal --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\" --yes)",
+      "Bash(npm install:*)",
+      "mcp__claude_ai_Supabase__apply_migration",
+      "Bash(npm run:*)",
+      "mcp__claude_ai_Supabase__execute_sql"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\digui\\.claude\\projects\\c--Users-digui-Documents-Claude-Claude-Local-RIse\\memory"
+    ]
+  }
+}

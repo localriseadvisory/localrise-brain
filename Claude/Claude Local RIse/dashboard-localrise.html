@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LocalRise Advisory — Dashboard de Crescimento</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #18181f;
+    --border: #2a2a3a;
+    --accent: #6c63ff;
+    --accent2: #00d4aa;
+    --accent3: #ff6b6b;
+    --accent4: #ffd166;
+    --text: #e8e8f0;
+    --muted: #7a7a9a;
+    --green: #00d4aa;
+    --red: #ff6b6b;
+    --yellow: #ffd166;
+    --blue: #4ecdc4;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #111118 0%, #1a1a2e 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-icon {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 18px; color: white;
+  }
+  .logo-text { font-size: 20px; font-weight: 700; }
+  .logo-sub { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+  .header-meta { text-align: right; }
+  .header-meta .date { font-size: 13px; color: var(--muted); }
+  .header-meta .status { font-size: 12px; color: var(--green); margin-top: 2px; }
+
+  /* NAV */
+  .nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .nav-item {
+    padding: 14px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .nav-item:hover { color: var(--text); }
+  .nav-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* MAIN */
+  .main { padding: 32px 40px; max-width: 1400px; margin: 0 auto; }
+
+  /* SECTIONS */
+  .section { margin-bottom: 56px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-number {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; color: white; flex-shrink: 0;
+  }
+  .section-title { font-size: 22px; font-weight: 700; }
+  .section-subtitle { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+  /* CARDS GRID */
+  .grid { display: grid; gap: 16px; }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid-5 { grid-template-columns: repeat(5, 1fr); }
+  @media (max-width: 1100px) { .grid-4, .grid-5 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 768px) { .grid-2, .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr; } }
+
+  /* CARD */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .card-accent { border-top: 3px solid var(--accent); }
+  .card-green { border-top: 3px solid var(--green); }
+  .card-red { border-top: 3px solid var(--red); }
+  .card-yellow { border-top: 3px solid var(--yellow); }
+  .card-blue { border-top: 3px solid var(--blue); }
+
+  .card-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .card-value {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .card-value.green { color: var(--green); }
+  .card-value.red { color: var(--red); }
+  .card-value.yellow { color: var(--yellow); }
+  .card-value.blue { color: var(--blue); }
+  .card-value.accent { color: var(--accent); }
+
+  .card-formula {
+    font-size: 11px;
+    color: var(--accent);
+    font-family: monospace;
+    background: rgba(108,99,255,0.08);
+    border: 1px solid rgba(108,99,255,0.2);
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-top: 8px;
+    display: inline-block;
+  }
+  .card-freq {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+  .card-insight {
+    font-size: 12px;
+    color: var(--accent2);
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    line-height: 1.5;
+  }
+
+  /* METRIC TABLE */
+  .metric-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .metric-table th {
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .metric-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .metric-table tr:last-child td { border-bottom: none; }
+  .metric-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .metric-name { font-weight: 600; color: var(--text); }
+  .metric-formula { font-family: monospace; font-size: 11px; color: var(--accent); margin-top: 3px; }
+  .metric-desc { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge-diario { background: rgba(255,107,107,0.15); color: var(--red); }
+  .badge-semanal { background: rgba(255,209,102,0.15); color: var(--yellow); }
+  .badge-mensal { background: rgba(108,99,255,0.15); color: var(--accent); }
+
+  /* CRM TABLE */
+  .crm-table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+  .crm-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    min-width: 900px;
+  }
+  .crm-table th {
+    background: var(--surface2);
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .crm-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.4;
+  }
+  .crm-table tr:last-child td { border-bottom: none; }
+  .col-id { font-family: monospace; color: var(--muted); font-size: 10px; }
+  .col-name { font-weight: 600; }
+  .col-formula { font-family: monospace; font-size: 10px; color: var(--accent); }
+  .col-desc { font-size: 10px; color: var(--muted); margin-top: 2px; }
+  .col-feed { font-size: 10px; color: var(--green); margin-top: 2px; }
+
+  .status-tag {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .s-lead { background: rgba(78,205,196,0.15); color: var(--blue); }
+  .s-contato { background: rgba(255,209,102,0.15); color: var(--yellow); }
+  .s-proposta { background: rgba(108,99,255,0.15); color: var(--accent); }
+  .s-followup { background: rgba(255,165,0,0.15); color: orange; }
+  .s-fechado { background: rgba(0,212,170,0.15); color: var(--green); }
+  .s-perdido { background: rgba(255,107,107,0.15); color: var(--red); }
+
+  /* AUTOMATIONS */
+  .automation-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .automation-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .auto-1::before { background: linear-gradient(90deg, var(--accent), var(--blue)); }
+  .auto-2::before { background: linear-gradient(90deg, var(--yellow), var(--red)); }
+  .auto-3::before { background: linear-gradient(90deg, var(--green), var(--blue)); }
+  .auto-4::before { background: linear-gradient(90deg, var(--accent), var(--green)); }
+  .auto-5::before { background: linear-gradient(90deg, var(--red), var(--yellow)); }
+
+  .automation-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .automation-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(108,99,255,0.15);
+    color: var(--accent);
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 12px;
+  }
+  .flow-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 12px;
+  }
+  .flow-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .fl-trigger { background: rgba(255,209,102,0.15); color: var(--yellow); }
+  .fl-action { background: rgba(108,99,255,0.15); color: var(--accent); }
+  .fl-result { background: rgba(0,212,170,0.15); color: var(--green); }
+  .flow-text { color: var(--muted); line-height: 1.5; }
+
+  /* INSIGHTS */
+  .insight-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .insight-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .insight-icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .ii-red { background: rgba(255,107,107,0.15); }
+  .ii-green { background: rgba(0,212,170,0.15); }
+  .ii-yellow { background: rgba(255,209,102,0.15); }
+  .ii-accent { background: rgba(108,99,255,0.15); }
+
+  .insight-list { list-style: none; }
+  .insight-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+  .insight-list li:last-child { border-bottom: none; padding-bottom: 0; }
+  .insight-list .bullet {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .b-red { background: rgba(255,107,107,0.2); color: var(--red); }
+  .b-green { background: rgba(0,212,170,0.2); color: var(--green); }
+  .b-yellow { background: rgba(255,209,102,0.2); color: var(--yellow); }
+  .b-accent { background: rgba(108,99,255,0.2); color: var(--accent); }
+
+  /* PIPELINE VISUAL */
+  .pipeline {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .pipeline-stage {
+    flex: 1;
+    min-width: 140px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-right: none;
+    padding: 16px 14px;
+    position: relative;
+  }
+  .pipeline-stage:first-child { border-radius: 10px 0 0 10px; }
+  .pipeline-stage:last-child { border-radius: 0 10px 10px 0; border-right: 1px solid var(--border); }
+  .pipeline-stage::after {
+    content: '›';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--border);
+    font-size: 20px;
+    z-index: 1;
+  }
+  .pipeline-stage:last-child::after { display: none; }
+  .ps-name { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; }
+  .ps-count { font-size: 24px; font-weight: 800; }
+  .ps-value { font-size: 11px; color: var(--green); margin-top: 3px; }
+  .ps-rate { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+  /* PREVISAO */
+  .forecast-bar {
+    background: var(--surface2);
+    border-radius: 8px;
+    height: 8px;
+    margin-top: 6px;
+    overflow: hidden;
+  }
+  .forecast-fill {
+    height: 100%;
+    border-radius: 8px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0;
+  }
+
+  /* INFO BOX */
+  .info-box {
+    background: rgba(108,99,255,0.06);
+    border: 1px solid rgba(108,99,255,0.2);
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .info-box strong { color: var(--accent); }
+
+  .warn-box {
+    background: rgba(255,107,107,0.06);
+    border: 1px solid rgba(255,107,107,0.2);
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .warn-box strong { color: var(--red); }
+
+  .success-box {
+    background: rgba(0,212,170,0.06);
+    border: 1px solid rgba(0,212,170,0.2);
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .success-box strong { color: var(--green); }
+
+  /* FOOTER */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 40px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .footer strong { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">LR</div>
+    <div>
+      <div class="logo-text">LocalRise Advisory</div>
+      <div class="logo-sub">Growth Intelligence Dashboard</div>
+    </div>
+  </div>
+  <div class="header-meta">
+    <div class="date" id="currentDate"></div>
+    <div class="status">● Sistema Operacional</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <a class="nav-item active" href="#aquisicao">1. Aquisição</a>
+  <a class="nav-item" href="#metricas">2. Métricas</a>
+  <a class="nav-item" href="#crm">3. CRM</a>
+  <a class="nav-item" href="#automacoes">4. Automações</a>
+  <a class="nav-item" href="#escala">5. Escala</a>
+</div>
+
+<div class="main">
+
+  <!-- ===== SEÇÃO 1: AQUISIÇÃO ===== -->
+  <div class="section" id="aquisicao">
+    <div class="section-header">
+      <div class="section-number">1</div>
+      <div>
+        <div class="section-title">Aquisição de Leads</div>
+        <div class="section-subtitle">Volume, qualidade e origem dos leads captados</div>
+      </div>
+    </div>
+
+    <div class="grid grid-5" style="margin-bottom:16px;">
+      <div class="card card-blue">
+        <div class="card-label">Leads / Mês</div>
+        <div class="card-value blue">—</div>
+        <div class="card-formula">COUNTA(CRM!A:A)-1</div>
+        <div class="card-freq">Frequência: Diária</div>
+        <div class="card-insight">Meta: 60+ leads/mês para pipeline saudável</div>
+      </div>
+      <div class="card card-yellow">
+        <div class="card-label">Leads / Semana</div>
+        <div class="card-value yellow">—</div>
+        <div class="card-formula">COUNTIFS(Data,">="&HOJE()-7)</div>
+        <div class="card-freq">Frequência: Semanal</div>
+        <div class="card-insight">Abaixo de 12/semana = revisar prospecção</div>
+      </div>
+      <div class="card card-accent">
+        <div class="card-label">Taxa Qualificação</div>
+        <div class="card-value accent">—%</div>
+        <div class="card-formula">Leads Qualif. / Total Leads</div>
+        <div class="card-freq">Frequência: Semanal</div>
+        <div class="card-insight">Meta: &gt;40% leads chegam à etapa Contato</div>
+      </div>
+      <div class="card card-green">
+        <div class="card-label">Score Médio</div>
+        <div class="card-value green">—</div>
+        <div class="card-formula">AVERAGE(CRM!Score)</div>
+        <div class="card-freq">Frequência: Semanal</div>
+        <div class="card-insight">Score &gt;70 = prioridade de contato imediato</div>
+      </div>
+      <div class="card card-red">
+        <div class="card-label">Leads Parados (+3d)</div>
+        <div class="card-value red">—</div>
+        <div class="card-formula">COUNTIFS(Status,"Lead",Último Contato,"&lt;"&HOJE()-3)</div>
+        <div class="card-freq">Frequência: Diária</div>
+        <div class="card-insight">Qualquer número &gt;0 = acionar automação</div>
+      </div>
+    </div>
+
+    <!-- Pipeline Visual -->
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-label" style="margin-bottom:16px;">Pipeline de Vendas — Funil de Conversão</div>
+      <div class="pipeline">
+        <div class="pipeline-stage">
+          <div class="ps-name">Lead Captado</div>
+          <div class="ps-count" style="color:var(--blue);">—</div>
+          <div class="ps-value">R$ —</div>
+          <div class="ps-rate">100% entrada</div>
+        </div>
+        <div class="pipeline-stage">
+          <div class="ps-name">Contato Feito</div>
+          <div class="ps-count" style="color:var(--yellow);">—</div>
+          <div class="ps-value">R$ —</div>
+          <div class="ps-rate">Meta: 70% conv.</div>
+        </div>
+        <div class="pipeline-stage">
+          <div class="ps-name">Proposta Enviada</div>
+          <div class="ps-count" style="color:var(--accent);">—</div>
+          <div class="ps-value">R$ —</div>
+          <div class="ps-rate">Meta: 40% conv.</div>
+        </div>
+        <div class="pipeline-stage">
+          <div class="ps-name">Follow-up</div>
+          <div class="ps-count" style="color:orange;">—</div>
+          <div class="ps-value">R$ —</div>
+          <div class="ps-rate">Meta: 30% conv.</div>
+        </div>
+        <div class="pipeline-stage">
+          <div class="ps-name">Fechado</div>
+          <div class="ps-count" style="color:var(--green);">—</div>
+          <div class="ps-value">R$ —</div>
+          <div class="ps-rate">Meta: 15% geral</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="card-label">Por Origem do Lead</div>
+        <div style="margin-top:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px;">
+            <span>Google Maps / Scraper</span>
+            <span style="color:var(--blue);">—%</span>
+          </div>
+          <div class="forecast-bar"><div class="forecast-fill" style="width:60%"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin:8px 0;">
+            <span>Indicação de Clientes</span>
+            <span style="color:var(--green);">—%</span>
+          </div>
+          <div class="forecast-bar"><div class="forecast-fill" style="width:25%;background:linear-gradient(90deg,var(--green),var(--blue))"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin:8px 0;">
+            <span>Instagram / Social</span>
+            <span style="color:var(--yellow);">—%</span>
+          </div>
+          <div class="forecast-bar"><div class="forecast-fill" style="width:15%;background:linear-gradient(90deg,var(--yellow),orange)"></div></div>
+        </div>
+        <div class="card-insight">Indicações convertem 3x mais — priorize programa de referral</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Por Nicho</div>
+        <div style="margin-top:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px;">
+            <span>Restaurantes / Food</span>
+            <span style="color:var(--accent);">—%</span>
+          </div>
+          <div class="forecast-bar"><div class="forecast-fill" style="width:50%"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin:8px 0;">
+            <span>Serviços (clínicas, etc.)</span>
+            <span style="color:var(--green);">—%</span>
+          </div>
+          <div class="forecast-bar"><div class="forecast-fill" style="width:30%;background:linear-gradient(90deg,var(--green),var(--blue))"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin:8px 0;">
+            <span>Comércio Local</span>
+            <span style="color:var(--yellow);">—%</span>
+          </div>
+          <div class="forecast-bar"><div class="forecast-fill" style="width:20%;background:linear-gradient(90deg,var(--yellow),orange)"></div></div>
+        </div>
+        <div class="card-insight">Serviços recorrentes (clínicas) = maior LTV — priorizar</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Previsão do Mês</div>
+        <div class="card-value accent" style="font-size:24px;margin:12px 0;">R$ —</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Pipeline ponderado por probabilidade</div>
+        <div class="card-formula">Σ(Valor × Prob%) por lead em aberto</div>
+        <div class="divider"></div>
+        <div style="font-size:12px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+            <span style="color:var(--muted);">Meta do mês</span><span>R$ —</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <span style="color:var(--muted);">Gap para meta</span><span style="color:var(--red);">R$ —</span>
+          </div>
+        </div>
+        <div class="card-insight">Atualizar probabilidades a cada contato feito</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SEÇÃO 2: MÉTRICAS ===== -->
+  <div class="section" id="metricas">
+    <div class="section-header">
+      <div class="section-number">2</div>
+      <div>
+        <div class="section-title">Métricas Essenciais com Fórmulas</div>
+        <div class="section-subtitle">KPIs de negócio com cálculos prontos para implementar no Sheets/Looker Studio</div>
+      </div>
+    </div>
+
+    <!-- KPI Cards Row 1 -->
+    <div class="grid grid-4" style="margin-bottom:16px;">
+      <div class="card card-green">
+        <div class="card-label">MRR (Receita Mensal Recorrente)</div>
+        <div class="card-value green" style="font-size:24px;">R$ —</div>
+        <div class="card-formula">Σ Mensalidades Contratos Ativos</div>
+        <div class="card-freq">Análise: Mensal | Meta: crescer 20% ao mês</div>
+        <div class="card-insight">Principal métrica de saúde. Abaixo de R$5k = modo sobrevivência</div>
+      </div>
+      <div class="card card-red">
+        <div class="card-label">CAC (Custo de Aquisição)</div>
+        <div class="card-value red" style="font-size:24px;">R$ —</div>
+        <div class="card-formula">Custo Total Vendas+Mktg / Clientes Novos</div>
+        <div class="card-freq">Análise: Mensal | Meta: CAC &lt; Ticket médio</div>
+        <div class="card-insight">Inclua: horas gastas + ferramentas + anúncios</div>
+      </div>
+      <div class="card card-accent">
+        <div class="card-label">LTV (Lifetime Value)</div>
+        <div class="card-value accent" style="font-size:24px;">R$ —</div>
+        <div class="card-formula">Ticket Médio × Meses Médios de Contrato</div>
+        <div class="card-freq">Análise: Trimestral | Meta: LTV/CAC &gt; 3x</div>
+        <div class="card-insight">Se LTV &lt; 3× CAC, o negócio não escala com saúde</div>
+      </div>
+      <div class="card card-yellow">
+        <div class="card-label">Ticket Médio</div>
+        <div class="card-value yellow" style="font-size:24px;">R$ —</div>
+        <div class="card-formula">Receita Total / Nº Clientes Ativos</div>
+        <div class="card-freq">Análise: Mensal | Meta: R$ 1.500 - R$ 3.000</div>
+        <div class="card-insight">Subir ticket = mais rentável que buscar mais clientes</div>
+      </div>
+    </div>
+
+    <!-- TABELA COMPLETA DE MÉTRICAS -->
+    <div class="card">
+      <div class="card-label" style="margin-bottom:16px;">Referência Completa de Métricas</div>
+      <div style="overflow-x:auto;">
+        <table class="metric-table">
+          <thead>
+            <tr>
+              <th>Métrica</th>
+              <th>Fórmula</th>
+              <th>Meta LocalRise</th>
+              <th>Frequência</th>
+              <th>Insight Estratégico</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="metric-name">Leads / Dia</div><div class="metric-desc">Volume de entrada no funil</div></td>
+              <td><div class="metric-formula">COUNTIFS(Data_Entrada, HOJE())</div></td>
+              <td>3–5 leads/dia</td>
+              <td><span class="badge badge-diario">Diária</span></td>
+              <td>Queda por 3 dias = alarme de prospecção</td>
+            </tr>
+            <tr>
+              <td><div class="metric-name">Taxa de Conversão Geral</div><div class="metric-desc">Lead → Cliente Fechado</div></td>
+              <td><div class="metric-formula">Clientes Fechados / Total Leads × 100</div></td>
+              <td>&gt; 15%</td>
+              <td><span class="badge badge-semanal">Semanal</span></td>
+              <td>Abaixo de 10% = problema no pitch ou segmentação</td>
+            </tr>
+            <tr>
+              <td><div class="metric-name">Taxa Contato → Proposta</div><div class="metric-desc">Eficácia da 1ª abordagem</div></td>
+              <td><div class="metric-formula">Propostas / Contatos Feitos × 100</div></td>
+              <td>&gt; 50%</td>
+              <td><span class="badge badge-semanal">Semanal</span></td>
+              <td>Abaixo de 40% = revisar script de abordagem</td>
+            </tr>
+            <tr>
+              <td><div class="metric-name">Taxa Proposta → Fechado</div><div class="metric-desc">Eficácia da proposta comercial</div></td>
+              <td><div class="metric-formula">Fechados / Propostas Enviadas × 100</div></td>
+              <td>&gt; 30%</td>
+              <td><span class="badge badge-semanal">Semanal</span></td>
+              <td>Abaixo de 20% = problema de preço ou apresentação</td>
+            </tr>
+            <tr>
+              <td><div class="metric-name">MRR (Receita Mensal Recorrente)</div><div class="metric-desc">Base de receita previsível</div></td>
+              <td><div class="metric-formula">Σ (Valor_Contrato de status="Ativo")</div></td>
+              <td>Crescer 20%/mês</td>
+              <td><span class="badge badge-mensal">Mensal</span></td>
+              <td>MRR é o termômetro da saúde do negócio</td>
+            </tr>
+            <tr>
+              <td><div class="metric-name">Receita Prevista (Pipeline)</div><div class="metric-desc">Forecast baseado em probabilidade</div></td>
+              <td><div class="metric-formula">Σ (Valor × Probabilidade%) leads em aberto</div></td>
+              <td>2× meta mensal</td>
+              <td><span class="badge badge-semanal">Semanal</span></td>
+              <td>Pipeline abaixo de 2× meta = prospectar urgente</td>
+            </tr>
+            <tr>
+              <td><div class="metric-name">CAC (Custo de Aquisição)</div><div class="metric-desc">Custo real por cliente fechado</div></td>
+              <td><div class="metric-formula">(Ferramentas + Ads + Horas×Hora) / Clientes Novos</div></td>
+              <td>&lt; R$ 300</td>
+              <td><span class="badge badge-mensal">Mensal</span></td>
+              <td>CAC alto = canal de aquisição errado ou processo lento</td>
+            </tr>
+            <tr>
+              <td><div class="metric-name">LTV (Lifetime Value)</div><div class="metric-desc">Valor total do cliente no tempo</div></td>
+              <td><div class="metric-formula">Ticket_Médio × Duração_Média_Meses</div></td>
+              <td>&gt; R$ 6.000</td>
+              <td><span class="badge badge-mensal">Mensal</span></td>
+              <td>LTV/CAC &gt; 3x = negócio escalável</td>
+            </tr>
+            <tr>
+              <td><div class="metric-name">Churn Rate (Perda de Clientes)</div><div class="metric-desc">Taxa de cancelamento mensal</div></td>
+              <td><div class="metric-formula">Clientes Cancelados / Clientes Início Mês × 100</div></td>
+              <td>&lt; 5%/mês</td>
+              <td><span class="badge badge-mensal">Mensal</span></td>
+              <td>Churn &gt; 10% cancela crescimento mesmo com novos clientes</td>
+            </tr>
+            <tr>
+              <td><div class="metric-name">Tempo Médio de Fechamento</div><div class="metric-desc">Dias entre lead e contrato</div></td>
+              <td><div class="metric-formula">AVERAGE(Data_Fechamento - Data_Entrada)</div></td>
+              <td>&lt; 14 dias</td>
+              <td><span class="badge badge-semanal">Semanal</span></td>
+              <td>Ciclo longo = follow-up insuficiente ou proposta fraca</td>
+            </tr>
+            <tr>
+              <td><div class="metric-name">Receita por Serviço</div><div class="metric-desc">Qual serviço gera mais</div></td>
+              <td><div class="metric-formula">SUMIF(Serviço, "GBP", Valor_Contrato)</div></td>
+              <td>Identificar top 2</td>
+              <td><span class="badge badge-mensal">Mensal</span></td>
+              <td>Focar nos 2 serviços mais rentáveis para escalar</td>
+            </tr>
+            <tr>
+              <td><div class="metric-name">NPS / Satisfação</div><div class="metric-desc">Probabilidade de indicação</div></td>
+              <td><div class="metric-formula">% Promotores (9-10) - % Detratores (0-6)</div></td>
+              <td>&gt; 50</td>
+              <td><span class="badge badge-mensal">Mensal</span></td>
+              <td>NPS alto = máquina de indicações gratuitas</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SEÇÃO 3: CRM ===== -->
+  <div class="section" id="crm">
+    <div class="section-header">
+      <div class="section-number">3</div>
+      <div>
+        <div class="section-title">Estrutura do CRM no Google Sheets</div>
+        <div class="section-subtitle">Arquitetura completa de colunas, fórmulas e integração com o dashboard</div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>Arquitetura recomendada:</strong> 3 abas no mesmo Spreadsheet — <strong>CRM</strong> (dados brutos), <strong>Dashboard</strong> (fórmulas e KPIs), <strong>Config</strong> (listas de validação, metas, responsáveis). Isso permite que o N8N leia e escreva na aba CRM sem quebrar fórmulas do Dashboard.
+    </div>
+
+    <!-- STATUS LEGEND -->
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-label" style="margin-bottom:12px;">Pipeline de Status — Fluxo Obrigatório</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <span class="status-tag s-lead">Lead</span>
+        <span style="color:var(--muted);">→</span>
+        <span class="status-tag s-contato">Contato</span>
+        <span style="color:var(--muted);">→</span>
+        <span class="status-tag s-proposta">Proposta Enviada</span>
+        <span style="color:var(--muted);">→</span>
+        <span class="status-tag s-followup">Follow-up 1 / 2 / 3</span>
+        <span style="color:var(--muted);">→</span>
+        <span class="status-tag s-fechado">Fechado</span>
+        <span style="color:var(--muted);">ou</span>
+        <span class="status-tag s-perdido">Perdido</span>
+      </div>
+    </div>
+
+    <!-- CRM TABLE -->
+    <div class="crm-table-wrap">
+      <table class="crm-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Coluna</th>
+            <th>Tipo / Validação</th>
+            <th>Fórmula / Exemplo</th>
+            <th>Alimenta o Dashboard</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-id">A</td>
+            <td><div class="col-name">ID</div><div class="col-desc">Identificador único do lead</div></td>
+            <td>Auto-gerado</td>
+            <td><div class="col-formula">="LR-"&TEXT(ROW()-1,"0000")</div></td>
+            <td><div class="col-feed">Chave de match para atualização automática N8N</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">B</td>
+            <td><div class="col-name">Nome do Negócio</div><div class="col-desc">Nome do estabelecimento</div></td>
+            <td>Texto livre</td>
+            <td>Ex: "Restaurante Sabor da Terra"</td>
+            <td><div class="col-feed">Mensagem Telegram, proposta comercial</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">C</td>
+            <td><div class="col-name">Nicho</div><div class="col-desc">Categoria do negócio</div></td>
+            <td>Lista: Restaurante, Clínica, Salão, Comércio, Serviço</td>
+            <td>Validação de dados → Lista</td>
+            <td><div class="col-feed">COUNTIF por nicho → Receita por segmento</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">D</td>
+            <td><div class="col-name">Cidade</div><div class="col-desc">Localização do negócio</div></td>
+            <td>Texto</td>
+            <td>Ex: "São Paulo - SP"</td>
+            <td><div class="col-feed">Segmentação geográfica futura</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">E</td>
+            <td><div class="col-name">Telefone</div><div class="col-desc">WhatsApp principal</div></td>
+            <td>Texto (DDD+número)</td>
+            <td>Ex: "11999998888"</td>
+            <td><div class="col-feed">Envio automático WhatsApp/Telegram via N8N</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">F</td>
+            <td><div class="col-name">Site</div><div class="col-desc">URL do site atual</div></td>
+            <td>URL</td>
+            <td>Ex: "www.restaurante.com.br"</td>
+            <td><div class="col-feed">Auditoria automatizada pelo agente N8N</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">G</td>
+            <td><div class="col-name">Instagram</div><div class="col-desc">Handle do perfil</div></td>
+            <td>@handle</td>
+            <td>Ex: "@restaurantesabor"</td>
+            <td><div class="col-feed">Diagnóstico Instagram Agent</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">H</td>
+            <td><div class="col-name">Nota Google</div><div class="col-desc">Avaliação atual no GBP</div></td>
+            <td>Número (0-5)</td>
+            <td>Ex: 3.8</td>
+            <td><div class="col-feed">Score de oportunidade, priorização de abordagem</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">I</td>
+            <td><div class="col-name">Qtd Reviews</div><div class="col-desc">Total de avaliações no Google</div></td>
+            <td>Número inteiro</td>
+            <td>Ex: 47</td>
+            <td><div class="col-feed">Componente do score de oportunidade</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">J</td>
+            <td><div class="col-name">Score de Oportunidade</div><div class="col-desc">Potencial calculado do lead</div></td>
+            <td>Fórmula auto</td>
+            <td><div class="col-formula">=(5-H2)*20 + IF(I2&lt;50,30,IF(I2&lt;200,15,0)) + IF(F2="",20,0)</div></td>
+            <td><div class="col-feed">Priorização automática, classificação no Telegram</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">K</td>
+            <td><div class="col-name">Prioridade</div><div class="col-desc">Classificação de urgência</div></td>
+            <td>Fórmula auto</td>
+            <td><div class="col-formula">=IF(J2>=70,"Alta",IF(J2>=40,"Média","Baixa"))</div></td>
+            <td><div class="col-feed">Cor condicional, filtro no dashboard, emoji no Telegram</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">L</td>
+            <td><div class="col-name">Status</div><div class="col-desc">Etapa atual no funil</div></td>
+            <td>Lista validada</td>
+            <td>Lead / Contato / Proposta Enviada / Follow-up 1-3 / Fechado / Perdido</td>
+            <td><div class="col-feed">Funil de conversão, trigger das automações N8N</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">M</td>
+            <td><div class="col-name">Data de Entrada</div><div class="col-desc">Quando entrou no CRM</div></td>
+            <td>Data (DD/MM/YYYY)</td>
+            <td><div class="col-formula">=TODAY() — preencher na criação</div></td>
+            <td><div class="col-feed">Leads por período, tempo de ciclo</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">N</td>
+            <td><div class="col-name">Último Contato</div><div class="col-desc">Data do contato mais recente</div></td>
+            <td>Data (atualizada pelo N8N)</td>
+            <td>Atualizado automaticamente após cada ação</td>
+            <td><div class="col-feed">Trigger de lead parado (+3 dias sem contato)</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">O</td>
+            <td><div class="col-name">Data Proposta</div><div class="col-desc">Quando a proposta foi enviada</div></td>
+            <td>Data (DD/MM/YYYY)</td>
+            <td>Preenchido ao mudar status para "Proposta Enviada"</td>
+            <td><div class="col-feed">Trigger dos follow-ups automáticos (3, 6, 9 dias)</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">P</td>
+            <td><div class="col-name">Valor do Contrato</div><div class="col-desc">Mensalidade ou valor único</div></td>
+            <td>Moeda (R$)</td>
+            <td>Ex: 1500</td>
+            <td><div class="col-feed">MRR, ticket médio, pipeline ponderado</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">Q</td>
+            <td><div class="col-name">Tipo de Serviço</div><div class="col-desc">O que foi proposto</div></td>
+            <td>Lista</td>
+            <td>GBP / Site / Tráfego Pago / Pacote Completo</td>
+            <td><div class="col-feed">Receita por serviço, identificar produto mais vendido</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">R</td>
+            <td><div class="col-name">Probabilidade (%)</div><div class="col-desc">Chance de fechar</div></td>
+            <td>% (0-100)</td>
+            <td>Lead=10%, Contato=30%, Proposta=50%, Follow-up=40%</td>
+            <td><div class="col-feed">Σ(Valor×Prob%) = Receita Prevista do mês</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">S</td>
+            <td><div class="col-name">Receita Ponderada</div><div class="col-desc">Valor esperado do lead</div></td>
+            <td>Fórmula auto</td>
+            <td><div class="col-formula">=P2*(R2/100)</div></td>
+            <td><div class="col-feed">SUM(S:S) = Forecast mensal total</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">T</td>
+            <td><div class="col-name">Responsável</div><div class="col-desc">Quem gerencia o lead</div></td>
+            <td>Lista (nomes da equipe)</td>
+            <td>Ex: "Você" / "Sócio"</td>
+            <td><div class="col-feed">Performance por vendedor quando escalar equipe</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">U</td>
+            <td><div class="col-name">Origem do Lead</div><div class="col-desc">Canal de captação</div></td>
+            <td>Lista</td>
+            <td>Google Maps / Indicação / Instagram / Cold Outreach</td>
+            <td><div class="col-feed">CAC por canal, ROI de cada fonte</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">V</td>
+            <td><div class="col-name">Observações</div><div class="col-desc">Notas sobre o lead</div></td>
+            <td>Texto livre</td>
+            <td>Contexto, objeções, próximos passos</td>
+            <td><div class="col-feed">Contexto para automações de IA personalizadas</div></td>
+          </tr>
+          <tr>
+            <td class="col-id">W</td>
+            <td><div class="col-name">Dias no Funil</div><div class="col-desc">Tempo desde a entrada</div></td>
+            <td>Fórmula auto</td>
+            <td><div class="col-formula">=IF(L2="Fechado",Data_Fechamento-M2,TODAY()-M2)</div></td>
+            <td><div class="col-feed">Tempo médio de fechamento, identificar leads estagnados</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== SEÇÃO 4: AUTOMAÇÕES ===== -->
+  <div class="section" id="automacoes">
+    <div class="section-header">
+      <div class="section-number">4</div>
+      <div>
+        <div class="section-title">Automações N8N + IA para Escala</div>
+        <div class="section-subtitle">5 workflows essenciais com trigger, ação e resultado esperado</div>
+      </div>
+    </div>
+
+    <div class="grid grid-2" style="margin-bottom:16px;">
+
+      <!-- AUTO 1 -->
+      <div class="automation-card auto-1">
+        <div class="automation-title">Follow-up Sequencial (3, 6 e 9 dias)</div>
+        <div class="automation-badge">N8N + Google Sheets + Telegram</div>
+        <div class="flow-row">
+          <span class="flow-label fl-trigger">Trigger</span>
+          <div class="flow-text">Cron diário às 9h (seg-sex) → lê CRM → filtra leads com status "Proposta Enviada"</div>
+        </div>
+        <div class="flow-row">
+          <span class="flow-label fl-action">Ação 3d</span>
+          <div class="flow-text">Notifica equipe no Telegram + atualiza status para "Follow-up 1"</div>
+        </div>
+        <div class="flow-row">
+          <span class="flow-label fl-action">Ação 6d</span>
+          <div class="flow-text">Notifica com urgência MÉDIA + atualiza para "Follow-up 2" + sugere novo ângulo de abordagem via IA</div>
+        </div>
+        <div class="flow-row">
+          <span class="flow-label fl-action">Ação 9d</span>
+          <div class="flow-text">Alerta URGENTE + atualiza para "Follow-up 3" + pergunta ao responsável se deve marcar como "Perdido"</div>
+        </div>
+        <div class="flow-row">
+          <span class="flow-label fl-result">Resultado</span>
+          <div class="flow-text">Nenhum lead fica esquecido. Taxa de fechamento por follow-up sobe 15-25%</div>
+        </div>
+      </div>
+
+      <!-- AUTO 2 -->
+      <div class="automation-card auto-2">
+        <div class="automation-title">Alerta de Lead Parado</div>
+        <div class="automation-badge">N8N + Google Sheets + Telegram</div>
+        <div class="flow-row">
+          <span class="flow-label fl-trigger">Trigger</span>
+          <div class="flow-text">Cron diário às 9h → filtra leads com status "Lead" ou "Contato" + Último Contato há mais de 2 dias</div>
+        </div>
+        <div class="flow-row">
+          <span class="flow-label fl-action">Ação</span>
+          <div class="flow-text">Envia alerta no Telegram com nome do lead, score, dias parado e sugestão de próximo passo gerada por IA (Claude via API)</div>
+        </div>
+        <div class="flow-row">
+          <span class="flow-label fl-result">Resultado</span>
+          <div class="flow-text">Leads quentes não esfriam. Tempo médio de resposta cai para menos de 24h</div>
+        </div>
+        <div class="divider"></div>
+        <div style="font-size:11px;color:var(--muted);">
+          <strong style="color:var(--yellow);">Prompt IA sugerido:</strong> "Lead: [Nome], Nicho: [Nicho], Último contato: [X] dias. Gere uma sugestão de abordagem em 2 linhas para retomar contato de forma não invasiva."
+        </div>
+      </div>
+
+      <!-- AUTO 3 -->
+      <div class="automation-card auto-3">
+        <div class="automation-title">Lead Scoring Automático</div>
+        <div class="automation-badge">N8N + Google Sheets + Claude API</div>
+        <div class="flow-row">
+          <span class="flow-label fl-trigger">Trigger</span>
+          <div class="flow-text">Nova linha adicionada ao CRM (via webhook Google Sheets ou polling a cada 30min)</div>
+        </div>
+        <div class="flow-row">
+          <span class="flow-label fl-action">Ação</span>
+          <div class="flow-text">Calcula score baseado em: nota Google, qtd reviews, presença de site, nicho, cidade. Classifica como Alta/Média/Baixa. Atualiza colunas Score e Prioridade automaticamente</div>
+        </div>
+        <div class="flow-row">
+          <span class="flow-label fl-result">Resultado</span>
+          <div class="flow-text">Equipe sabe imediatamente quem ligar primeiro. Foco nos leads com maior chance de fechar</div>
+        </div>
+        <div class="divider"></div>
+        <div style="font-size:11px;color:var(--muted);">
+          <strong style="color:var(--green);">Fórmula Score:</strong><br>
+          nota baixa (&lt;4) = +20pts | reviews baixo (&lt;50) = +30pts | sem site = +20pts | nicho premium = +15pts | cidade grande = +10pts
+        </div>
+      </div>
+
+      <!-- AUTO 4 -->
+      <div class="automation-card auto-4">
+        <div class="automation-title">Relatório Semanal Automático</div>
+        <div class="automation-badge">N8N + Google Sheets + Telegram</div>
+        <div class="flow-row">
+          <span class="flow-label fl-trigger">Trigger</span>
+          <div class="flow-text">Toda sexta-feira às 17h</div>
+        </div>
+        <div class="flow-row">
+          <span class="flow-label fl-action">Ação</span>
+          <div class="flow-text">Lê CRM → calcula: leads da semana, propostas enviadas, fechamentos, MRR atual, pipeline total → formata relatório → envia no Telegram</div>
+        </div>
+        <div class="flow-row">
+          <span class="flow-label fl-result">Resultado</span>
+          <div class="flow-text">Visão executiva semanal sem esforço manual. Decisões baseadas em dados toda semana</div>
+        </div>
+        <div class="divider"></div>
+        <div style="font-size:11px;color:var(--muted);">
+          Inclui comparativo com semana anterior e alerta se alguma métrica caiu mais de 20%
+        </div>
+      </div>
+
+      <!-- AUTO 5 -->
+      <div class="automation-card auto-5" style="grid-column: span 2;">
+        <div class="automation-title">Diagnóstico Automatizado + Proposta Personalizada (IA)</div>
+        <div class="automation-badge">N8N + Claude API + Google Sheets + Telegram</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+          <div>
+            <div class="flow-row">
+              <span class="flow-label fl-trigger">Trigger</span>
+              <div class="flow-text">Lead entra com score Alto → N8N dispara diagnóstico automático</div>
+            </div>
+            <div class="flow-row">
+              <span class="flow-label fl-action">Passo 1</span>
+              <div class="flow-text">Agente audita GBP (Google Maps), site e Instagram do lead</div>
+            </div>
+          </div>
+          <div>
+            <div class="flow-row">
+              <span class="flow-label fl-action">Passo 2</span>
+              <div class="flow-text">Claude API analisa resultados e gera diagnóstico personalizado com problemas e oportunidades</div>
+            </div>
+            <div class="flow-row">
+              <span class="flow-label fl-action">Passo 3</span>
+              <div class="flow-text">Gera proposta HTML personalizada com nome do negócio, score e plano de ação</div>
+            </div>
+          </div>
+          <div>
+            <div class="flow-row">
+              <span class="flow-label fl-result">Resultado</span>
+              <div class="flow-text">Proposta pronta em menos de 2 minutos após entrada do lead. Diferencial competitivo massivo vs. agências tradicionais</div>
+            </div>
+            <div class="flow-row" style="margin-top:0;">
+              <span class="flow-label fl-result">Impacto</span>
+              <div class="flow-text">Taxa de conversão de propostas sobe 40%+ por ser específica ao problema do cliente</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="warn-box">
+      <strong>Sequência de implementação recomendada:</strong> Implemente nesta ordem — (1) Follow-up sequencial já está pronto ✅, (2) Alerta de lead parado, (3) Relatório semanal, (4) Lead scoring, (5) Diagnóstico + proposta automatizada. Cada um agrega valor imediato sem depender do próximo.
+    </div>
+  </div>
+
+  <!-- ===== SEÇÃO 5: INSIGHTS DE ESCALA ===== -->
+  <div class="section" id="escala">
+    <div class="section-header">
+      <div class="section-number">5</div>
+      <div>
+        <div class="section-title">Insights de Escala — O Mais Importante</div>
+        <div class="section-subtitle">Diagnóstico estratégico e plano de ação para crescimento acelerado</div>
+      </div>
+    </div>
+
+    <div class="grid grid-2" style="margin-bottom:16px;">
+
+      <div class="insight-card">
+        <div class="insight-title">
+          <div class="insight-icon ii-red">🚨</div>
+          Onde Está o Gargalo
+        </div>
+        <ul class="insight-list">
+          <li>
+            <div class="bullet b-red">1</div>
+            <div><strong>Gargalo #1 — Volume de leads:</strong> Agências que escalam rápido têm 50-100 leads/mês no funil. Com o scraper automatizado, você pode chegar a isso em dias. O problema não é a ferramenta, é a consistência de alimentar o CRM todo dia.</div>
+          </li>
+          <li>
+            <div class="bullet b-red">2</div>
+            <div><strong>Gargalo #2 — Tempo de resposta:</strong> 80% das vendas B2SMB são perdidas por demora no primeiro contato. Lead captado hoje deve ser contatado hoje. A automação de scoring e alerta resolve isso.</div>
+          </li>
+          <li>
+            <div class="bullet b-red">3</div>
+            <div><strong>Gargalo #3 — Proposta genérica:</strong> Enviar uma proposta sem diagnóstico prévio converte mal. O diagnóstico automatizado transforma uma proposta genérica em consultoria personalizada.</div>
+          </li>
+          <li>
+            <div class="bullet b-yellow">4</div>
+            <div><strong>Gargalo #4 — Sem receita recorrente definida:</strong> Se cada cliente paga um valor diferente sem modelo fixo de serviço, o MRR é imprevisível e impossível de escalar.</div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-title">
+          <div class="insight-icon ii-green">📈</div>
+          Como Aumentar Faturamento Agora
+        </div>
+        <ul class="insight-list">
+          <li>
+            <div class="bullet b-green">1</div>
+            <div><strong>Pacotes fixos ao invés de projetos:</strong> Crie 3 planos — Essencial (R$800/mês), Profissional (R$1.800/mês), Elite (R$3.500/mês). Receita previsível e mais fácil de vender.</div>
+          </li>
+          <li>
+            <div class="bullet b-green">2</div>
+            <div><strong>Upsell no 3º mês:</strong> Clientes com GBP otimizado no mês 3 estão prontos para adicionar tráfego pago. Ticket sobe de R$800 para R$2.500 sem novo custo de aquisição.</div>
+          </li>
+          <li>
+            <div class="bullet b-green">3</div>
+            <div><strong>Programa de indicação:</strong> 1 mês grátis para o cliente que indicar e fechar. Com NPS alto, cada cliente feliz pode trazer 1-2 novos leads qualificados por trimestre.</div>
+          </li>
+          <li>
+            <div class="bullet b-green">4</div>
+            <div><strong>Resultado como argumento:</strong> Documente os resultados dos primeiros clientes (% de aumento de visualizações no Google, novos contatos gerados). Use como case em cada proposta nova.</div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-title">
+          <div class="insight-icon ii-accent">🚀</div>
+          Serviços com Maior Potencial de Escala
+        </div>
+        <ul class="insight-list">
+          <li>
+            <div class="bullet b-accent">1</div>
+            <div><strong>GBP (Google Business Profile) — Melhor ROI imediato:</strong> Resultado visível em 30-60 dias, custo de entrega baixo, alta demanda reprimida. Melhor porta de entrada e produto que retém clientes.</div>
+          </li>
+          <li>
+            <div class="bullet b-accent">2</div>
+            <div><strong>Tráfego Pago (Google Ads) — Maior ticket:</strong> Ticket mais alto (R$1.500-R$3.000+), resultado mensurável, cliente percebe valor claramente. Exige mais conhecimento mas é o serviço mais escalável.</div>
+          </li>
+          <li>
+            <div class="bullet b-yellow">3</div>
+            <div><strong>Sites — Receita pontual, não recorre:</strong> Bom para caixa inicial, mas não gera MRR. Use como porta de entrada e converta para mensalidade de manutenção + SEO.</div>
+          </li>
+          <li>
+            <div class="bullet b-accent">4</div>
+            <div><strong>Pacote Completo — Maior LTV:</strong> GBP + Site + Tráfego em pacote fechado retém clientes 3-4x mais. Cliente que compra tudo não cancela facilmente.</div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-title">
+          <div class="insight-icon ii-yellow">🏗️</div>
+          Receita Previsível — Modelo de Escala
+        </div>
+        <ul class="insight-list">
+          <li>
+            <div class="bullet b-yellow">1</div>
+            <div><strong>Fase 1 — 0 a 10 clientes (agora):</strong> Foco em fechar, entregar resultado, documentar processos. Meta: R$10k MRR. Faça tudo você mesmo para entender cada etapa.</div>
+          </li>
+          <li>
+            <div class="bullet b-yellow">2</div>
+            <div><strong>Fase 2 — 10 a 30 clientes:</strong> Automações cobrem 80% do operacional. Contratar primeiro colaborador para entrega. Meta: R$30k MRR. Foco em vendas e estratégia.</div>
+          </li>
+          <li>
+            <div class="bullet b-yellow">3</div>
+            <div><strong>Fase 3 — 30+ clientes:</strong> Playbook documentado, time de vendas, processos replicáveis. Meta: R$80k+ MRR. Modelo de agência real com crescimento previsível.</div>
+          </li>
+          <li>
+            <div class="bullet b-green">4</div>
+            <div><strong>Alavanca principal:</strong> O diferencial da LocalRise é o diagnóstico com IA + velocidade de proposta. Nenhuma agência local faz isso. Esse é o argumento de venda — não o preço.</div>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- META TRACKER -->
+    <div class="card card-accent">
+      <div class="card-label" style="margin-bottom:16px;">Metas de Crescimento — Referência Mensal</div>
+      <div style="overflow-x:auto;">
+        <table class="metric-table">
+          <thead>
+            <tr>
+              <th>Mês</th>
+              <th>Leads/Mês</th>
+              <th>Clientes Novos</th>
+              <th>Clientes Ativos</th>
+              <th>Ticket Médio</th>
+              <th>MRR Meta</th>
+              <th>Foco Principal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Mês 1</strong></td>
+              <td>30</td>
+              <td>2–3</td>
+              <td>2–3</td>
+              <td>R$ 900</td>
+              <td style="color:var(--yellow);">R$ 2.700</td>
+              <td>Validar processo de vendas + primeiros resultados</td>
+            </tr>
+            <tr>
+              <td><strong>Mês 2</strong></td>
+              <td>50</td>
+              <td>4–5</td>
+              <td>6–8</td>
+              <td>R$ 1.200</td>
+              <td style="color:var(--yellow);">R$ 8.000</td>
+              <td>Refinar proposta + ativar automações de follow-up</td>
+            </tr>
+            <tr>
+              <td><strong>Mês 3</strong></td>
+              <td>80</td>
+              <td>6–8</td>
+              <td>12–16</td>
+              <td>R$ 1.500</td>
+              <td style="color:var(--accent);">R$ 20.000</td>
+              <td>Upsell clientes antigos + casos de sucesso documentados</td>
+            </tr>
+            <tr>
+              <td><strong>Mês 6</strong></td>
+              <td>120+</td>
+              <td>10–15</td>
+              <td>35–50</td>
+              <td>R$ 1.800</td>
+              <td style="color:var(--green);">R$ 70.000+</td>
+              <td>Escalar com time + playbook replicável</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="success-box" style="margin-top:16px;">
+      <strong>Princípio fundamental:</strong> Com as automações que você já tem (scraper + diagnóstico + follow-up + proposta), a LocalRise opera como uma agência de 5 pessoas sendo gerenciada por 1. O gargalo real não é tecnologia — é consistência de execução diária: prospectar, propor e fechar com disciplina todos os dias.
+    </div>
+
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <strong>LocalRise Advisory</strong> — Growth Intelligence Dashboard v1.0 &nbsp;|&nbsp;
+  Gerado automaticamente &nbsp;|&nbsp;
+  <span id="footerDate"></span>
+</div>
+
+<script>
+  // Date
+  const now = new Date();
+  const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  document.getElementById('currentDate').textContent = now.toLocaleDateString('pt-BR', opts);
+  document.getElementById('footerDate').textContent = now.toLocaleDateString('pt-BR');
+
+  // Nav active on scroll
+  const sections = document.querySelectorAll('.section');
+  const navItems = document.querySelectorAll('.nav-item');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 120) current = s.id;
+    });
+    navItems.forEach(n => {
+      n.classList.remove('active');
+      if (n.getAttribute('href') === '#' + current) n.classList.add('active');
+    });
+  });
+
+  // Smooth scroll
+  navItems.forEach(n => {
+    n.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(n.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+
+</body>
+</html>

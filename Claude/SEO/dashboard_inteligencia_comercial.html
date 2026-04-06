@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LocalRise × Tchê Ofertas — Inteligência Comercial</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --navy: #1A3A6B;
+    --navy-light: #E8F1FB;
+    --navy-mid: #2A5298;
+    --gold: #C8A041;
+    --gold-light: #FBF5E6;
+    --gold-mid: #E8D59A;
+    --green: #1D9E75;
+    --green-light: #EAF3DE;
+    --red: #C62828;
+    --red-light: #FFEBEE;
+    --orange: #E65100;
+    --orange-light: #FFF3E0;
+    --amber: #F9A825;
+    --amber-light: #FFFDE7;
+    --purple: #6A1B9A;
+    --purple-light: #F3E5F5;
+    --blue: #1565C0;
+    --blue-light: #E3F2FD;
+    --gray: #546E7A;
+    --gray-light: #ECEFF1;
+    --border: rgba(0,0,0,0.09);
+    --text: #1a1a18;
+    --text-sec: #6b6a65;
+    --bg: #F4F6F9;
+    --surface: #ffffff;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; }
+
+  /* TOP BAR */
+  .topbar { background: var(--navy); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 52px; border-bottom: 2px solid var(--gold); }
+  .topbar-brand { display: flex; align-items: center; gap: 10px; }
+  .topbar-logo { width: 32px; height: 32px; border-radius: 8px; background: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: var(--navy); }
+  .topbar-name { font-size: 14px; font-weight: 700; color: white; }
+  .topbar-agency { font-size: 11px; color: rgba(255,255,255,0.6); }
+  .topbar-date { font-size: 11px; color: rgba(255,255,255,0.75); }
+  .topbar-right { display: flex; align-items: center; gap: 16px; }
+  .topbar-badge { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 3px 12px; font-size: 11px; color: rgba(255,255,255,0.85); }
+
+  /* DATA BANNER */
+  .data-banner { background: #EFF6FF; border-bottom: 1px solid #93C5FD; padding: 8px 2rem; display: flex; align-items: center; gap: 8px; font-size: 11px; color: #1e3a8a; }
+
+  /* LAYOUT */
+  .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+
+  /* HEADER CARD */
+  .header-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 1.5rem 2rem; display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .header-left h1 { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+  .header-left p { font-size: 13px; color: var(--text-sec); }
+  .header-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 1px solid; font-weight: 600; }
+  .tag-navy { background: var(--navy-light); color: var(--navy); border-color: var(--navy-mid); }
+  .tag-red { background: var(--red-light); color: var(--red); border-color: #EF9A9A; }
+  .tag-green { background: var(--green-light); color: #1B5E20; border-color: #A5D6A7; }
+  .tag-orange { background: var(--orange-light); color: var(--orange); border-color: #FFCC80; }
+  .tag-purple { background: var(--purple-light); color: var(--purple); border-color: #CE93D8; }
+
+  .stats-box { display: flex; gap: 24px; }
+  .stat-item { text-align: center; }
+  .stat-num { font-size: 36px; font-weight: 800; color: var(--navy); line-height: 1; }
+  .stat-num.maxima { color: var(--red); }
+  .stat-num.alta { color: var(--orange); }
+  .stat-label { font-size: 10px; color: var(--text-sec); margin-top: 2px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat-divider { width: 1px; background: var(--border); }
+
+  /* SECTION LABEL */
+  .sec-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-sec); margin-bottom: 10px; margin-top: 1.5rem; }
+
+  /* KPI GRID */
+  .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+  .kpi { background: var(--surface); border-radius: var(--radius-sm); border: 1px solid var(--border); padding: 16px 18px; border-top: 3px solid transparent; }
+  .kpi-navy { border-top-color: var(--navy); }
+  .kpi-red { border-top-color: var(--red); }
+  .kpi-orange { border-top-color: var(--orange); }
+  .kpi-purple { border-top-color: var(--purple); }
+  .kpi-green { border-top-color: var(--green); }
+  .kpi-label { font-size: 11px; color: var(--text-sec); margin-bottom: 4px; font-weight: 500; }
+  .kpi-val { font-size: 28px; font-weight: 800; color: var(--text); line-height: 1.1; }
+  .kpi-delta { font-size: 11px; margin-top: 4px; font-weight: 600; }
+  .up { color: var(--green); } .down { color: var(--red); } .warn { color: #BA7517; }
+  .kpi-sub { font-size: 10px; color: var(--text-sec); margin-top: 2px; }
+
+  /* ROWS */
+  .row2 { display: grid; grid-template-columns: 1.5fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .row2b { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .row4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .full { margin-bottom: 12px; }
+
+  /* CARDS */
+  .card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 1.25rem 1.5rem; }
+  .card-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
+  .card-title-badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+
+  /* CHART WRAP */
+  .chart-wrap { position: relative; }
+
+  /* PROGRESS BARS */
+  .progress-row { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; font-size: 12px; }
+  .progress-lbl { width: 130px; flex-shrink: 0; color: var(--text-sec); font-size: 11px; }
+  .progress { flex: 1; height: 7px; border-radius: 3px; background: var(--gray-light); overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
+  .progress-val { width: 36px; text-align: right; font-weight: 700; font-size: 12px; color: var(--text); }
+
+  /* OPORTUNIDADES */
+  .opp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .opp { border-radius: var(--radius-sm); padding: 16px; border-left: 4px solid; }
+  .opp-red { background: var(--red-light); border-color: var(--red); }
+  .opp-orange { background: var(--orange-light); border-color: var(--orange); }
+  .opp-purple { background: var(--purple-light); border-color: var(--purple); }
+  .opp-blue { background: var(--blue-light); border-color: var(--blue); }
+  .opp-priority { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-sec); margin-bottom: 4px; }
+  .opp-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .opp-desc { font-size: 12px; color: var(--text-sec); line-height: 1.55; margin-bottom: 8px; }
+  .opp-meta { font-size: 11px; font-weight: 700; color: var(--text); }
+
+  /* TOP LEADS TABLE */
+  .leads-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .leads-table th { font-size: 10px; font-weight: 700; color: var(--text-sec); text-align: left; padding: 6px 10px; border-bottom: 2px solid var(--border); background: var(--gray-light); text-transform: uppercase; letter-spacing: 0.04em; }
+  .leads-table th.tc { text-align: center; }
+  .leads-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
+  .leads-table td.tc { text-align: center; }
+  .leads-table tr:last-child td { border-bottom: none; }
+  .leads-table tr:hover { background: #FAFBFD; }
+  .rank-badge { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 6px; font-size: 11px; font-weight: 800; }
+  .rank-max { background: var(--red-light); color: var(--red); }
+  .rank-alta { background: var(--orange-light); color: var(--orange); }
+  .rank-media { background: var(--amber-light); color: #7a4a0a; }
+  .score-pill { display: inline-flex; align-items: center; justify-content: center; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+  .score-max { background: var(--red-light); color: var(--red); }
+  .score-alta { background: var(--orange-light); color: var(--orange); }
+  .score-media { background: var(--amber-light); color: #7a4a0a; }
+  .prio-badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+  .prio-max { background: var(--red-light); color: var(--red); border: 1px solid #EF9A9A; }
+  .prio-alta { background: var(--orange-light); color: var(--orange); border: 1px solid #FFCC80; }
+  .prio-media { background: var(--amber-light); color: #7a4a0a; border: 1px solid #FFE082; }
+  .prio-baixa { background: var(--green-light); color: #1B5E20; border: 1px solid #A5D6A7; }
+
+  /* CANAL badges */
+  .canal-wpp { background: #E8F5E9; color: #1B5E20; border: 1px solid #A5D6A7; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+  .canal-insta { background: var(--purple-light); color: var(--purple); border: 1px solid #CE93D8; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+  .canal-lig { background: var(--blue-light); color: var(--blue); border: 1px solid #90CAF9; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+
+  /* CHECK icons */
+  .check { font-size: 12px; }
+  .check-yes { color: var(--red); }
+  .check-no { color: var(--green); }
+
+  /* CITY TABLE */
+  .city-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .city-table th { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-sec); padding: 5px 8px; border-bottom: 2px solid var(--border); text-align: left; }
+  .city-table th.tr { text-align: right; }
+  .city-table td { padding: 7px 8px; border-bottom: 1px solid var(--border); }
+  .city-table tr:last-child td { border-bottom: none; }
+  .city-bar-wrap { display: flex; align-items: center; gap: 8px; }
+  .city-bar { flex: 1; height: 6px; background: var(--gray-light); border-radius: 3px; overflow: hidden; }
+  .city-bar-fill { height: 100%; border-radius: 3px; background: var(--navy); }
+
+  /* ALERT ITEMS */
+  .alert-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+  .alert-item:last-child { border-bottom: none; }
+  .adot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .dot-r { background: var(--red); } .dot-a { background: #EF9F27; } .dot-g { background: var(--green); }
+  .atext { line-height: 1.5; }
+  .atext small { color: var(--text-sec); font-size: 11px; display: block; margin-top: 1px; }
+
+  /* SCORING MODEL */
+  .score-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+  .score-item:last-child { border-bottom: none; }
+  .score-pts { font-size: 13px; font-weight: 800; min-width: 50px; }
+  .score-pts-red { color: var(--red); }
+  .score-pts-orange { color: var(--orange); }
+  .score-pts-amber { color: #BA7517; }
+  .score-pts-navy { color: var(--navy); }
+
+  /* FOOTER */
+  .footer { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; }
+  .footer-brand { font-size: 14px; font-weight: 800; color: var(--navy); }
+  .footer-sub { font-size: 11px; color: var(--text-sec); margin-top: 2px; }
+  .footer-note { font-size: 11px; color: var(--text-sec); text-align: right; line-height: 1.6; }
+
+  /* SUMMARY CHIPS */
+  .chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .chip { display: flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; font-size: 12px; }
+  .chip-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* GBP DETAIL */
+  .gbp-stat { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; align-items: center; }
+  .gbp-stat-lbl { color: var(--text-sec); }
+  .gbp-stat-val { font-weight: 700; }
+
+  /* NOTA */
+  .nota-grande { font-size: 38px; font-weight: 800; line-height: 1; }
+  .nota-sub { font-size: 11px; color: var(--text-sec); margin-top: 3px; }
+
+  /* Gancho text */
+  .gancho-text { font-size: 12px; color: var(--text-sec); font-style: italic; line-height: 1.5; margin-top: 4px; padding: 6px 10px; background: var(--gray-light); border-radius: 6px; border-left: 3px solid var(--navy); }
+
+  @media (max-width: 768px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .row2, .row3, .row2b, .row4 { grid-template-columns: 1fr; }
+    .opp-grid { grid-template-columns: 1fr; }
+    .stats-box { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo">LR</div>
+    <div>
+      <div class="topbar-name">LocalRise × Tchê Ofertas</div>
+      <div class="topbar-agency">Sistema de Inteligência Comercial — Prospecção de Restaurantes</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-badge">RS · Grande POA · Serra · Litoral</span>
+    <div class="topbar-date">Março de 2026 — Diagnóstico inicial</div>
+  </div>
+</div>
+
+<!-- DATA BANNER -->
+<div class="data-banner">
+  <span style="font-weight:700;">✅ Dados verificados em 29/03/2026</span>
+  <span style="color:#94A3B8;">·</span>
+  <span>Fontes: Tchê Ofertas · Google Maps · Instagram · Análise de presença digital</span>
+  <span style="color:#94A3B8;">·</span>
+  <span style="font-weight:600;">61 restaurantes únicos · 6 páginas do marketplace · dados reais coletados em março/2026</span>
+</div>
+
+<div class="container">
+
+  <!-- HEADER CARD -->
+  <div class="header-card">
+    <div class="header-left">
+      <h1>Inteligência Comercial — Restaurantes Tchê Ofertas</h1>
+      <p>Pipeline de prospecção B2B para LocalRise Advisory · Grande Porto Alegre · Serra Gaúcha · Litoral RS</p>
+      <div class="header-tags">
+        <span class="tag tag-navy">61 restaurantes mapeados</span>
+        <span class="tag tag-navy">10 cidades do RS</span>
+        <span class="tag tag-red">5 PRIORIDADE MÁXIMA</span>
+        <span class="tag tag-orange">18 ALTA PRIORIDADE</span>
+        <span class="tag tag-purple">62% sem site profissional</span>
+        <span class="tag tag-green">Dados reais do marketplace</span>
+      </div>
+    </div>
+    <div class="stats-box">
+      <div class="stat-item">
+        <div class="stat-num">61</div>
+        <div class="stat-label">Total Analisados</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num maxima">5</div>
+        <div class="stat-label">Prioridade Máxima</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num alta">18</div>
+        <div class="stat-label">Alta Prioridade</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="sec-label">Indicadores do pipeline — visão geral</div>
+  <div class="kpi-grid">
+    <div class="kpi kpi-navy">
+      <div class="kpi-label">Total mapeados</div>
+      <div class="kpi-val">61</div>
+      <div class="kpi-delta up">↑ dados 100% reais</div>
+      <div class="kpi-sub">Tchê Ofertas — 29/03/2026</div>
+    </div>
+    <div class="kpi kpi-red">
+      <div class="kpi-label">Prioridade máxima</div>
+      <div class="kpi-val" style="color:var(--red)">5</div>
+      <div class="kpi-delta down">→ abordar esta semana</div>
+      <div class="kpi-sub">Score 80–100</div>
+    </div>
+    <div class="kpi kpi-orange">
+      <div class="kpi-label">Alta prioridade</div>
+      <div class="kpi-val" style="color:var(--orange)">18</div>
+      <div class="kpi-delta warn">→ prospecção ativa</div>
+      <div class="kpi-sub">Score 60–79</div>
+    </div>
+    <div class="kpi kpi-purple">
+      <div class="kpi-label">Sem site profissional</div>
+      <div class="kpi-val" style="color:var(--purple)">38</div>
+      <div class="kpi-delta down">↓ 62% do total</div>
+      <div class="kpi-sub">Maior oportunidade</div>
+    </div>
+    <div class="kpi kpi-green">
+      <div class="kpi-label">GBP fraco ou ausente</div>
+      <div class="kpi-val" style="color:#2E7D32">41</div>
+      <div class="kpi-delta warn">→ 67% do total</div>
+      <div class="kpi-sub">Perfil Google Maps</div>
+    </div>
+  </div>
+
+  <!-- INSIGHT CRÍTICO -->
+  <div style="background:var(--navy-light);border:1px solid #93C5FD;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;">
+    <div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:6px;">💡 Oportunidade principal</div>
+      <div style="font-size:22px;font-weight:800;color:var(--navy)">R$ 45.600</div>
+      <div style="font-size:11px;color:var(--text-sec);margin-top:2px;">MRR potencial (23 leads prioritários × R$ 1.982 médio)</div>
+    </div>
+    <div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:6px;">🎯 Conversão estimada (15%)</div>
+      <div style="font-size:22px;font-weight:800;color:var(--navy)">R$ 6.840</div>
+      <div style="font-size:11px;color:var(--text-sec);margin-top:2px;">MRR realista em 90 dias com 3–4 contratos fechados</div>
+    </div>
+    <div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:6px;">📍 Cidades com mais oportunidade</div>
+      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-top:4px;">Porto Alegre · Gramado · Tramandaí</div>
+      <div style="font-size:11px;color:var(--text-sec);margin-top:2px;">22 · 16 · 6 restaurantes respectivamente</div>
+    </div>
+  </div>
+
+  <!-- GRÁFICOS PRINCIPAIS -->
+  <div class="row3">
+
+    <!-- Distribuição por prioridade -->
+    <div class="card">
+      <div class="card-title">Distribuição por Prioridade</div>
+      <div class="chart-wrap" style="height:200px">
+        <canvas id="chartPrioridade"></canvas>
+      </div>
+      <div style="margin-top:12px">
+        <div class="progress-row">
+          <div class="progress-lbl">🔴 Máxima (80–100)</div>
+          <div class="progress"><div class="progress-fill" style="width:8.2%;background:var(--red)"></div></div>
+          <div class="progress-val" style="color:var(--red)">5</div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-lbl">🟠 Alta (60–79)</div>
+          <div class="progress"><div class="progress-fill" style="width:29.5%;background:var(--orange)"></div></div>
+          <div class="progress-val" style="color:var(--orange)">18</div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-lbl">🟡 Média (40–59)</div>
+          <div class="progress"><div class="progress-fill" style="width:26.2%;background:var(--amber)"></div></div>
+          <div class="progress-val" style="color:#7a4a0a">16</div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-lbl">🟢 Baixa (0–39)</div>
+          <div class="progress"><div class="progress-fill" style="width:36.1%;background:var(--green)"></div></div>
+          <div class="progress-val" style="color:var(--green)">22</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Necessidades identificadas -->
+    <div class="card">
+      <div class="card-title">Necessidades Identificadas</div>
+      <div class="chart-wrap" style="height:200px">
+        <canvas id="chartNecessidades"></canvas>
+      </div>
+      <div style="margin-top:12px;font-size:11px;color:var(--text-sec);line-height:1.6;">
+        Um mesmo restaurante pode ter múltiplas necessidades. O tamanho de cada barra representa o % do total de 61 restaurantes.
+      </div>
+    </div>
+
+    <!-- Por Região -->
+    <div class="card">
+      <div class="card-title">Distribuição por Região</div>
+      <div class="chart-wrap" style="height:200px">
+        <canvas id="chartRegiao"></canvas>
+      </div>
+      <div style="margin-top:12px">
+        <div class="gbp-stat">
+          <span class="gbp-stat-lbl">Grande POA</span>
+          <span class="gbp-stat-val" style="color:var(--navy)">33 restaurantes</span>
+        </div>
+        <div class="gbp-stat">
+          <span class="gbp-stat-lbl">Serra Gaúcha (Gramado/Canela)</span>
+          <span class="gbp-stat-val" style="color:var(--navy)">17 restaurantes</span>
+        </div>
+        <div class="gbp-stat">
+          <span class="gbp-stat-lbl">Litoral RS</span>
+          <span class="gbp-stat-val" style="color:var(--navy)">11 restaurantes</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP LEADS + OPORTUNIDADES -->
+  <div class="row2">
+
+    <!-- TOP LEADS PRIORITÁRIOS -->
+    <div class="card">
+      <div class="card-title">
+        🏆 Top Leads Prioritários
+        <span class="card-title-badge" style="background:var(--red-light);color:var(--red)">Ação imediata</span>
+      </div>
+      <table class="leads-table">
+        <thead>
+          <tr>
+            <th class="tc">#</th>
+            <th>Restaurante</th>
+            <th>Cidade</th>
+            <th class="tc">Score</th>
+            <th class="tc">Prioridade</th>
+            <th>Canal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="tc"><span class="rank-badge rank-max">1</span></td>
+            <td><strong>Padaria Dom Felipe</strong></td>
+            <td>Porto Alegre</td>
+            <td class="tc"><span class="score-pill score-max">90</span></td>
+            <td class="tc"><span class="prio-badge prio-max">MÁXIMA</span></td>
+            <td><span class="canal-wpp">WhatsApp</span></td>
+          </tr>
+          <tr>
+            <td class="tc"><span class="rank-badge rank-max">2</span></td>
+            <td><strong>Restaurante Novo Sabor</strong></td>
+            <td>Porto Alegre</td>
+            <td class="tc"><span class="score-pill score-max">90</span></td>
+            <td class="tc"><span class="prio-badge prio-max">MÁXIMA</span></td>
+            <td><span class="canal-wpp">WhatsApp</span></td>
+          </tr>
+          <tr>
+            <td class="tc"><span class="rank-badge rank-max">3</span></td>
+            <td><strong>Churrascaria Passoquinha</strong></td>
+            <td>Canoas</td>
+            <td class="tc"><span class="score-pill score-max">90</span></td>
+            <td class="tc"><span class="prio-badge prio-max">MÁXIMA</span></td>
+            <td><span class="canal-wpp">WhatsApp</span></td>
+          </tr>
+          <tr>
+            <td class="tc"><span class="rank-badge rank-max">4</span></td>
+            <td><strong>Guardiões da Pizza Alvorada</strong></td>
+            <td>Alvorada</td>
+            <td class="tc"><span class="score-pill score-max">90</span></td>
+            <td class="tc"><span class="prio-badge prio-max">MÁXIMA</span></td>
+            <td><span class="canal-wpp">WhatsApp</span></td>
+          </tr>
+          <tr>
+            <td class="tc"><span class="rank-badge rank-max">5</span></td>
+            <td><strong>Rest. Panorama Gastronômico</strong></td>
+            <td>Porto Alegre</td>
+            <td class="tc"><span class="score-pill score-max">85</span></td>
+            <td class="tc"><span class="prio-badge prio-max">MÁXIMA</span></td>
+            <td><span class="canal-wpp">WhatsApp</span></td>
+          </tr>
+          <tr>
+            <td class="tc"><span class="rank-badge rank-alta">6</span></td>
+            <td>Marquês Pizzaria</td>
+            <td>Porto Alegre</td>
+            <td class="tc"><span class="score-pill score-alta">70</span></td>
+            <td class="tc"><span class="prio-badge prio-alta">ALTA</span></td>
+            <td><span class="canal-wpp">WhatsApp</span></td>
+          </tr>
+          <tr>
+            <td class="tc"><span class="rank-badge rank-alta">7</span></td>
+            <td>La Più Buona</td>
+            <td>Porto Alegre</td>
+            <td class="tc"><span class="score-pill score-alta">70</span></td>
+            <td class="tc"><span class="prio-badge prio-alta">ALTA</span></td>
+            <td><span class="canal-wpp">WhatsApp</span></td>
+          </tr>
+          <tr>
+            <td class="tc"><span class="rank-badge rank-alta">8</span></td>
+            <td>Restaurante Modelo Grill</td>
+            <td>São Leopoldo</td>
+            <td class="tc"><span class="score-pill score-alta">70</span></td>
+            <td class="tc"><span class="prio-badge prio-alta">ALTA</span></td>
+            <td><span class="canal-wpp">WhatsApp</span></td>
+          </tr>
+          <tr>
+            <td class="tc"><span class="rank-badge rank-alta">9</span></td>
+            <td>Toca da Bruxa Canela</td>
+            <td>Canela</td>
+            <td class="tc"><span class="score-pill score-alta">70</span></td>
+            <td class="tc"><span class="prio-badge prio-alta">ALTA</span></td>
+            <td><span class="canal-wpp">WhatsApp</span></td>
+          </tr>
+          <tr>
+            <td class="tc"><span class="rank-badge rank-alta">10</span></td>
+            <td>Lutiano Pizzas e Massas</td>
+            <td>Gravataí</td>
+            <td class="tc"><span class="score-pill score-alta">70</span></td>
+            <td class="tc"><span class="prio-badge prio-alta">ALTA</span></td>
+            <td><span class="canal-wpp">WhatsApp</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- OPORTUNIDADES COMERCIAIS -->
+    <div class="card">
+      <div class="card-title">💼 Oportunidades Comerciais</div>
+      <div class="opp-grid">
+        <div class="opp opp-red">
+          <div class="opp-priority">🔴 Maior volume · 62% dos leads</div>
+          <div class="opp-title">Site Profissional</div>
+          <div class="opp-desc">38 restaurantes sem presença web adequada. Dependem de iFood e Instagram — perdem clientes que buscam no Google.</div>
+          <div class="opp-meta">R$ 1.200–2.500/mês · 38 leads</div>
+        </div>
+        <div class="opp opp-orange">
+          <div class="opp-priority">🟠 Crítico · 79% dos leads</div>
+          <div class="opp-title">SEO Local</div>
+          <div class="opp-desc">48 restaurantes invisíveis nas buscas "restaurante em [cidade]". Oportunidade imediata de tráfego orgânico.</div>
+          <div class="opp-meta">R$ 800–1.500/mês · 48 leads</div>
+        </div>
+        <div class="opp opp-purple">
+          <div class="opp-priority">🟣 Urgente · 67% dos leads</div>
+          <div class="opp-title">Otimização GBP</div>
+          <div class="opp-desc">41 restaurantes com Google Business Profile fraco ou mal configurado. Impacta diretamente nas buscas locais.</div>
+          <div class="opp-meta">R$ 400–800/mês · 41 leads</div>
+        </div>
+        <div class="opp opp-blue">
+          <div class="opp-priority">🔵 Médio prazo · 23% dos leads</div>
+          <div class="opp-title">Gestão Instagram</div>
+          <div class="opp-desc">14 restaurantes com Instagram parado ou inexistente. Perda de visibilidade com turistas e frequentadores locais.</div>
+          <div class="opp-meta">R$ 600–1.200/mês · 14 leads</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CIDADES + ANÁLISE POR SERVIÇO -->
+  <div class="row2b">
+
+    <!-- DISTRIBUIÇÃO POR CIDADE -->
+    <div class="card">
+      <div class="card-title">📍 Distribuição por Cidade</div>
+      <table class="city-table">
+        <thead>
+          <tr>
+            <th>Cidade</th>
+            <th>Restaurantes</th>
+            <th>Máxima</th>
+            <th>Alta</th>
+            <th>Oportunidade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Porto Alegre</strong></td>
+            <td>
+              <div class="city-bar-wrap">
+                <div class="city-bar"><div class="city-bar-fill" style="width:100%"></div></div>
+                <span style="font-weight:700;font-size:12px;min-width:24px">22</span>
+              </div>
+            </td>
+            <td><span style="color:var(--red);font-weight:700">3</span></td>
+            <td><span style="color:var(--orange);font-weight:700">9</span></td>
+            <td><span class="prio-badge prio-max">ALTA</span></td>
+          </tr>
+          <tr>
+            <td><strong>Gramado</strong></td>
+            <td>
+              <div class="city-bar-wrap">
+                <div class="city-bar"><div class="city-bar-fill" style="width:72%;background:#93C5FD"></div></div>
+                <span style="font-weight:700;font-size:12px;min-width:24px">16</span>
+              </div>
+            </td>
+            <td>—</td>
+            <td><span style="color:var(--orange);font-weight:700">5</span></td>
+            <td><span class="prio-badge prio-alta">ALTA</span></td>
+          </tr>
+          <tr>
+            <td><strong>Tramandaí</strong></td>
+            <td>
+              <div class="city-bar-wrap">
+                <div class="city-bar"><div class="city-bar-fill" style="width:27%;background:#93C5FD"></div></div>
+                <span style="font-weight:700;font-size:12px;min-width:24px">6</span>
+              </div>
+            </td>
+            <td><span style="color:var(--red);font-weight:700">1</span></td>
+            <td><span style="color:var(--orange);font-weight:700">2</span></td>
+            <td><span class="prio-badge prio-alta">ALTA</span></td>
+          </tr>
+          <tr>
+            <td><strong>Canoas</strong></td>
+            <td>
+              <div class="city-bar-wrap">
+                <div class="city-bar"><div class="city-bar-fill" style="width:23%;background:#93C5FD"></div></div>
+                <span style="font-weight:700;font-size:12px;min-width:24px">5</span>
+              </div>
+            </td>
+            <td>—</td>
+            <td><span style="color:var(--orange);font-weight:700">2</span></td>
+            <td><span class="prio-badge prio-media">MÉDIA</span></td>
+          </tr>
+          <tr>
+            <td><strong>Capão da Canoa</strong></td>
+            <td>
+              <div class="city-bar-wrap">
+                <div class="city-bar"><div class="city-bar-fill" style="width:18%;background:#93C5FD"></div></div>
+                <span style="font-weight:700;font-size:12px;min-width:24px">4</span>
+              </div>
+            </td>
+            <td><span style="color:var(--red);font-weight:700">1</span></td>
+            <td><span style="color:var(--orange);font-weight:700">1</span></td>
+            <td><span class="prio-badge prio-alta">ALTA</span></td>
+          </tr>
+          <tr>
+            <td><strong>Gravataí</strong></td>
+            <td>
+              <div class="city-bar-wrap">
+                <div class="city-bar"><div class="city-bar-fill" style="width:14%;background:#93C5FD"></div></div>
+                <span style="font-weight:700;font-size:12px;min-width:24px">3</span>
+              </div>
+            </td>
+            <td><span style="color:var(--red);font-weight:700">1</span></td>
+            <td><span style="color:var(--orange);font-weight:700">1</span></td>
+            <td><span class="prio-badge prio-alta">ALTA</span></td>
+          </tr>
+          <tr>
+            <td><strong>São Leopoldo</strong></td>
+            <td>
+              <div class="city-bar-wrap">
+                <div class="city-bar"><div class="city-bar-fill" style="width:9%;background:#93C5FD"></div></div>
+                <span style="font-weight:700;font-size:12px;min-width:24px">2</span>
+              </div>
+            </td>
+            <td>—</td>
+            <td><span style="color:var(--orange);font-weight:700">2</span></td>
+            <td><span class="prio-badge prio-alta">ALTA</span></td>
+          </tr>
+          <tr>
+            <td style="color:var(--text-sec)">Outros (Alvorada, Esteio…)</td>
+            <td>
+              <div class="city-bar-wrap">
+                <div class="city-bar"><div class="city-bar-fill" style="width:14%;background:var(--gray-light)"></div></div>
+                <span style="font-weight:700;font-size:12px;min-width:24px;color:var(--text-sec)">3</span>
+              </div>
+            </td>
+            <td>—</td>
+            <td>—</td>
+            <td><span class="prio-badge prio-media">MÉDIA</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ANÁLISE POR CATEGORIA -->
+    <div class="card">
+      <div class="card-title">🍽️ Análise por Categoria</div>
+      <div class="chart-wrap" style="height:240px">
+        <canvas id="chartCategoria"></canvas>
+      </div>
+      <div style="margin-top:10px;font-size:11px;color:var(--text-sec);">
+        Pizzarias lideram em volume. Fondues e Cafés Coloniais da Serra concentram tickets mais altos — boa oportunidade de SEO turístico.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- GANCHOS COMERCIAIS + MODELO DE SCORING -->
+  <div class="row2b">
+
+    <!-- GANCHOS POR TIPO DE NEED -->
+    <div class="card">
+      <div class="card-title">💬 Ganchos de Venda Recomendados</div>
+
+      <div class="alert-item">
+        <div class="adot dot-r"></div>
+        <div class="atext">
+          <strong>Para leads sem site</strong>
+          <div class="gancho-text">"Você está perdendo clientes no Google agora mesmo — quem busca 'pizzaria em Porto Alegre' não encontra o seu restaurante. A concorrência aparece, você não."</div>
+          <small>38 leads · Canal: WhatsApp · Serviço: Site Profissional</small>
+        </div>
+      </div>
+
+      <div class="alert-item">
+        <div class="adot dot-r"></div>
+        <div class="atext">
+          <strong>Para leads com GBP fraco</strong>
+          <div class="gancho-text">"Seu Google Maps está incompleto — isso reduz seu ranking quando alguém busca 'restaurante perto de mim' no celular. É tráfego gratuito que você não está capturando."</div>
+          <small>41 leads · Canal: WhatsApp · Serviço: Otimização GBP</small>
+        </div>
+      </div>
+
+      <div class="alert-item">
+        <div class="adot dot-a"></div>
+        <div class="atext">
+          <strong>Para leads com Instagram parado</strong>
+          <div class="gancho-text">"Seu Instagram está parado — turistas e clientes novos pesquisam o restaurante antes de ir. Se as últimas fotos têm meses, muitos desistem e vão pra outro lugar."</div>
+          <small>14 leads · Canal: Instagram DM · Serviço: Gestão Instagram</small>
+        </div>
+      </div>
+
+      <div class="alert-item">
+        <div class="adot dot-a"></div>
+        <div class="atext">
+          <strong>Para leads Serra Gaúcha</strong>
+          <div class="gancho-text">"Turistas buscam 'fondue em Gramado' antes de viajar — se o seu site e Google Maps não aparecerem nos primeiros resultados, você perde reservas para concorrentes."</div>
+          <small>17 leads · Canal: WhatsApp · Serviço: SEO Local + Site</small>
+        </div>
+      </div>
+
+      <div class="alert-item">
+        <div class="adot dot-g"></div>
+        <div class="atext">
+          <strong>Abordagem padrão (presença fraca geral)</strong>
+          <div class="gancho-text">"Faço um diagnóstico gratuito da presença digital do seu restaurante — em 5 minutos você vê exatamente o que está faltando para aparecer melhor no Google."</div>
+          <small>Todos os leads · Abertura de conversa</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODELO DE SCORING -->
+    <div class="card">
+      <div class="card-title">📐 Modelo de Scoring (0–100 pts)</div>
+
+      <div class="score-item">
+        <div class="score-pts score-pts-red">+30</div>
+        <div>
+          <div style="font-weight:600;font-size:12px">Sem site profissional</div>
+          <div style="font-size:11px;color:var(--text-sec)">Maior oportunidade: criar presença web do zero</div>
+        </div>
+      </div>
+      <div class="score-item">
+        <div class="score-pts score-pts-red">+25</div>
+        <div>
+          <div style="font-weight:600;font-size:12px">Sem Google Business Profile</div>
+          <div style="font-size:11px;color:var(--text-sec)">Criar e configurar GBP do zero</div>
+        </div>
+      </div>
+      <div class="score-item">
+        <div class="score-pts score-pts-orange">+20</div>
+        <div>
+          <div style="font-weight:600;font-size:12px">Site fraco ou desatualizado</div>
+          <div style="font-size:11px;color:var(--text-sec)">Redesign ou criação de site profissional</div>
+        </div>
+      </div>
+      <div class="score-item">
+        <div class="score-pts score-pts-orange">+15</div>
+        <div>
+          <div style="font-weight:600;font-size:12px">GBP incompleto/mal otimizado</div>
+          <div style="font-size:11px;color:var(--text-sec)">Fotos, descrição, categorias, posts GBP</div>
+        </div>
+      </div>
+      <div class="score-item">
+        <div class="score-pts score-pts-orange">+15</div>
+        <div>
+          <div style="font-weight:600;font-size:12px">SEO local inexistente ou fraco</div>
+          <div style="font-size:11px;color:var(--text-sec)">Palavras-chave, schema markup, citações</div>
+        </div>
+      </div>
+      <div class="score-item">
+        <div class="score-pts score-pts-orange">+15</div>
+        <div>
+          <div style="font-weight:600;font-size:12px">Instagram fraco (pouco ativo)</div>
+          <div style="font-size:11px;color:var(--text-sec)">Reativar com curadoria de conteúdo</div>
+        </div>
+      </div>
+      <div class="score-item">
+        <div class="score-pts score-pts-amber">+10</div>
+        <div>
+          <div style="font-weight:600;font-size:12px">Instagram inexistente</div>
+          <div style="font-size:11px;color:var(--text-sec)">Criar perfil e estratégia de conteúdo</div>
+        </div>
+      </div>
+      <div class="score-item">
+        <div class="score-pts score-pts-navy">+10</div>
+        <div>
+          <div style="font-weight:600;font-size:12px">Alto potencial comercial</div>
+          <div style="font-size:11px;color:var(--text-sec)">Ticket alto + presença digital fraca</div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;padding:12px;background:var(--gray-light);border-radius:8px;font-size:11px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+          <span style="font-weight:700;color:var(--red)">80–100 → MÁXIMA</span>
+          <span style="color:var(--text-sec)">Proposta esta semana</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+          <span style="font-weight:700;color:var(--orange)">60–79 → ALTA</span>
+          <span style="color:var(--text-sec)">Prospecção ativa</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+          <span style="font-weight:700;color:#7a4a0a">40–59 → MÉDIA</span>
+          <span style="color:var(--text-sec)">Nutrição mensal</span>
+        </div>
+        <div style="display:flex;justify-content:space-between">
+          <span style="font-weight:700;color:var(--green)">0–39 → BAIXA</span>
+          <span style="color:var(--text-sec)">Campanhas sazonais</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TABELA COMPLETA TOP 20 -->
+  <div class="full">
+    <div class="card">
+      <div class="card-title">
+        📋 Pipeline Completo — Top 20 Leads
+        <span class="card-title-badge" style="background:var(--navy-light);color:var(--navy)">61 restaurantes processados</span>
+      </div>
+      <table class="leads-table">
+        <thead>
+          <tr>
+            <th class="tc">#</th>
+            <th>Restaurante</th>
+            <th>Cidade</th>
+            <th>Categoria</th>
+            <th class="tc">Score</th>
+            <th class="tc">Prioridade</th>
+            <th class="tc">Site</th>
+            <th class="tc">GBP</th>
+            <th class="tc">SEO</th>
+            <th class="tc">Insta</th>
+            <th>Serviços</th>
+            <th>Canal</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyLeads">
+          <!-- Preenchido via JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PRÓXIMOS PASSOS -->
+  <div class="sec-label">Plano de ação recomendado</div>
+  <div class="row4">
+    <div class="card">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--red);margin-bottom:8px">📅 Semana 1</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:6px">Abordar os 5 leads de PRIORIDADE MÁXIMA</div>
+      <div style="font-size:11px;color:var(--text-sec);line-height:1.6">Enviar diagnóstico personalizado via WhatsApp com gancho específico para cada lead.</div>
+    </div>
+    <div class="card">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--orange);margin-bottom:8px">📅 Semanas 2–3</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:6px">Prospectar 18 leads de ALTA PRIORIDADE</div>
+      <div style="font-size:11px;color:var(--text-sec);line-height:1.6">Foco em GBP e site. Agendar diagnósticos gratuitos como porta de entrada.</div>
+    </div>
+    <div class="card">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#7a4a0a;margin-bottom:8px">📅 Mês 1</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:6px">Fechar primeiros contratos</div>
+      <div style="font-size:11px;color:var(--text-sec);line-height:1.6">Documentar resultados iniciais para usar como case de conversão com novos leads.</div>
+    </div>
+    <div class="card">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--navy);margin-bottom:8px">📅 Trimestral</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:6px">Atualizar a base</div>
+      <div style="font-size:11px;color:var(--text-sec);line-height:1.6">Nova extração do Tchê Ofertas e ampliar para outras cidades do RS.</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div>
+      <div class="footer-brand">LocalRise Advisory</div>
+      <div class="footer-sub">localriseai@gmail.com · Sistema de Inteligência Comercial</div>
+    </div>
+    <div class="footer-note">
+      Dados extraídos do Tchê Ofertas em 29/03/2026<br>
+      61 restaurantes · 10 cidades · Grande POA · Serra Gaúcha · Litoral RS<br>
+      Pipeline processado automaticamente com modelo de scoring proprietário
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── DADOS DO PIPELINE ─────────────────────────────────────────────────────────
+const topLeads = [
+  {rank:1, nome:"Padaria e Confeitaria Dom Felipe", cidade:"Porto Alegre", cat:"Buffet/Padaria", score:90, prio:"MÁXIMA", site:"SIM", gbp:"NÃO", seo:"SIM", insta:"SIM", servs:"Site + SEO + GBP + Insta", canal:"WhatsApp"},
+  {rank:2, nome:"Restaurante Novo Sabor", cidade:"Porto Alegre", cat:"Buffet", score:90, prio:"MÁXIMA", site:"SIM", gbp:"NÃO", seo:"SIM", insta:"SIM", servs:"Site + SEO + GBP + Insta", canal:"WhatsApp"},
+  {rank:3, nome:"Churrascaria Passoquinha", cidade:"Canoas", cat:"Churrascaria", score:90, prio:"MÁXIMA", site:"SIM", gbp:"NÃO", seo:"SIM", insta:"SIM", servs:"Site + SEO + GBP + Insta", canal:"WhatsApp"},
+  {rank:4, nome:"Guardiões da Pizza Alvorada", cidade:"Alvorada", cat:"Pizzaria", score:90, prio:"MÁXIMA", site:"SIM", gbp:"NÃO", seo:"SIM", insta:"SIM", servs:"Site + SEO + GBP + Insta", canal:"WhatsApp"},
+  {rank:5, nome:"Restaurante Panorama Gastronômico", cidade:"Porto Alegre", cat:"Buffet", score:85, prio:"MÁXIMA", site:"SIM", gbp:"SIM", seo:"SIM", insta:"SIM", servs:"Site + SEO + GBP + Insta", canal:"WhatsApp"},
+  {rank:6, nome:"Marquês Pizzaria", cidade:"Porto Alegre", cat:"Pizzaria", score:70, prio:"ALTA", site:"SIM", gbp:"SIM", seo:"SIM", insta:"NÃO", servs:"Site + SEO + GBP", canal:"WhatsApp"},
+  {rank:7, nome:"La Più Buona", cidade:"Porto Alegre", cat:"Pizzaria", score:70, prio:"ALTA", site:"SIM", gbp:"SIM", seo:"SIM", insta:"NÃO", servs:"Site + SEO + GBP", canal:"WhatsApp"},
+  {rank:8, nome:"Zaandam Boulevard Laçador", cidade:"Porto Alegre", cat:"Bar/Restaurante", score:70, prio:"ALTA", site:"SIM", gbp:"SIM", seo:"SIM", insta:"NÃO", servs:"Site + SEO + GBP", canal:"WhatsApp"},
+  {rank:9, nome:"Toca da Bruxa Canela", cidade:"Canela", cat:"Fondue/Bar", score:70, prio:"ALTA", site:"SIM", gbp:"SIM", seo:"SIM", insta:"NÃO", servs:"Site + SEO + GBP", canal:"WhatsApp"},
+  {rank:10, nome:"Reino da Boêmia", cidade:"Gramado", cat:"Restaurante", score:70, prio:"ALTA", site:"SIM", gbp:"SIM", seo:"SIM", insta:"NÃO", servs:"Site + SEO + GBP", canal:"WhatsApp"},
+  {rank:11, nome:"Trattoria da Praça", cidade:"Porto Alegre", cat:"Italiana/Buffet", score:65, prio:"ALTA", site:"SIM", gbp:"SIM", seo:"SIM", insta:"NÃO", servs:"Site + SEO + GBP", canal:"WhatsApp"},
+  {rank:12, nome:"Galeto D'Primo", cidade:"Porto Alegre", cat:"Galeto/Churrasco", score:65, prio:"ALTA", site:"SIM", gbp:"SIM", seo:"SIM", insta:"NÃO", servs:"Site + SEO + GBP", canal:"WhatsApp"},
+  {rank:13, nome:"Restaurante Modelo Grill", cidade:"São Leopoldo", cat:"Churrascaria", score:65, prio:"ALTA", site:"SIM", gbp:"SIM", seo:"SIM", insta:"SIM", servs:"Site + SEO + GBP + Insta", canal:"WhatsApp"},
+  {rank:14, nome:"Restaurante Piemonte", cidade:"São Leopoldo", cat:"Galeto/Churrasco", score:65, prio:"ALTA", site:"SIM", gbp:"SIM", seo:"SIM", insta:"NÃO", servs:"Site + SEO + GBP", canal:"WhatsApp"},
+  {rank:15, nome:"Lutiano Pizzas e Massas", cidade:"Gravataí", cat:"Pizzaria/Italiana", score:65, prio:"ALTA", site:"SIM", gbp:"SIM", seo:"SIM", insta:"NÃO", servs:"Site + SEO + GBP", canal:"WhatsApp"},
+  {rank:16, nome:"Restaurante Deck Sorriso", cidade:"Tramandaí", cat:"Bar/Restaurante", score:65, prio:"ALTA", site:"SIM", gbp:"NÃO", seo:"SIM", insta:"SIM", servs:"Site + SEO + GBP + Insta", canal:"Instagram DM"},
+  {rank:17, nome:"Confraria do Peixe", cidade:"Gravataí", cat:"Frutos do Mar", score:65, prio:"ALTA", site:"SIM", gbp:"NÃO", seo:"SIM", insta:"SIM", servs:"Site + SEO + GBP + Insta", canal:"WhatsApp"},
+  {rank:18, nome:"Petiskos Bar e Restaurante", cidade:"Capão da Canoa", cat:"Bar/Petisco", score:65, prio:"ALTA", site:"SIM", gbp:"SIM", seo:"SIM", insta:"SIM", servs:"Site + SEO + GBP + Insta", canal:"Instagram DM"},
+  {rank:19, nome:"Mano's Pizzaria", cidade:"Canoas", cat:"Pizzaria", score:60, prio:"ALTA", site:"SIM", gbp:"SIM", seo:"SIM", insta:"NÃO", servs:"Site + SEO + GBP", canal:"WhatsApp"},
+  {rank:20, nome:"Restaurante Família Zanatta", cidade:"Tramandaí", cat:"Buffet/Caseiro", score:60, prio:"ALTA", site:"SIM", gbp:"SIM", seo:"SIM", insta:"NÃO", servs:"Site + SEO + GBP", canal:"WhatsApp"},
+];
+
+function getBadge(val, positiveIsGood = false) {
+  const isNeed = val === "SIM";
+  if (positiveIsGood) {
+    return isNeed ? `<span style="color:var(--green);font-weight:700">✓</span>` : `<span style="color:var(--red);font-weight:700">✗</span>`;
+  }
+  return isNeed ? `<span style="color:var(--red);font-weight:700">✗ Sim</span>` : `<span style="color:var(--green);font-weight:700">✓ Não</span>`;
+}
+
+function getPrioBadge(p) {
+  const cls = {MÁXIMA:'prio-max',ALTA:'prio-alta',MÉDIA:'prio-media',BAIXA:'prio-baixa'}[p] || 'prio-baixa';
+  return `<span class="prio-badge ${cls}">${p}</span>`;
+}
+function getCanalBadge(c) {
+  if(c==='WhatsApp') return `<span class="canal-wpp">📱 WhatsApp</span>`;
+  if(c==='Instagram DM') return `<span class="canal-insta">📸 Instagram DM</span>`;
+  return `<span class="canal-lig">📞 Ligação</span>`;
+}
+function getScorePill(s, p) {
+  const cls = p==='MÁXIMA'?'score-max':p==='ALTA'?'score-alta':'score-media';
+  return `<span class="score-pill ${cls}">${s}</span>`;
+}
+function getRankBadge(r, p) {
+  const cls = p==='MÁXIMA'?'rank-max':p==='ALTA'?'rank-alta':'rank-media';
+  return `<span class="rank-badge ${cls}">${r}</span>`;
+}
+
+const tbody = document.getElementById('tbodyLeads');
+topLeads.forEach(r => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td class="tc">${getRankBadge(r.rank, r.prio)}</td>
+    <td><strong>${r.nome}</strong></td>
+    <td>${r.cidade}</td>
+    <td style="font-size:11px;color:var(--text-sec)">${r.cat}</td>
+    <td class="tc">${getScorePill(r.score, r.prio)}</td>
+    <td class="tc">${getPrioBadge(r.prio)}</td>
+    <td class="tc">${getBadge(r.site)}</td>
+    <td class="tc">${getBadge(r.gbp)}</td>
+    <td class="tc">${getBadge(r.seo)}</td>
+    <td class="tc">${getBadge(r.insta)}</td>
+    <td style="font-size:11px">${r.servs}</td>
+    <td>${getCanalBadge(r.canal)}</td>
+  `;
+  tbody.appendChild(tr);
+});
+
+// ── GRÁFICOS CHART.JS ─────────────────────────────────────────────────────────
+
+// Gráfico 1 — Prioridade (Donut)
+new Chart(document.getElementById('chartPrioridade'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Máxima (80–100)','Alta (60–79)','Média (40–59)','Baixa (0–39)'],
+    datasets: [{
+      data: [5, 18, 16, 22],
+      backgroundColor: ['#C62828','#E65100','#F9A825','#1D9E75'],
+      borderWidth: 2,
+      borderColor: '#fff',
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    cutout: '65%',
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} restaurantes` } }
+    }
+  }
+});
+
+// Gráfico 2 — Necessidades (Bar horizontal)
+new Chart(document.getElementById('chartNecessidades'), {
+  type: 'bar',
+  data: {
+    labels: ['SEO Local','Site Profissional','GBP Fraco/Ausente','Instagram Fraco','Presença Fraca'],
+    datasets: [{
+      label: 'Restaurantes',
+      data: [48, 38, 41, 14, 28],
+      backgroundColor: ['#1565C0','#6A1B9A','#880E4F','#E65100','#C62828'],
+      borderRadius: 5,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw} de 61 restaurantes` } } },
+    scales: {
+      x: { max: 61, grid: { color: '#F0F0F0' }, ticks: { font: { size: 10 } } },
+      y: { ticks: { font: { size: 11 } } }
+    }
+  }
+});
+
+// Gráfico 3 — Região (Pie)
+new Chart(document.getElementById('chartRegiao'), {
+  type: 'pie',
+  data: {
+    labels: ['Grande Porto Alegre','Serra Gaúcha','Litoral RS'],
+    datasets: [{
+      data: [33, 17, 11],
+      backgroundColor: ['#1A3A6B','#2196F3','#90CAF9'],
+      borderWidth: 2,
+      borderColor: '#fff',
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 12, padding: 10 } },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} restaurantes` } }
+    }
+  }
+});
+
+// Gráfico 4 — Categoria (Bar)
+new Chart(document.getElementById('chartCategoria'), {
+  type: 'bar',
+  data: {
+    labels: ['Pizzaria','Churrasco','Buffet','Fondue','Café Colonial','Italiana','Bar/Petisco','Sushi','Outros'],
+    datasets: [{
+      label: 'Restaurantes',
+      data: [14, 8, 7, 8, 3, 4, 5, 3, 9],
+      backgroundColor: ['#1A3A6B','#C62828','#E65100','#F9A825','#1D9E75','#6A1B9A','#1565C0','#00838F','#78909C'],
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 10 } } },
+      x: { ticks: { font: { size: 9 }, maxRotation: 35 } }
+    }
+  }
+});
+</script>
+</body>
+</html>

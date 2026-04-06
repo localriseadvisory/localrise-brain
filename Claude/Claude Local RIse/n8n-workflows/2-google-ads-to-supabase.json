@@ -1,0 +1,127 @@
+{
+  "name": "LocalRise — Google Ads → Supabase (metrics_ads)",
+  "nodes": [
+    {
+      "id": "b2c3d4e5-0002-0002-0002-000000000001",
+      "name": "Dia 1 do Mês",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [240, 300],
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "cronExpression", "expression": "0 9 1 * *" }]
+        }
+      }
+    },
+    {
+      "id": "b2c3d4e5-0002-0002-0002-000000000002",
+      "name": "Buscar Integrações Ads",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 300],
+      "parameters": {
+        "method": "GET",
+        "url": "https://tfzjyttvymojsgvifxlk.supabase.co/rest/v1/client_integrations?select=client_id,google_ads_customer_id&google_ads_customer_id=not.is.null",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{$credentials.value}}" },
+            { "name": "Authorization", "value": "=Bearer {{$credentials.value}}" }
+          ]
+        }
+      },
+      "credentials": { "httpHeaderAuth": { "id": "supabase-service-key", "name": "Supabase Service Key" } }
+    },
+    {
+      "id": "b2c3d4e5-0002-0002-0002-000000000003",
+      "name": "Loop por Cliente",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [680, 300],
+      "parameters": { "batchSize": 1, "options": {} }
+    },
+    {
+      "id": "b2c3d4e5-0002-0002-0002-000000000004",
+      "name": "Calcular Mês Anterior",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300],
+      "parameters": {
+        "jsCode": "const now = new Date();\nconst ano = now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();\nconst mes = now.getMonth() === 0 ? 12 : now.getMonth();\nconst start = new Date(ano, mes - 1, 1);\nconst end = new Date(ano, mes, 0);\nconst fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;\nreturn [{\n  json: {\n    ...items[0].json,\n    mes,\n    ano,\n    startDate: fmt(start),\n    endDate: fmt(end)\n  }\n}];"
+      }
+    },
+    {
+      "id": "b2c3d4e5-0002-0002-0002-000000000005",
+      "name": "Google Ads API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://googleads.googleapis.com/v16/customers/{{$json.google_ads_customer_id}}/googleAds:searchStream",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "developer-token", "value": "SEU_DEVELOPER_TOKEN_AQUI" }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "body": {
+          "query": "=SELECT metrics.impressions, metrics.clicks, metrics.ctr, metrics.average_cpc, metrics.cost_micros, metrics.conversions, metrics.cost_per_conversion FROM customer WHERE segments.date BETWEEN '{{$json.startDate}}' AND '{{$json.endDate}}'"
+        }
+      },
+      "credentials": { "googleApi": { "id": "google-oauth", "name": "Google OAuth2" } }
+    },
+    {
+      "id": "b2c3d4e5-0002-0002-0002-000000000006",
+      "name": "Transformar Dados Ads",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1340, 300],
+      "parameters": {
+        "jsCode": "const prev = $('Calcular Mês Anterior').first().json;\nconst results = items[0].json[0]?.results || [];\n\nlet impressoes = 0, cliques = 0, custo = 0, conversoes = 0;\nfor (const r of results) {\n  impressoes += parseInt(r.metrics?.impressions || 0);\n  cliques += parseInt(r.metrics?.clicks || 0);\n  custo += parseInt(r.metrics?.costMicros || 0);\n  conversoes += parseFloat(r.metrics?.conversions || 0);\n}\n\nconst investimento = custo / 1_000_000;\nconst ctr = impressoes > 0 ? parseFloat(((cliques / impressoes) * 100).toFixed(2)) : null;\nconst cpc = cliques > 0 ? parseFloat((investimento / cliques).toFixed(2)) : null;\nconst cpa = conversoes > 0 ? parseFloat((investimento / conversoes).toFixed(2)) : null;\n\nreturn [{\n  json: {\n    client_id: prev.client_id,\n    mes: prev.mes,\n    ano: prev.ano,\n    impressoes: impressoes || null,\n    cliques: cliques || null,\n    ctr,\n    cpc,\n    investimento: parseFloat(investimento.toFixed(2)) || null,\n    conversoes: Math.round(conversoes) || null,\n    custo_por_conversao: cpa\n  }\n}];"
+      }
+    },
+    {
+      "id": "b2c3d4e5-0002-0002-0002-000000000007",
+      "name": "Upsert metrics_ads",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "https://tfzjyttvymojsgvifxlk.supabase.co/rest/v1/metrics_ads",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{$credentials.value}}" },
+            { "name": "Authorization", "value": "=Bearer {{$credentials.value}}" },
+            { "name": "Prefer", "value": "resolution=merge-duplicates" }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={{JSON.stringify($json)}}"
+      },
+      "credentials": { "httpHeaderAuth": { "id": "supabase-service-key", "name": "Supabase Service Key" } }
+    }
+  ],
+  "connections": {
+    "Dia 1 do Mês": { "main": [[{ "node": "Buscar Integrações Ads", "type": "main", "index": 0 }]] },
+    "Buscar Integrações Ads": { "main": [[{ "node": "Loop por Cliente", "type": "main", "index": 0 }]] },
+    "Loop por Cliente": { "main": [[{ "node": "Calcular Mês Anterior", "type": "main", "index": 0 }]] },
+    "Calcular Mês Anterior": { "main": [[{ "node": "Google Ads API", "type": "main", "index": 0 }]] },
+    "Google Ads API": { "main": [[{ "node": "Transformar Dados Ads", "type": "main", "index": 0 }]] },
+    "Transformar Dados Ads": { "main": [[{ "node": "Upsert metrics_ads", "type": "main", "index": 0 }]] },
+    "Upsert metrics_ads": { "main": [[{ "node": "Loop por Cliente", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "active": false
+}
