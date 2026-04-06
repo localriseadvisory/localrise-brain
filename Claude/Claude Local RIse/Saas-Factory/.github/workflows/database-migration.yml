@@ -1,0 +1,73 @@
+name:  "🚀 Deploy: Manual Database Migration & Rollback"
+
+on:
+  workflow_dispatch:      
+    inputs:
+      environment:
+        description: 'Target environment (dev/staging/production)'
+        required: true
+        default: dev
+      action:
+        description: 'Specify the action (migrate/rollback)'
+        required: true
+        default: migrate
+      target_rollback_migration:
+        description: 'Target migration for rollback (only for rollback action) - For example: 20240610120000_InitialCreate' 
+        required: false
+
+jobs:
+  run-migrations:
+    name: Run Database Migrations
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    environment: ${{ github.event.inputs.environment }}
+
+    steps:
+    - name: Checkout Code
+      # SECURITY: Upgrade from v3 to v4 and use commit SHA
+      uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
+
+    - name: Setup .NET
+      # SECURITY: Upgrade from v3 to v4/v5 and use commit SHA
+      uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309  # v5.1.0
+      with:
+        dotnet-version: '9.0'
+
+    - name: Restore Dependencies
+      run: dotnet restore
+
+    - name: Build Project
+      run: dotnet build --no-restore
+
+    - name: Backup database
+      env:
+        DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+      run: |
+        echo "Backing up database..."
+        pg_dump --no-owner --no-acl --format=custom --file=backup.dump "$DB_CONNECTION_STRING"
+
+    - name: Create migration bundle
+      run: |
+        echo "Creating migration bundle..."
+        dotnet ef migrations bundle --project AppBlueprint.Infrastructure --output-dir ./MigrationsBundle
+
+    - name: Run Migration or Rollback
+      env:
+        DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+        DOTNET_ENVIRONMENT: ${{ secrets.DOTNET_ENVIRONMENT }}
+        MIGRATION_ACTION: ${{ github.event.inputs.action }}
+        TARGET_MIGRATION: ${{ github.event.inputs.target_rollback_migration }}
+      run: |
+        if [ "$MIGRATION_ACTION" = "migrate" ]; then
+          echo "Applying migration bundle..."
+          dotnet ef migrations apply --project AppBlueprint.Infrastructure --bundle ./MigrationsBundle
+        elif [ "$MIGRATION_ACTION" = "rollback" ]; then
+          if [ -z "$TARGET_MIGRATION" ]; then
+            echo "Error: Target migration must be specified for rollback."
+            exit 1
+          fi
+          echo "Rolling back to migration $TARGET_MIGRATION..."
+          dotnet ef database update "$TARGET_MIGRATION" --project AppBlueprint.Infrastructure --connection "$DB_CONNECTION_STRING"
+        else
+          echo "Invalid action specified. Use 'migrate' or 'rollback'."
+          exit 1
+        fi

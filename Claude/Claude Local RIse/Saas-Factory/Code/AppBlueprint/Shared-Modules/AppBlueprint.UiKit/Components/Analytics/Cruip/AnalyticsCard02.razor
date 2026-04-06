@@ -1,0 +1,78 @@
+@namespace AppBlueprint.UiKit.Components.Analytics.Cruip
+
+<div class="flex flex-col col-span-full xl:col-span-4 bg-white dark:bg-gray-800 shadow-xs rounded-xl">
+    <header class="px-5 py-4 border-b border-gray-100 dark:border-gray-700/60">
+        <h2 class="font-semibold text-gray-800 dark:text-gray-100">Active Users Right Now</h2>
+    </header>
+    <!-- Card content -->
+    <div class="flex flex-col h-full">
+        <!-- Live visitors number -->
+        <div class="px-5 py-3">
+            <LiveIndicator Count="347" Label="Live visitors" />
+        </div>
+
+        <!-- Chart -->
+        <div>
+            <LineChart
+                CanvasId="analytics-card-02-chart"
+                Labels="@labels"
+                Datasets="@datasets"
+                Width="389"
+                Height="70"
+                UseTimeScale="true" />
+        </div>
+
+        <!-- Table -->
+        <div class="grow px-5 pt-3 pb-1">
+            <SimpleDataTable LabelHeader="Top pages"
+                             ValueHeader="Active users"
+                             Items="@_topPages"
+                             LabelAlign="left"
+                             ValueAlign="right"
+                             Padding="compact"
+                             BoldValues="true" />
+        </div>
+
+        <!-- Card footer -->
+        <div class="text-right px-5 pb-4">
+            <a class="text-sm font-medium text-violet-500 hover:text-violet-600 dark:hover:text-violet-400" href="#0">Real-Time Report -&gt;</a>
+        </div>
+    </div>
+</div>
+
+@code {
+    private readonly List<SimpleDataTable.DataItem> _topPages =
+    [
+        new("preview.cruip.com/open-pro/", "94"),
+        new("preview.cruip.com/simple/", "42"),
+        new("cruip.com/unlimited/", "12"),
+        new("preview.cruip.com/twist/", "4")
+    ];
+
+    private List<string> labels = new()
+    {
+        "12-01-2022", "01-01-2023", "02-01-2023", "03-01-2023",
+        "04-01-2023", "05-01-2023", "06-01-2023", "07-01-2023",
+        "08-01-2023", "09-01-2023", "10-01-2023", "11-01-2023",
+        "12-01-2023", "01-01-2024", "02-01-2024", "03-01-2024",
+        "04-01-2024", "05-01-2024", "06-01-2024", "07-01-2024",
+        "08-01-2024", "09-01-2024", "10-01-2024", "11-01-2024",
+        "12-01-2024", "01-01-2025"
+    };
+
+    private List<LineChart.ChartDataset> datasets = new()
+    {
+        new()
+        {
+            Label = "Visitors",
+            Data = new List<double> { 732, 610, 610, 504, 504, 504, 349, 349, 504, 342, 504, 610, 391, 192, 154, 273, 191, 191, 126, 263, 349, 252, 423, 622, 470, 532 },
+            BorderColor = "rgb(139, 92, 246)",
+            BackgroundColor = "rgba(139, 92, 246, 0.08)",
+            Fill = true,
+            Tension = 0.2,
+            PointRadius = 0,
+            PointHoverRadius = 3,
+            BorderWidth = 2
+        }
+    };
+}

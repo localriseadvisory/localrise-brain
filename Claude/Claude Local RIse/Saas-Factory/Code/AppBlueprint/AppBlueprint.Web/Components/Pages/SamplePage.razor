@@ -1,0 +1,57 @@
+@inject ApiClient ApiClient
+@inject UserAuthenticationProvider AuthProvider
+
+@page "/sample-page"
+@using AppBlueprint.Api.Client.Sdk
+@using AppBlueprint.Api.Client.Sdk.Models
+@using AppBlueprint.Infrastructure.Authorization
+
+<PageTitle>Sample Page</PageTitle>
+
+<h1>Sample Page</h1>
+
+@if (!string.IsNullOrEmpty(_loginError))
+{
+    <p class="text-red-600">@_loginError</p>
+}
+@if (_data is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <ul>
+        @foreach (var item in _data)
+        {
+            <li>@item.Name</li>
+        }
+    </ul>
+}
+
+@code {
+    private IEnumerable<AccountEntity>? _data;
+    private string _loginError = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Log in using preset credentials.
+        // Adjust "user@example.com" and "UserPassword" to your valid credentials.
+        var loggedIn = await AuthProvider.LoginAsync("", "12345678");
+        if (!loggedIn)
+        {
+            _loginError = "Login failed. Please check your credentials.";
+            return;
+        }
+
+        // If login is successful, call the API to get the data.
+        try
+        {
+            _data = await ApiClient.Api.V1.Account.GetAccounts.GetAsync();
+        }
+        catch (Exception ex)
+        {
+            _loginError = $"Error calling API: {ex.Message}";
+        }
+    }
+
+}

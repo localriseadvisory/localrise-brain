@@ -1,0 +1,33 @@
+@namespace AppBlueprint.UiKit.Components.Fintech.Cruip
+
+<StockPriceCard Name="Twtr"
+                Subtitle="Twitter Inc."
+                Price="43.07m"
+                ChangeAmount="4.20m"
+                ChangePercentage="9.2m"
+                TitleSize="xs"
+                ChartData="@_chartData"
+                ChartLabels="@_labels" />
+
+@code {
+    private readonly List<string> _labels =
+    [
+        "12-01-2022", "01-01-2023", "02-01-2023",
+        "03-01-2023", "04-01-2023", "05-01-2023",
+        "06-01-2023", "07-01-2023", "08-01-2023",
+        "09-01-2023", "10-01-2023", "11-01-2023",
+        "12-01-2023", "01-01-2024", "02-01-2024",
+        "03-01-2024", "04-01-2024", "05-01-2024",
+        "06-01-2024", "07-01-2024", "08-01-2024",
+        "09-01-2024", "10-01-2024", "11-01-2024",
+        "12-01-2024", "01-01-2025"
+    ];
+
+    private readonly List<double> _chartData =
+    [
+        540, 466, 540, 466, 385, 432, 334,
+        334, 289, 289, 200, 289, 222, 289,
+        289, 403, 554, 304, 289, 270, 134,
+        270, 829, 644, 688, 664
+    ];
+}

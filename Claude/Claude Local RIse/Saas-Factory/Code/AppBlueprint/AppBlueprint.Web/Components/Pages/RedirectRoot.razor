@@ -1,0 +1,69 @@
+@page "/"
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
+@attribute [AllowAnonymous]
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<div class="flex justify-center items-center h-screen">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    <span class="ml-4 text-lg font-semibold text-gray-700 dark:text-gray-200">Checking authentication...</span>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("========================================");
+        Console.WriteLine("[RedirectRoot] OnInitializedAsync START");
+        Console.WriteLine("========================================");
+
+        // Log any auth-error query param server-side only — never surface to the user
+        var uri = new Uri(Navigation.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        var authError = query["auth-error"];
+        if (!string.IsNullOrEmpty(authError))
+        {
+            Console.WriteLine($"[RedirectRoot] ❌ Authentication error code: {authError}");
+        }
+
+        
+        // Check if user is authenticated using ASP.NET Core auth state
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var isAuthenticated = user.Identity?.IsAuthenticated == true;
+        
+        Console.WriteLine($"[RedirectRoot] Authentication check:");
+        Console.WriteLine($"[RedirectRoot]   - Is Authenticated: {isAuthenticated}");
+        Console.WriteLine($"[RedirectRoot]   - User Name: {user.Identity?.Name ?? "(none)"}");
+        Console.WriteLine($"[RedirectRoot]   - Claims Count: {user.Claims.Count()}");
+        
+        if (isAuthenticated)
+        {
+            // Check if user has completed onboarding (has a tenant_id claim)
+            string? tenantIdClaim = user.FindFirst("tenant_id")?.Value;
+
+            if (!string.IsNullOrEmpty(tenantIdClaim))
+            {
+                // User has a tenant - go to dashboard
+                Console.WriteLine($"[RedirectRoot] ✅ User is authenticated with tenant {tenantIdClaim} - redirecting to /dashboard");
+                Console.WriteLine("========================================");
+                Navigation.NavigateTo("/dashboard", forceLoad: false);
+            }
+            else
+            {
+                // User is authenticated but has no tenant yet - must complete onboarding first
+                Console.WriteLine("[RedirectRoot] ⚠️ User is authenticated but has no tenant_id claim - redirecting to /onboarding");
+                Console.WriteLine("========================================");
+                Navigation.NavigateTo("/onboarding", forceLoad: false);
+            }
+        }
+        else
+        {
+            // Non-authenticated users go to login
+            Console.WriteLine("[RedirectRoot] ❌ User is NOT authenticated - redirecting to /login");
+            Console.WriteLine("========================================");
+            Navigation.NavigateTo("/signin", forceLoad: false);
+        }
+    }
+}
+

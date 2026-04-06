@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <!-- Basic Project Properties -->
+        <RootNamespace>AppBlueprint.Domain</RootNamespace>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>latestmajor</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <!-- NuGet Package Configuration -->
+        <Version>$(GITVERSION_SemVer)</Version>
+        <PackageId>SaaS-Factory.AppBlueprint.Domain</PackageId>
+        <Authors>Casper Rubæk</Authors>
+        <Description>Domain layer with entities, aggregates, and value objects following Domain-Driven Design principles</Description>
+        <PackageTags>domain domain-driven-design entities aggregates value-objects</PackageTags>
+        <PackageProjectUrl>https://github.com/saas-factory-labs/Saas-Factory/blob/main/Code/AppBlueprint/Shared-Modules/AppBlueprint.Domain/README.md</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/saas-factory-labs/Saas-Factory</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageIcon>domain-icon.png</PackageIcon>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\assets\icons\domain-icon.png" Pack="true" PackagePath="" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Accounts\"/>
+        <Folder Include="Enums\"/>
+        <Folder Include="Users\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\AppBlueprint.SharedKernel\AppBlueprint.SharedKernel.csproj" />
+        <!-- Removed Infrastructure reference to fix circular dependency -->
+        <!-- Domain should not depend on Infrastructure layer -->
+    </ItemGroup>
+</Project>

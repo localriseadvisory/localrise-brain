@@ -1,0 +1,36 @@
+name: "🛡️ Security: Generate SBOM"
+
+on:
+#  push:
+#    branches:
+#      - main
+#  pull_request:
+  workflow_dispatch:
+
+jobs:
+  generate-sbom:
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
+
+      - name: Setup Blacksmith Builder
+        uses: useblacksmith/setup-docker-builder@v1
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@28d71544de8eaf1b958d335707167c5f783590ad  # v0.22.2
+        with:
+          image: your-docker-image:latest # Replace with your Docker image - Github package registry
+          output: sbom.json             # Optional: name of the SBOM file
+          path: .                       # Optional: path to generate SBOM for
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1  # v4.6.1
+        with:
+          name: sbom
+          path: sbom.json
+
+
+
+

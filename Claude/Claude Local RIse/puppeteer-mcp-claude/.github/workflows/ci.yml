@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths-ignore:
+      - '**/*[skip ci]*'  # Skip CI for version bump commits
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [20, 24]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install Chrome for Puppeteer
+        run: npx puppeteer browsers install chrome
+
+      - name: Build package
+        run: pnpm build
+
+      - name: Run unit tests
+        run: pnpm test
+
+      - name: Run E2E tests
+        if: matrix.node-version == 20
+        run: pnpm test:e2e
+
+      - name: Test CLI commands
+        run: |
+          # Test CLI help
+          node bin/cli.js help
+
+          # Test CLI status (should show not installed)
+          node bin/cli.js status
+
+          # Test server can start (with timeout)
+          timeout 3s node bin/cli.js serve || echo "Server started successfully"
+
+      - name: Verify package can be packed
+        run: |
+          pnpm pack --dry-run
+          echo "✅ Package structure verified"

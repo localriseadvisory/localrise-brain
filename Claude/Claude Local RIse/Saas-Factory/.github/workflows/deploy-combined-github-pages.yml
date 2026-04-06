@@ -1,0 +1,363 @@
+name: "🚀 Deploy: Documentation & Landing Page to Github Pages"
+
+on:
+  push:
+    branches: 
+      - "main"
+    paths:
+      - "Code/Landingpage/**"
+      - "docs/RazorPress/**"
+      - ".github/workflows/deploy-combined-github-pages.yml"
+  workflow_dispatch:
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
+        with:
+          fetch-depth: 0
+
+      # ========================================
+      # Build Landing Page (Blazor WASM)
+      # ========================================
+      - name: Setup .NET
+        uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309  # v5.1.0
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Publish Blazor WASM Landing Page
+        run: |
+          echo "🏗️ Publishing Blazor WASM Landing Page..."
+          cd Code/Landingpage/Landingpage.Web
+          dotnet publish -c Release -o publish
+          
+          # Verify publish succeeded
+          if [ -d "publish/wwwroot" ] && [ -f "publish/wwwroot/index.html" ]; then
+            echo "✅ Landing page published successfully"
+            ls -lh publish/wwwroot/index.html
+            
+            # Verify _framework directory exists with content
+            if [ -d "publish/wwwroot/_framework" ]; then
+              WASM_COUNT=$(find publish/wwwroot/_framework -name "*.wasm" -type f | wc -l)
+              DLL_COUNT=$(find publish/wwwroot/_framework -name "*.dll" -type f | wc -l)
+              echo "✅ _framework directory found"
+              echo "   📦 .wasm files: $WASM_COUNT"
+              echo "   📦 .dll files: $DLL_COUNT"
+              
+              if [ $WASM_COUNT -eq 0 ]; then
+                echo "❌ Error: No .wasm files found in _framework!"
+                exit 1
+              fi
+            else
+              echo "❌ Error: _framework directory not found!"
+              exit 1
+            fi
+          else
+            echo "❌ Error: Landing page publish failed!"
+            exit 1
+          fi
+
+      - name: Change base href for Landing Page
+        run: |
+          echo "🔧 Updating base href for Landing Page..."
+          cd Code/Landingpage/Landingpage.Web/publish/wwwroot
+          
+          # Backup original
+          cp index.html index.html.bak
+          
+          # Update base href
+          sed -i 's/<base href="\/" \/>/<base href="\/Saas-Factory\/" \/>/g' index.html
+          
+          # Verify change was made
+          if grep -q '<base href="/Saas-Factory/" />' index.html; then
+            echo "✅ Base href updated successfully"
+            grep '<base href=' index.html
+          else
+            echo "❌ Error: Base href update failed!"
+            exit 1
+          fi
+
+      - name: Add 404.html for SPA routing
+        run: |
+          cd Code/Landingpage/Landingpage.Web/publish/wwwroot
+          cp index.html 404.html
+
+      # ========================================
+      # Build Documentation (RazorPress)
+      # ========================================
+      - name: Setup Node.js
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238  # v6.2.0
+        with:
+          node-version: '20'
+
+      - name: Create directory junctions for content
+        run: |
+          echo "📂 Creating symlinks for content directories..."
+          cd docs/RazorPress/RazorPress/_pages
+          
+          # Remove existing symlinks/directories if they exist
+          rm -rf architecture development getting-started guides
+          
+          # Create new symlinks
+          ln -s ../../../content/architecture architecture
+          ln -s ../../../content/development development
+          ln -s ../../../content/getting-started getting-started
+          ln -s ../../../content/guides guides
+          
+          echo "✅ Created symlinks:"
+          ls -la | grep "^l"
+
+      - name: Install npm dependencies
+        working-directory: docs/RazorPress/RazorPress
+        run: |
+          echo "📦 Installing npm dependencies..."
+          npm ci --prefer-offline --no-audit
+          echo "✅ npm dependencies installed"
+          
+          # Verify tailwindcss is installed
+          if [ -f "node_modules/.bin/tailwindcss" ] || npx tailwindcss --help > /dev/null 2>&1; then
+            echo "✅ Tailwind CSS CLI available"
+          else
+            echo "❌ Error: Tailwind CSS CLI not found!"
+            exit 1
+          fi
+
+      - name: Build .NET project
+        working-directory: docs/RazorPress/RazorPress
+        run: |
+          echo "🔨 Building .NET project..."
+          dotnet clean --configuration Release
+          dotnet build . --configuration Release --no-incremental
+          echo "✅ .NET project built"
+
+      - name: Prerender static site
+        working-directory: docs/RazorPress/RazorPress
+        run: |
+          echo "🚀 Prerendering static site..."
+          dotnet run --no-launch-profile --AppTasks=prerender --configuration Release --environment Production
+          
+          echo "✅ RazorPress documentation prerendered!"
+          
+          # Verify dist directory exists and has content
+          if [ -d "dist" ]; then
+            echo "📁 dist directory contents:"
+            ls -la dist/ | head -20
+            
+            # Verify critical files exist
+            if [ -f "dist/index.html" ]; then
+              echo "✅ index.html found"
+              echo "🔍 Checking base href in index.html:"
+              grep -i "base href" dist/index.html || echo "⚠️ No base href found!"
+            else
+              echo "❌ Error: index.html not found!"
+              exit 1
+            fi
+          else
+            echo "❌ Error: dist directory not created!"
+            exit 1
+          fi
+
+      - name: Build Tailwind CSS (after prerender)
+        working-directory: docs/RazorPress/RazorPress
+        run: |
+          echo "🎨 Building Tailwind CSS with prerendered content..."
+          npx tailwindcss -i ./tailwind.input.css -o ./wwwroot/css/app.css --minify
+          echo "✅ Tailwind CSS built"
+          
+          # Verify CSS was generated and has content
+          if [ -f "wwwroot/css/app.css" ]; then
+            FILE_SIZE=$(stat -f%z "wwwroot/css/app.css" 2>/dev/null || stat -c%s "wwwroot/css/app.css" 2>/dev/null || echo "0")
+            echo "✅ app.css generated successfully ($FILE_SIZE bytes)"
+            ls -lh wwwroot/css/app.css
+            
+            if [ "$FILE_SIZE" -lt 10000 ]; then
+              echo "⚠️ Warning: app.css is suspiciously small!"
+              head -20 wwwroot/css/app.css
+              exit 1
+            fi
+          else
+            echo "❌ Error: app.css not generated!"
+            exit 1
+          fi
+          
+          # Copy the rebuilt CSS to dist
+          echo "📋 Copying rebuilt CSS to dist..."
+          mkdir -p dist/css
+          cp wwwroot/css/app.css dist/css/app.css
+          
+          # Verify the copy
+          if [ -f "dist/css/app.css" ]; then
+            DIST_FILE_SIZE=$(stat -f%z "dist/css/app.css" 2>/dev/null || stat -c%s "dist/css/app.css" 2>/dev/null || echo "0")
+            echo "✅ app.css copied to dist ($DIST_FILE_SIZE bytes)"
+            ls -lh dist/css/app.css
+          else
+            echo "❌ Error: Failed to copy app.css to dist!"
+            exit 1
+          fi
+
+      - name: Copy documentation output
+        run: |
+          echo "📋 Copying documentation output..."
+          mkdir -p documentation
+          
+          # Verify source exists before copying
+          if [ -d "docs/RazorPress/RazorPress/dist" ] && [ "$(ls -A docs/RazorPress/RazorPress/dist)" ]; then
+            cp -r docs/RazorPress/RazorPress/dist/* documentation/
+            echo "✅ Documentation copied to staging!"
+            echo "📁 Documentation directory contents:"
+            ls -la documentation/ | head -20
+          else
+            echo "❌ Error: dist directory is empty or doesn't exist!"
+            exit 1
+          fi
+
+      # ========================================
+      # Combine Landing Page + Documentation
+      # ========================================
+      - name: Create combined deployment directory
+        run: |
+          echo "🏗️ Creating combined deployment directory..."
+          mkdir -p combined-site
+
+          # Verify landing page exists
+          if [ ! -d "Code/Landingpage/Landingpage.Web/publish/wwwroot" ]; then
+            echo "❌ Error: Landing page wwwroot not found!"
+            exit 1
+          fi
+
+          # Copy landing page to root
+          echo "📄 Copying landing page..."
+          cp -r Code/Landingpage/Landingpage.Web/publish/wwwroot/* combined-site/
+          
+          # Verify _framework was copied
+          if [ ! -d "combined-site/_framework" ]; then
+            echo "❌ Error: _framework directory not copied!"
+            ls -la Code/Landingpage/Landingpage.Web/publish/wwwroot/
+            exit 1
+          fi
+          
+          # Add .nojekyll to prevent GitHub Pages from ignoring _framework directory
+          echo "📝 Adding .nojekyll file..."
+          touch combined-site/.nojekyll
+          
+          # Copy documentation to /docs subdirectory
+          echo "📚 Copying documentation..."
+          mkdir -p combined-site/docs
+          
+          if [ -d "documentation" ] && [ "$(ls -A documentation)" ]; then
+            cp -r documentation/* combined-site/docs/
+            echo "✅ Documentation copied to /docs"
+          else
+            echo "❌ Error: documentation directory is empty!"
+            exit 1
+          fi
+
+          echo "✅ Combined site structure created!"
+          echo "📁 Root directory:"
+          ls -lah combined-site/ | head -15
+          echo ""
+          echo "📁 Docs directory:"
+          ls -lah combined-site/docs/ | head -15
+          echo ""
+          echo "📁 Checking for getting-started directory:"
+          if [ -d "combined-site/docs/getting-started" ]; then
+            echo "✅ getting-started directory exists"
+            ls -la combined-site/docs/getting-started/
+          else
+            echo "❌ getting-started directory NOT found!"
+          fi
+          
+          # Verify critical files
+          echo ""
+          echo "🔍 Verifying critical files:"
+          [ -f "combined-site/.nojekyll" ] && echo "✅ .nojekyll file present" || echo "❌ Missing .nojekyll file"
+          [ -f "combined-site/index.html" ] && echo "✅ Landing page index.html" || echo "❌ Missing landing page index.html"
+          [ -d "combined-site/_framework" ] && echo "✅ Landing page _framework directory" || echo "❌ Missing _framework directory"
+          [ -f "combined-site/_framework/blazor.webassembly.js" ] && echo "✅ Blazor WASM runtime" || echo "❌ Missing Blazor WASM runtime"
+          [ -f "combined-site/docs/index.html" ] && echo "✅ Docs index.html" || echo "❌ Missing docs index.html"
+          
+          if [ -f "combined-site/docs/css/app.css" ]; then
+            FILE_SIZE=$(stat -f%z "combined-site/docs/css/app.css" 2>/dev/null || stat -c%s "combined-site/docs/css/app.css" 2>/dev/null || echo "0")
+            echo "✅ Docs CSS ($FILE_SIZE bytes)"
+            if [ "$FILE_SIZE" -lt 1000 ]; then
+              echo "⚠️ ERROR: app.css in combined-site is too small!"
+              cat combined-site/docs/css/app.css
+              exit 1
+            fi
+          else
+            echo "❌ Missing docs CSS"
+            exit 1
+          fi
+          
+          [ -f "combined-site/docs/getting-started/quick-start.html" ] && echo "✅ quick-start.html" || echo "❌ Missing quick-start.html"
+          
+          echo ""
+          echo "📦 _framework directory contents:"
+          if [ -d "combined-site/_framework" ]; then
+            ls -lh combined-site/_framework/ | head -20
+            echo ""
+            echo "📊 _framework file count: $(find combined-site/_framework -type f | wc -l)"
+          fi
+          
+          # Verify .wasm files are present
+          echo ""
+          echo "🔍 Checking for .wasm files:"
+          find combined-site/_framework -name "*.wasm" -type f || echo "⚠️ No .wasm files found!"
+          
+          # Check for any symbolic links that might cause issues
+          echo ""
+          echo "🔗 Checking for symbolic links:"
+          find combined-site -type l || echo "✅ No symbolic links found"
+
+      # ========================================
+      # Deploy to GitHub Pages
+      # ========================================
+      - name: Setup Pages
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b  # v5.0.0
+
+      - name: Upload artifact for GitHub Pages
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b  # v4.0.0
+        with:
+          path: combined-site/
+
+      - name: Save artifacts (backup)
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1  # v4.6.1
+        with:
+          name: combined-deployment
+          path: combined-site/
+          retention-days: 7
+
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e  # v4.0.5
+
+# Trigger rebuild
+
+
+
+
+
+
+
