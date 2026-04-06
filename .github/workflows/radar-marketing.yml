@@ -8,25 +8,34 @@ on:
 jobs:
   radar:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repositorio
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Instalar Claude CLI
         run: npm install -g @anthropic-ai/claude-code
+
+      - name: Configurar git identity
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
 
       - name: Rodar Radar de Marketing
         working-directory: "Claude/Claude Local RIse"
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          claude --dangerously-skip-permissions -p "$(cat .claude/commands/radar-marketing.md)"
+          claude --bare --dangerously-skip-permissions -p "$(cat .claude/commands/radar-marketing.md)"
 
       - name: Enviar email com anexos
         working-directory: "Claude/Claude Local RIse"
