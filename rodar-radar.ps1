@@ -26,8 +26,13 @@ Set-Location $projectDir
 
 try {
     $promptFile = "$projectDir\.claude\commands\radar-marketing.md"
-    $promptContent = Get-Content $promptFile -Raw -Encoding UTF8
-    $output = $promptContent | & 'C:\Users\digui\AppData\Roaming\npm\claude.cmd' --dangerously-skip-permissions -p 2>&1
+    $lines = Get-Content $promptFile -Encoding UTF8
+    $found = 0
+    $promptContent = ($lines | ForEach-Object {
+        if ($_ -eq '---') { $found++; return }
+        if ($found -ge 2) { $_ }
+    }) -join "`n"
+    $output = & 'C:\Users\digui\AppData\Roaming\npm\claude.cmd' --dangerously-skip-permissions -p $promptContent 2>&1
     $output | Add-Content -Path $logFile -Encoding UTF8
     Log 'Radar executado com sucesso.'
 }

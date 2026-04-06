@@ -32,16 +32,6 @@ jobs:
           git config --global credential.helper store
           echo "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com" > ~/.git-credentials
 
-      - name: Diagnostico claude
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          echo "=== Versao claude ==="
-          claude --version
-          echo "=== API Key configurada: ${#ANTHROPIC_API_KEY} caracteres ==="
-          echo "=== Teste simples ==="
-          claude --dangerously-skip-permissions -p "Responda apenas: OK" 2>&1 || echo "Exit code: $?"
-
       - name: Rodar Radar de Marketing
         working-directory: "Claude/Claude Local RIse"
         env:
@@ -49,7 +39,9 @@ jobs:
           GIT_TERMINAL_PROMPT: "0"
           GIT_ASKPASS: "true"
         run: |
-          claude --dangerously-skip-permissions -p "$(cat .claude/commands/radar-marketing.md)" 2>&1
+          # Remove frontmatter YAML (linhas entre --- e ---) antes de passar o prompt
+          PROMPT=$(awk '/^---/{found++; next} found>=2{print}' .claude/commands/radar-marketing.md)
+          claude --dangerously-skip-permissions -p "$PROMPT" 2>&1
 
       - name: Enviar email com anexos
         working-directory: "Claude/Claude Local RIse"
