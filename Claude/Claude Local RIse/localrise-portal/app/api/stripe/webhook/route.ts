@@ -62,9 +62,18 @@ export async function POST(request: NextRequest) {
         const customerId = invoice.customer as string
 
         // Calcular próxima data de vencimento (próximo período)
-        const subscription = await stripe.subscriptions.retrieve(
-          invoice.subscription as string
-        )
+        // Em Stripe 2025+, subscription pode estar em invoice.parent.subscription_details
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const inv = invoice as any
+        const subscriptionId: string | null =
+          inv.subscription ?? inv.parent?.subscription_details?.subscription ?? null
+
+        if (!subscriptionId) {
+          console.warn('[webhook] invoice.payment_succeeded sem subscription ID')
+          break
+        }
+
+        const subscription = await stripe.subscriptions.retrieve(subscriptionId)
         const dataVencimento = new Date(
           subscription.current_period_end * 1000
         ).toISOString()
