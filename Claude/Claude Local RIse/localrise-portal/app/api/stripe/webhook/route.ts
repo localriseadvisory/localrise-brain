@@ -73,10 +73,14 @@ export async function POST(request: NextRequest) {
           break
         }
 
-        const subscription = await stripe.subscriptions.retrieve(subscriptionId)
-        const dataVencimento = new Date(
-          subscription.current_period_end * 1000
-        ).toISOString()
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const subscription = await stripe.subscriptions.retrieve(subscriptionId) as any
+        // current_period_end em Stripe 2025+ pode estar em locais diferentes
+        const periodEnd: number =
+          subscription.current_period_end ??
+          subscription.billing_details?.current_period?.end ??
+          Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60
+        const dataVencimento = new Date(periodEnd * 1000).toISOString()
 
         await db
           .from('clients')
