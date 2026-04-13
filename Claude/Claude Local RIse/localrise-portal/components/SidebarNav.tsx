@@ -2,68 +2,175 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-type NavItem = { href: string; label: string; d: string }
+// ── Tipos ──────────────────────────────────────────────────────────────────
+// `status` controla o indicador colorido à direita do item:
+//   'active'   → ponto verde  (#22c55e) — seção ativa com dados
+//   'partial'  → ponto amarelo (#eab308) — em configuração
+//   'inactive' → ponto cinza  (#52525b) — ainda não iniciado
+//   undefined  → sem ponto (itens sem indicador de status)
+// ─────────────────────────────────────────────────────────────────────────
+type ItemStatus = 'active' | 'partial' | 'inactive'
+type NavItem = {
+  href: string
+  label: string
+  d: string
+  group: 'produto' | 'metricas' | 'admin'
+  status?: ItemStatus
+}
 
-const metrics: NavItem[] = [
+// ── Status dos itens de Métricas ──────────────────────────────────────────
+// TODO: substituir valores abaixo por dados reais do banco quando as
+//       integrações estiverem ativas. Exemplo de query Supabase:
+//
+//   const { data } = await supabase
+//     .from('clients')
+//     .select('section_status')   -- campo jsonb com status por seção
+//     .eq('id', clientId)
+//     .single()
+//   // section_status = { visao_geral: 'active', google: 'partial', ... }
+//
+// Para alternar manualmente: troque 'active' | 'partial' | 'inactive'
+// nos campos `status` abaixo.
+// ─────────────────────────────────────────────────────────────────────────
+export const sidebarItems: NavItem[] = [
+  // ── Seção Demo ─────────────────────────────────────────────────────────
+  {
+    href: '/dashboard',
+    label: 'Visao Geral',
+    d: 'M3 13h8V3H3v10zm10 8h8V3h-8v18zm-10 0h8v-6H3v6z',
+    group: 'produto',
+  },
+  {
+    href: '/dashboard/aquisicao',
+    label: 'Aquisicao',
+    d: 'M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z',
+    group: 'produto',
+  },
+  {
+    href: '/dashboard/trafego-pago',
+    label: 'Trafego Pago',
+    d: 'M4 17l6-6 4 4 6-8M20 7h-6V1',
+    group: 'produto',
+  },
+  {
+    href: '/dashboard/crm',
+    label: 'CRM e Retencao',
+    d: 'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zm11 10v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75',
+    group: 'produto',
+  },
+  {
+    href: '/dashboard/automacoes',
+    label: 'Automacoes e IA',
+    d: 'M12 2l3 7h7l-5.5 4.2L18.5 21 12 16.8 5.5 21l2-7.8L2 9h7l3-7z',
+    group: 'produto',
+  },
+  {
+    href: '/dashboard/reputacao',
+    label: 'Reputacao',
+    d: 'M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z',
+    group: 'produto',
+  },
+  {
+    href: '/dashboard/eventos',
+    label: 'Eventos',
+    d: 'M8 2v4M16 2v4M3 10h18M5 6h14a2 2 0 012 2v11a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2z',
+    group: 'produto',
+  },
+  {
+    href: '/dashboard/sistema-localrise',
+    label: 'Sistema LocalRise',
+    d: 'M12 3l7 4v5c0 5-3.5 9.5-7 11-3.5-1.5-7-6-7-11V7l7-4zm0 5v4m0 4h.01',
+    group: 'produto',
+  },
+
+  // ── Seção Métricas (com indicadores de status) ─────────────────────────
+  // Edite o campo `status` de cada item abaixo para controlar o ponto:
+  //   'active' = verde | 'partial' = amarelo | 'inactive' = cinza
   {
     href: '/dashboard',
     label: 'Visão Geral',
-    d: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z',
+    d: 'M3 13h8V3H3v10zm10 8h8V3h-8v18zm-10 0h8v-6H3v6z',
+    group: 'metricas',
+    status: 'active',      // ← altere aqui para mudar o status
   },
   {
     href: '/dashboard/google',
     label: 'Google Business',
-    d: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z',
+    d: 'M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z',
+    group: 'metricas',
+    status: 'partial',     // ← altere aqui para mudar o status
   },
   {
     href: '/dashboard/instagram',
     label: 'Instagram',
-    d: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z',
+    d: 'M16 2.5H8A5.5 5.5 0 002.5 8v8A5.5 5.5 0 008 21.5h8a5.5 5.5 0 005.5-5.5V8A5.5 5.5 0 0016 2.5zM12 16a4 4 0 110-8 4 4 0 010 8zm4.5-9a1 1 0 110-2 1 1 0 010 2z',
+    group: 'metricas',
+    status: 'partial',     // ← altere aqui para mudar o status
   },
   {
     href: '/dashboard/site',
     label: 'Site & SEO',
-    d: 'M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9',
+    d: 'M12 2a10 10 0 100 20A10 10 0 0012 2zm0 0c-2.5 3-4 6.5-4 10s1.5 7 4 10m0-20c2.5 3 4 6.5 4 10s-1.5 7-4 10M2 12h20',
+    group: 'metricas',
+    status: 'inactive',    // ← altere aqui para mudar o status
   },
   {
     href: '/dashboard/ads',
     label: 'Google Ads',
-    d: 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6',
+    d: 'M4 17l6-6 4 4 6-8M20 7h-6V1',
+    group: 'metricas',
+    status: 'inactive',    // ← altere aqui para mudar o status
   },
   {
     href: '/dashboard/relatorios',
     label: 'Relatórios',
-    d: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+    d: 'M9 17v-2m3 2v-4m3 4v-6M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
+    group: 'metricas',
+    status: 'inactive',    // ← altere aqui para mudar o status
   },
-]
 
-const adminItems: NavItem[] = [
+  // ── Seção Admin ────────────────────────────────────────────────────────
   {
     href: '/admin',
     label: 'Clientes',
     d: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z',
+    group: 'admin',
   },
   {
     href: '/admin/metricas',
-    label: 'Inserir Métricas',
+    label: 'Inserir Metricas',
     d: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z',
+    group: 'admin',
   },
 ]
 
 function NavIcon({ d }: { d: string }) {
   return (
-    <svg
-      width="14" height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      style={{ flexShrink: 0 }}
-    >
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
       <path d={d} />
     </svg>
+  )
+}
+
+// Cores dos pontos de status — edite aqui para ajustar globalmente
+const STATUS_COLOR: Record<ItemStatus, string> = {
+  active:   '#22c55e',  // verde
+  partial:  '#eab308',  // amarelo
+  inactive: '#52525b',  // cinza
+}
+
+function StatusDot({ status }: { status: ItemStatus }) {
+  return (
+    <span
+      style={{
+        display: 'inline-block',
+        width: 8,
+        height: 8,
+        borderRadius: '50%',
+        background: STATUS_COLOR[status],
+        flexShrink: 0,
+      }}
+    />
   )
 }
 
@@ -71,57 +178,118 @@ function NavLink({ item, active }: { item: NavItem; active: boolean }) {
   return (
     <Link
       href={item.href}
-      className="flex items-center gap-3 rounded-xl text-sm transition-all"
+      className="flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm transition-all"
       style={{
-        padding: '9px 12px',
-        marginBottom: 2,
-        color: active ? '#ffffff' : '#aaa',
-        background: active ? 'rgba(227,27,35,0.08)' : 'transparent',
-        fontWeight: active ? 600 : 400,
-        letterSpacing: active ? '-0.01em' : 'normal',
+        color: active ? '#fff' : '#a1a1aa',
+        background: active ? 'linear-gradient(90deg, rgba(227,27,35,0.14), rgba(227,27,35,0.05))' : 'transparent',
+        border: active ? '1px solid rgba(227,27,35,0.16)' : '1px solid transparent',
+        fontWeight: active ? 600 : 500,
       }}
     >
-      <span style={{ color: active ? '#E31B23' : '#777' }}>
+      <span style={{ color: active ? '#E31B23' : '#71717a' }}>
         <NavIcon d={item.d} />
       </span>
-      {item.label}
+      <span className="flex-1">{item.label}</span>
+      {item.status && <StatusDot status={item.status} />}
     </Link>
   )
 }
 
-export default function SidebarNav({ isAdmin }: { isAdmin: boolean }) {
+export default function SidebarNav({ isAdmin, basePath = '/dashboard' }: { isAdmin: boolean; basePath?: string }) {
   const pathname = usePathname()
 
-  return (
-    <nav className="flex-1 px-3 py-4 overflow-y-auto">
-      <p
-        className="px-3 mb-2 font-semibold uppercase"
-        style={{ color: '#666', fontSize: 10, letterSpacing: '0.1em' }}
-      >
-        Métricas
-      </p>
-      {metrics.map(item => {
-        const active = item.href === '/dashboard'
-          ? pathname === '/dashboard'
-          : pathname.startsWith(item.href)
-        return <NavLink key={item.href} item={item} active={active} />
-      })}
+  const productItems = sidebarItems
+    .filter((item) => item.group === 'produto')
+    .map((item) => ({
+      ...item,
+      href: item.href === '/dashboard' ? basePath : `${basePath}${item.href.replace('/dashboard', '')}`,
+    }))
 
+  // Itens com status — hrefs já são absolutos (não passam pelo basePath da demo)
+  const metricasItems = sidebarItems.filter((item) => item.group === 'metricas')
+
+  const adminItems = sidebarItems.filter((item) => item.group === 'admin')
+
+  function isActive(href: string) {
+    if (href === '/dashboard' || href === basePath) return pathname === href || pathname === basePath
+    return pathname.startsWith(href)
+  }
+
+  return (
+    <nav className="flex-1 overflow-y-auto px-3 py-4">
+      {/* Seção Demo */}
+      <div className="mb-6">
+        <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.18em]" style={{ color: '#71717a' }}>
+          Produto
+        </p>
+        <div className="space-y-1">
+          {productItems.map((item) => (
+            <NavLink key={item.href} item={item} active={isActive(item.href)} />
+          ))}
+        </div>
+      </div>
+
+      {/* Seção Métricas com indicadores de status */}
+      <div className="mb-6">
+        <div style={{ height: 1, background: '#18181b', margin: '0 12px 14px' }} />
+        <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.18em]" style={{ color: '#71717a' }}>
+          Métricas
+        </p>
+        <div className="space-y-1">
+          {metricasItems.map((item) => (
+            <NavLink key={item.label} item={item} active={isActive(item.href)} />
+          ))}
+        </div>
+      </div>
+
+      {/* Seção Admin — apenas para admins */}
       {isAdmin && (
-        <>
-          <div style={{ height: 1, background: '#141414', margin: '16px 0 14px' }} />
-          <p
-            className="px-3 mb-2 font-semibold uppercase"
-            style={{ color: '#666', fontSize: 10, letterSpacing: '0.1em' }}
-          >
+        <div>
+          <div style={{ height: 1, background: '#18181b', margin: '0 12px 14px' }} />
+          <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.18em]" style={{ color: '#71717a' }}>
             Admin
           </p>
-          {adminItems.map(item => {
-            const active = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href))
-            return <NavLink key={item.href} item={item} active={active} />
-          })}
-        </>
+          <div className="space-y-1">
+            {adminItems.map((item) => (
+              <NavLink key={item.href} item={item} active={pathname === item.href || pathname.startsWith(`${item.href}/`)} />
+            ))}
+          </div>
+        </div>
       )}
     </nav>
+  )
+}
+
+export function MobileProductNav({ basePath = '/dashboard' }: { basePath?: string }) {
+  const pathname = usePathname()
+  const productItems = sidebarItems
+    .filter((item) => item.group === 'produto')
+    .map((item) => ({
+      ...item,
+      href: item.href === '/dashboard' ? basePath : `${basePath}${item.href.replace('/dashboard', '')}`,
+    }))
+
+  return (
+    <div className="border-b border-white/6 bg-black/20 px-4 py-3 backdrop-blur xl:hidden">
+      <div className="flex gap-2 overflow-x-auto pb-1">
+        {productItems.map((item) => {
+          const active = item.href === basePath ? pathname === item.href : pathname.startsWith(item.href)
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="whitespace-nowrap rounded-full border px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] transition-all"
+              style={{
+                borderColor: active ? 'rgba(227,27,35,0.24)' : 'rgba(255,255,255,0.08)',
+                background: active ? 'rgba(227,27,35,0.12)' : 'rgba(255,255,255,0.03)',
+                color: active ? '#fff' : '#a1a1aa',
+              }}
+            >
+              {item.label}
+            </Link>
+          )
+        })}
+      </div>
+    </div>
   )
 }

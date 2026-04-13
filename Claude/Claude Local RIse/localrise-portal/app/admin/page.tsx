@@ -1,12 +1,13 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { IconUsers, IconTrendingUp, IconCheck } from '@/components/icons'
+import { AssinaturaActions } from './AssinaturaActions'
 
 export default async function AdminPage() {
   const supabase = await createClient()
   const { data: clients } = await supabase
     .from('clients')
-    .select('*')
+    .select('id, name, phone, nicho, cidade, plano, status, status_assinatura, data_vencimento, ativado_manualmente')
     .order('created_at', { ascending: false })
 
   // Buscar quais clientes já têm integrações configuradas
@@ -24,6 +25,18 @@ export default async function AdminPage() {
     essencial: '#666',
     profissional: '#3B82F6',
     elite: '#F59E0B',
+  }
+  const assinaturaColor: Record<string, string> = {
+    ativa: '#22C55E',
+    trial: '#3B82F6',
+    inativa: '#F59E0B',
+    cancelada: '#EF4444',
+  }
+  const assinaturaLabel: Record<string, string> = {
+    ativa: 'Ativa',
+    trial: 'Trial',
+    inativa: 'Inativa',
+    cancelada: 'Cancelada',
   }
 
   return (
@@ -47,7 +60,7 @@ export default async function AdminPage() {
           <table className="w-full text-sm">
             <thead>
               <tr style={{ background: '#181818', borderBottom: '1px solid #1e1e1e' }}>
-                {['Nome', 'Nicho', 'Cidade', 'Plano', 'Status', 'Ações'].map(h => (
+                {['Nome', 'Nicho', 'Cidade', 'Plano', 'Status', 'Assinatura', 'Vencimento', 'Ações'].map(h => (
                   <th key={h} className="text-left px-4 py-3 text-xs font-semibold" style={{ color: '#444' }}>
                     {h}
                   </th>
@@ -83,23 +96,61 @@ export default async function AdminPage() {
                     </span>
                   </td>
                   <td className="px-4 py-3.5">
-                    <div className="flex items-center gap-2">
-                      <Link href={`/admin/metricas/${client.id}`}
-                        className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition-colors hover:opacity-80"
-                        style={{ background: '#181818', color: '#3B82F6', border: '1px solid #1e1e1e' }}>
-                        <IconTrendingUp size={12} color="#3B82F6" />
-                        Métricas
-                      </Link>
-                      <Link href={`/admin/integracoes/${client.id}`}
-                        className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition-colors hover:opacity-80"
+                    {client.status_assinatura ? (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold"
                         style={{
-                          background: '#181818',
-                          color: integrationSet.has(client.id) ? '#22C55E' : '#555',
-                          border: '1px solid #1e1e1e',
+                          background: (assinaturaColor[client.status_assinatura] ?? '#666') + '18',
+                          color: assinaturaColor[client.status_assinatura] ?? '#666',
                         }}>
-                        <IconCheck size={12} color={integrationSet.has(client.id) ? '#22C55E' : '#555'} />
-                        {integrationSet.has(client.id) ? 'Integrado' : 'Integrar'}
-                      </Link>
+                        <span style={{
+                          width: 5, height: 5, borderRadius: '50%',
+                          background: assinaturaColor[client.status_assinatura] ?? '#666',
+                          display: 'inline-block',
+                          flexShrink: 0,
+                        }} />
+                        {assinaturaLabel[client.status_assinatura] ?? client.status_assinatura}
+                        {client.ativado_manualmente && (
+                          <span title="Ativado manualmente" style={{ color: '#888', fontSize: 10 }}>M</span>
+                        )}
+                      </span>
+                    ) : (
+                      <span style={{ color: '#444', fontSize: 12 }}>—</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3.5">
+                    {client.data_vencimento ? (
+                      <span className="text-xs" style={{ color: '#555' }}>
+                        {new Date(client.data_vencimento).toLocaleDateString('pt-BR')}
+                      </span>
+                    ) : (
+                      <span style={{ color: '#444', fontSize: 12 }}>—</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3.5">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-2">
+                        <Link href={`/admin/metricas/${client.id}`}
+                          className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition-colors hover:opacity-80"
+                          style={{ background: '#181818', color: '#3B82F6', border: '1px solid #1e1e1e' }}>
+                          <IconTrendingUp size={12} color="#3B82F6" />
+                          Métricas
+                        </Link>
+                        <Link href={`/admin/integracoes/${client.id}`}
+                          className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition-colors hover:opacity-80"
+                          style={{
+                            background: '#181818',
+                            color: integrationSet.has(client.id) ? '#22C55E' : '#555',
+                            border: '1px solid #1e1e1e',
+                          }}>
+                          <IconCheck size={12} color={integrationSet.has(client.id) ? '#22C55E' : '#555'} />
+                          {integrationSet.has(client.id) ? 'Integrado' : 'Integrar'}
+                        </Link>
+                      </div>
+                      <AssinaturaActions
+                        clientId={client.id}
+                        clientName={client.name}
+                        statusAtual={client.status_assinatura ?? null}
+                      />
                     </div>
                   </td>
                 </tr>

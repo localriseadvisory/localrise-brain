@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import Image from 'next/image'
 import LogoutButton from '@/components/LogoutButton'
-import SidebarNav from '@/components/SidebarNav'
+import SidebarNav, { MobileProductNav } from '@/components/SidebarNav'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient()
@@ -10,8 +11,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (!user) redirect('/login')
 
   const isAdmin = user.user_metadata?.role === 'admin'
-
-  let clientName = isAdmin ? 'LocalRise Advisory' : 'Minha Empresa'
+  let clientName = 'Don Aurelio Prime Grill'
 
   if (!isAdmin) {
     const { data } = await supabase
@@ -19,101 +19,75 @@ export default async function DashboardLayout({ children }: { children: React.Re
       .select('clients(name)')
       .eq('id', user.id)
       .single()
-    const c = data?.clients as { name?: string } | null
-    clientName = c?.name || 'Minha Empresa'
+    const client = data?.clients as { name?: string } | null
+    clientName = client?.name || 'Don Aurelio Prime Grill'
   }
 
   return (
-    <div className="min-h-screen flex" style={{ background: '#080808' }}>
-
-      {/* Sidebar */}
-      <aside
-        className="flex-shrink-0 flex flex-col"
-        style={{
-          width: 252,
-          background: '#080808',
-          borderRight: '1px solid #141414',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          bottom: 0,
-        }}
-      >
-        {/* Brand header */}
-        <div
-          className="flex items-center gap-3 px-5"
-          style={{ height: 68, borderBottom: '1px solid #141414' }}
+    <div className="min-h-screen" style={{ background: 'radial-gradient(circle at top, rgba(227,27,35,0.08), transparent 28%), #09090b' }}>
+      <div className="flex min-h-screen">
+        <aside
+          className="hidden xl:flex xl:w-[300px] xl:flex-col"
+          style={{
+            background: 'rgba(10,10,12,0.9)',
+            borderRight: '1px solid rgba(255,255,255,0.06)',
+            backdropFilter: 'blur(18px)',
+          }}
         >
-          {/* Icon mark — Oficial PNG em vermelho, legível em qualquer tamanho */}
-          <div
-            className="flex items-center justify-center flex-shrink-0 rounded-xl overflow-hidden"
-            style={{
-              width: 36,
-              height: 36,
-              background: '#0f0f0f',
-              border: '1px solid #1e1e1e',
-              padding: 4,
-            }}
-          >
-            <img
-              src="/logo-icon.png"
-              alt=""
-              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-            />
-          </div>
-
-          {/* Wordmark */}
-          <div>
-            <div
-              className="font-black text-white leading-none"
-              style={{ fontSize: 14, letterSpacing: '-0.02em' }}
-            >
-              LocalRise
-            </div>
-            <div
-              className="font-medium leading-none mt-0.5"
-              style={{ fontSize: 10, color: '#E31B23', letterSpacing: '0.08em', textTransform: 'uppercase' }}
-            >
-              Advisory
+          <div className="border-b border-white/6 px-5 py-5">
+            <div className="flex items-center gap-3">
+              <div
+                className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl"
+                style={{
+                  background: 'linear-gradient(180deg, rgba(227,27,35,0.18), rgba(255,255,255,0.02))',
+                  border: '1px solid rgba(227,27,35,0.18)',
+                }}
+              >
+                <Image src="/logo-icon.png" alt="LocalRise" width={28} height={28} style={{ width: 28, height: 28, objectFit: 'contain' }} />
+              </div>
+              <div>
+                <div className="text-sm font-black tracking-tight text-white">LocalRise</div>
+                <div className="text-[11px] font-semibold uppercase tracking-[0.18em]" style={{ color: '#E31B23' }}>
+                  Growth OS Demo
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Client badge */}
-        <div className="mx-4 mt-4">
-          <div
-            className="rounded-xl px-4 py-3"
-            style={{ background: '#0f0f0f', border: '1px solid #161616' }}
-          >
-            <div
-              className="font-semibold uppercase mb-1"
-              style={{ fontSize: 9, color: '#666', letterSpacing: '0.1em' }}
-            >
-              Empresa
-            </div>
-            <div
-              className="font-bold text-white truncate"
-              style={{ fontSize: 13, letterSpacing: '-0.01em' }}
-            >
-              {clientName}
+          <div className="px-4 pt-4">
+            <div className="rounded-3xl border border-white/8 bg-white/[0.03] px-4 py-4">
+              <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-zinc-500">Conta ativa</div>
+              <div className="mt-2 text-sm font-bold text-white">{clientName}</div>
+              <div className="mt-2 text-xs leading-5 text-zinc-400">
+                Demo SaaS para restaurantes com aquisicao, CRM, automacoes, reputacao e eventos.
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Nav */}
-        <SidebarNav isAdmin={isAdmin} />
+          <SidebarNav isAdmin={isAdmin} />
 
-        {/* Bottom */}
-        <div className="px-4 pb-5 pt-3 mt-auto" style={{ borderTop: '1px solid #141414' }}>
-          <div className="text-xs mb-3 truncate" style={{ color: '#777' }}>{user.email}</div>
-          <LogoutButton />
-        </div>
-      </aside>
+          <div className="mt-auto border-t border-white/6 px-4 py-4">
+            <div className="mb-3 text-xs text-zinc-500">{user.email}</div>
+            <LogoutButton />
+          </div>
+        </aside>
 
-      {/* Main */}
-      <main className="flex-1 overflow-auto" style={{ marginLeft: 252, minHeight: '100vh' }}>
-        {children}
-      </main>
+        <main className="min-w-0 flex-1">
+          <div className="border-b border-white/6 bg-black/20 px-4 py-4 backdrop-blur xl:hidden">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">LocalRise Demo</div>
+                <div className="text-sm font-bold text-white">{clientName}</div>
+              </div>
+              <div className="rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-xs font-semibold text-red-300">
+                Dashboard SaaS
+              </div>
+            </div>
+          </div>
+          <MobileProductNav />
+          {children}
+        </main>
+      </div>
     </div>
   )
 }

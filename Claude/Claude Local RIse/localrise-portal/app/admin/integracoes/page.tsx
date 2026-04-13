@@ -12,18 +12,28 @@ export default async function IntegracoesPage() {
 
   const { data: integrations } = await supabase
     .from('client_integrations')
-    .select('client_id, ga4_property_id, instagram_access_token, google_ads_customer_id, ultima_sincronizacao')
+    .select('client_id, provider, account_name, is_active, last_sync_at')
 
-  const integMap = new Map(
-    (integrations ?? []).map(i => [i.client_id, i])
-  )
+  // Agrupa por client_id
+  const integMap = new Map<string, { google: boolean; instagram: boolean; lastSync: string | null }>()
+  for (const integ of integrations ?? []) {
+    const current = integMap.get(integ.client_id) ?? { google: false, instagram: false, lastSync: null }
+    if (integ.provider === 'google'    && integ.is_active) current.google    = true
+    if (integ.provider === 'instagram' && integ.is_active) current.instagram = true
+    if (integ.last_sync_at) {
+      if (!current.lastSync || integ.last_sync_at > current.lastSync) {
+        current.lastSync = integ.last_sync_at
+      }
+    }
+    integMap.set(integ.client_id, current)
+  }
 
   return (
     <div style={{ padding: '32px 40px', maxWidth: 900 }}>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">Integrações</h1>
+        <h1 className="text-2xl font-bold text-white">Conexões OAuth</h1>
         <p className="text-sm mt-1" style={{ color: '#555' }}>
-          Configure as APIs de cada cliente para sincronização automática de métricas
+          Gerencie as conexões de cada cliente para sincronização automática de métricas
         </p>
       </div>
 
@@ -32,14 +42,14 @@ export default async function IntegracoesPage() {
         <p className="text-xs font-semibold mb-3" style={{ color: '#777' }}>COMO FUNCIONA</p>
         <div className="grid grid-cols-3 gap-4">
           {[
-            { icon: '1', title: 'Configure uma vez', desc: 'Adicione o GA4 Property ID, token do Instagram e Ads ID do cliente' },
-            { icon: '2', title: 'Clique em Sincronizar', desc: 'Na tela de métricas, selecione o mês e clique no botão verde' },
-            { icon: '3', title: 'Dados preenchidos', desc: 'GA4, Instagram e Ads são preenchidos automaticamente. Só o GBP fica manual.' },
+            { n: '1', title: 'Conectar uma vez', desc: 'Clique em "Configurar" → autorize a conta Google ou Instagram do cliente' },
+            { n: '2', title: 'Tokens salvos com segurança', desc: 'Tokens OAuth ficam no Supabase com RLS. Renovação automática.' },
+            { n: '3', title: 'Sincronize quando quiser', desc: 'Em Inserir Métricas, clique em "Sincronizar" — GA4, Search Console, Ads e Instagram preenchidos automaticamente.' },
           ].map(item => (
-            <div key={item.icon} className="flex items-start gap-3">
+            <div key={item.n} className="flex items-start gap-3">
               <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 text-xs font-bold text-white"
                 style={{ background: '#E31B23' }}>
-                {item.icon}
+                {item.n}
               </div>
               <div>
                 <div className="text-xs font-semibold text-white mb-1">{item.title}</div>
@@ -55,21 +65,23 @@ export default async function IntegracoesPage() {
           <table className="w-full text-sm">
             <thead>
               <tr style={{ background: '#181818', borderBottom: '1px solid #1e1e1e' }}>
-                {['Cliente', 'GA4', 'Instagram', 'Google Ads', 'Última Sync', 'Ação'].map(h => (
+                {['Cliente', 'Google', 'Instagram', 'Última Sync', 'Ação'].map(h => (
                   <th key={h} className="text-left px-4 py-3 text-xs font-semibold" style={{ color: '#444' }}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {clients.map(client => {
-                const integ = integMap.get(client.id)
-                const check = (val: string | null | undefined) => val
+                const integ   = integMap.get(client.id)
+                const syncDate = integ?.lastSync
+                  ? new Date(integ.lastSync).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
+                  : '—'
+
+                const badge = (ok: boolean) => ok
                   ? <span className="text-xs px-2 py-0.5 rounded-lg" style={{ background: 'rgba(34,197,94,0.08)', color: '#22C55E', border: '1px solid rgba(34,197,94,0.12)' }}>✓</span>
                   : <span className="text-xs px-2 py-0.5 rounded-lg" style={{ background: '#181818', color: '#444', border: '1px solid #222' }}>—</span>
 
-                const syncDate = integ?.ultima_sincronizacao
-                  ? new Date(integ.ultima_sincronizacao).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
-                  : '—'
+                const allConnected = integ?.google && integ?.instagram
 
                 return (
                   <tr key={client.id} style={{ borderBottom: '1px solid #181818', background: '#111111' }}
@@ -78,15 +90,20 @@ export default async function IntegracoesPage() {
                       <div className="font-semibold text-white">{client.name}</div>
                       <div className="text-xs mt-0.5" style={{ color: '#444' }}>{client.nicho ?? ''}</div>
                     </td>
-                    <td className="px-4 py-3.5">{check(integ?.ga4_property_id)}</td>
-                    <td className="px-4 py-3.5">{check(integ?.instagram_access_token)}</td>
-                    <td className="px-4 py-3.5">{check(integ?.google_ads_customer_id)}</td>
+                    <td className="px-4 py-3.5">{badge(integ?.google ?? false)}</td>
+                    <td className="px-4 py-3.5">{badge(integ?.instagram ?? false)}</td>
                     <td className="px-4 py-3.5 text-xs" style={{ color: '#555' }}>{syncDate}</td>
                     <td className="px-4 py-3.5">
-                      <Link href={`/admin/integracoes/${client.id}`}
+                      <Link
+                        href={`/admin/clientes/${client.id}/conexoes`}
                         className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition-opacity hover:opacity-80"
-                        style={{ background: '#181818', color: integ ? '#22C55E' : '#E31B23', border: '1px solid #1e1e1e' }}>
-                        {integ ? '⚙ Editar' : '+ Configurar'}
+                        style={{
+                          background:   '#181818',
+                          color:        allConnected ? '#22C55E' : '#E31B23',
+                          border:       '1px solid #1e1e1e',
+                        }}
+                      >
+                        {allConnected ? '⚙ Gerenciar' : '+ Conectar'}
                       </Link>
                     </td>
                   </tr>

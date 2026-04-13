@@ -18,7 +18,7 @@ const TABS: { key: Tab; label: string }[] = [
 export default function MetricasClientePage({ params }: { params: Promise<{ clientId: string }> }) {
   const { clientId } = use(params)
   const router = useRouter()
-  const supabase = createClient()
+  const [supabase] = useState(() => createClient())
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [syncing, setSyncing] = useState(false)
@@ -57,7 +57,7 @@ export default function MetricasClientePage({ params }: { params: Promise<{ clie
       setLoading(false)
     }
     load()
-  }, [clientId, mes, ano])
+  }, [clientId, mes, ano, supabase])
 
   async function handleSync() {
     setSyncing(true)

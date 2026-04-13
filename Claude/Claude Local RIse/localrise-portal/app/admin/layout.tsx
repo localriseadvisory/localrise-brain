@@ -29,7 +29,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           {[
             { href: '/admin', label: 'Clientes', icon: '👥' },
             { href: '/admin/metricas', label: 'Inserir Métricas', icon: '✏️' },
-            { href: '/admin/integracoes', label: 'Integrações', icon: '⚙️' },
+            { href: '/admin/integracoes', label: 'Conexões OAuth', icon: '🔗' },
             { href: '/dashboard', label: 'Ver como Cliente', icon: '👁️' },
           ].map(item => (
             <Link key={item.href} href={item.href}
