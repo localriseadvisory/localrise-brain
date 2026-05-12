@@ -118,6 +118,7 @@ export function ChannelKpiCard({
   iconColor,
   iconBg,
   positive = true,
+  connected = true,
 }: {
   icon: ElementType
   label: string
@@ -126,18 +127,28 @@ export function ChannelKpiCard({
   iconColor: string
   iconBg: string
   positive?: boolean
+  connected?: boolean
 }) {
+  if (!connected) {
+    return (
+      <div className="lr-panel p-5" style={{ borderColor: 'rgba(239,68,68,0.18)', background: 'rgba(239,68,68,0.04)' }}>
+        <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-2xl" style={{ background: 'rgba(239,68,68,0.1)' }}>
+          <Icon size={18} style={{ color: '#f87171' }} />
+        </div>
+        <div className="text-2xl font-black tracking-tight text-zinc-600">—</div>
+        <div className="mt-1 text-sm text-zinc-500">{label}</div>
+        <div className="mt-3 text-xs font-semibold text-red-500">Não conectado</div>
+      </div>
+    )
+  }
   return (
     <div className="lr-panel p-5">
-      {/* Ícone colorido no topo esquerdo */}
       <div
         className="mb-4 flex h-10 w-10 items-center justify-center rounded-2xl"
         style={{ background: iconBg }}
       >
         <Icon size={18} style={{ color: iconColor }} />
       </div>
-      {/* TODO: substituir value, change e positive por dados reais do banco
-          quando as integrações estiverem ativas (ex: buscar de metrics_snapshots) */}
       <div className="text-2xl font-black tracking-tight text-white">{value}</div>
       <div className="mt-1 text-sm text-zinc-400">{label}</div>
       <div className={`mt-3 text-xs font-semibold ${positive ? 'text-emerald-400' : 'text-amber-400'}`}>

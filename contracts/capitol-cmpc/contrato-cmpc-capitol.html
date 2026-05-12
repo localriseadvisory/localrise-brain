@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contrato CMPC | Capitol Consultoria</title>
+  <style>
+    :root {
+      --ink: #172b3a;
+      --muted: #5f6b76;
+      --border: #d6dde4;
+      --accent: #d9435f;
+      --paper: #ffffff;
+      --bg: #f3f5f7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.6;
+    }
+
+    .page {
+      width: min(920px, calc(100vw - 32px));
+      margin: 24px auto;
+      background: var(--paper);
+      padding: 56px 64px 72px;
+      box-shadow: 0 18px 40px rgba(23, 43, 58, 0.08);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 20px;
+      margin-bottom: 28px;
+    }
+
+    .header img {
+      height: 70px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .header-meta {
+      text-align: right;
+    }
+
+    .header-meta h1 {
+      margin: 0;
+      font-size: 14px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .header-meta strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 22px;
+      letter-spacing: 0.02em;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    h2 {
+      margin: 0 0 24px;
+      font-size: 24px;
+      line-height: 1.3;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    p {
+      margin: 0 0 14px;
+      text-align: justify;
+    }
+
+    .qualificacao strong,
+    .clause-title {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .clause {
+      margin-top: 22px;
+    }
+
+    .clause-title {
+      margin-bottom: 10px;
+      font-size: 15px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    ol.scope,
+    ol.obrigacoes {
+      margin: 10px 0 14px 22px;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 8px;
+      text-align: justify;
+    }
+
+    .signature-block {
+      margin-top: 48px;
+    }
+
+    .signature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    .signature {
+      padding-top: 48px;
+      border-top: 1px solid var(--ink);
+      text-align: center;
+      min-height: 120px;
+    }
+
+    .signature strong {
+      display: block;
+      font-family: Arial, Helvetica, sans-serif;
+      margin-bottom: 6px;
+    }
+
+    .note {
+      margin-top: 22px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      background: #fafbfc;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .page {
+        width: 100%;
+        margin: 0;
+        padding: 28px 36px 40px;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <img src="./capitol-logo.png" alt="Capitol Consultoria Ltda" />
+      <div class="header-meta">
+        <h1>Capitol Consultoria Ltda</h1>
+        <strong>Contrato de Prestação de Serviços</strong>
+      </div>
+    </header>
+
+    <h2>Contrato de Prestação de Serviços de Assessoria em Relações Governamentais e Institucionais</h2>
+
+    <p class="qualificacao">
+      Pelo presente instrumento particular, de um lado,
+      <strong>CMPC</strong>, pessoa jurídica inscrita no CNPJ sob o nº <strong>[●]</strong>, com sede em
+      <strong>[●]</strong>, neste ato representada por <strong>[●]</strong>, <strong>[cargo]</strong>, doravante denominada
+      <strong>CONTRATANTE</strong>; e, de outro lado, <strong>CAPITOL CONSULTORIA LTDA</strong>, pessoa jurídica de direito
+      privado, inscrita no CNPJ sob o nº <strong>10.248.895/0001-31</strong>, com sede no Setor de Rádio e TV Sul
+      (SRTVS), Quadra 701, Conjunto L, nº 38, Bloco 01, Sala 608, Edifício Assis Chateaubriand, Asa Sul,
+      Brasília/DF, CEP 70.340-906, neste ato representada por seu Sócio Diretor, <strong>Luiz Carlos Saraiva</strong>,
+      doravante denominada <strong>CONTRATADA</strong>; têm entre si justo e acordado o presente Contrato de Prestação
+      de Serviços, que se regerá pelas cláusulas e condições seguintes.
+    </p>
+
+    <section class="clause">
+      <div class="clause-title">Cláusula Primeira – Do Objeto</div>
+      <p>
+        O presente contrato tem por objeto a prestação, pela CONTRATADA, de serviços especializados de assessoria
+        em Relações Governamentais e Institucionais, com atuação em Brasília/DF, voltados à antecipação de cenários,
+        defesa de interesses legítimos da CONTRATANTE, acompanhamento de agendas estratégicas e fortalecimento do
+        diálogo institucional com órgãos e agentes do Poder Público.
+      </p>
+      <p>
+        A atuação da CONTRATADA dar-se-á em caráter não exclusivo e consistirá em obrigação de meio, não implicando
+        garantia de resultado específico, aprovação de medidas, obtenção de atos administrativos, legislativos ou
+        regulatórios, nem qualquer compromisso com deliberações de terceiros.
+      </p>
+    </section>
+
+    <section class="clause">
+      <div class="clause-title">Cláusula Segunda – Do Escopo dos Serviços</div>
+      <p>Os serviços compreenderão, de forma não exaustiva:</p>
+      <ol class="scope" type="I">
+        <li>monitoramento do Poder Executivo Federal, do Congresso Nacional e de temas regulatórios de interesse da CONTRATANTE;</li>
+        <li>mapeamento, gestão e acompanhamento de stakeholders estratégicos, públicos e privados;</li>
+        <li>atuação institucional junto a ministérios, autarquias, agências reguladoras e demais órgãos federais, conforme alinhamento prévio com a CONTRATANTE;</li>
+        <li>elaboração de notas técnicas, subsídios, memorandos executivos e sugestões de posicionamento institucional, quando demandado;</li>
+        <li>estruturação, manutenção e execução de agenda institucional em Brasília/DF;</li>
+        <li>acompanhamento de reuniões, audiências, agendas públicas e interlocuções estratégicas relacionadas aos interesses da CONTRATANTE;</li>
+        <li>emissão de relatórios estratégicos e atualizações executivas sobre temas regulatórios, tributários, legislativos e setoriais;</li>
+        <li>apoio institucional relacionado ao ambiente de negócios da CONTRATANTE no setor de celulose, papel, base florestal e economia renovável.</li>
+      </ol>
+      <p>
+        Parágrafo único. Não se incluem no escopo, salvo ajuste escrito específico entre as partes, a execução de serviços
+        jurídicos contenciosos, consultoria tributária formal, elaboração de pareceres legais, atividades contábeis,
+        representação judicial ou administrativa com poderes de mandato, nem a prática de atos privativos de outras
+        profissões regulamentadas.
+      </p>
+    </section>
+
+    <section class="clause">
+      <div class="clause-title">Cláusula Terceira – Da Metodologia de Atuação</div>
+      <p>
+        A CONTRATADA prestará os serviços de forma personalizada, com presença ativa em Brasília/DF, interlocução de alto
+        nível e alinhamento contínuo com a CONTRATANTE, observadas as prioridades estratégicas definidas em comum acordo.
+      </p>
+      <p>
+        Sempre que necessário, as partes poderão realizar reuniões de alinhamento, presenciais ou remotas, para avaliação
+        de cenário, definição de posicionamento institucional e priorização de agendas, temas e interlocuções.
+      </p>
+    </section>
+
+    <section class="clause">
+      <div class="clause-title">Cláusula Quarta – Da Vigência</div>
+      <p>
+        O presente contrato vigorará da data de sua assinatura até <strong>31 de dezembro de 2026</strong>, podendo ser
+        prorrogado mediante termo aditivo escrito firmado entre as partes.
+      </p>
+    </section>
+
+    <section class="clause">
+      <div class="clause-title">Cláusula Quinta – Dos Honorários e das Condições de Pagamento</div>
+      <p>
+        Pelos serviços objeto deste contrato, a CONTRATANTE pagará à CONTRATADA o valor mensal de
+        <strong>R$ 74.000,00 (setenta e quatro mil reais)</strong>, mediante apresentação da respectiva nota fiscal.
+      </p>
+      <p>
+        §1º O pagamento deverá ser efetuado até o <strong>[●]</strong> dia útil de cada mês, por meio de depósito, transferência
+        bancária ou outro meio de pagamento previamente ajustado entre as partes.
+      </p>
+      <p>
+        §2º Tributos incidentes sobre a prestação dos serviços observarão a legislação aplicável, cabendo a cada parte o
+        cumprimento das obrigações legais a ela atribuídas.
+      </p>
+      <p>
+        §3º Na hipótese de atraso no pagamento, incidirão correção monetária, juros legais e demais encargos cabíveis,
+        observada a legislação vigente.
+      </p>
+    </section>
+
+    <section class="clause">
+      <div class="clause-title">Cláusula Sexta – Das Obrigações da Contratada</div>
+      <ol class="obrigacoes" type="I">
+        <li>executar os serviços com zelo, diligência, ética, discrição e observância da legislação aplicável;</li>
+        <li>atuar tecnicamente no campo institucional, mantendo alinhamento prévio com a CONTRATANTE quanto a pautas sensíveis, posicionamentos e prioridades;</li>
+        <li>manter a CONTRATANTE informada, em nível executivo, sobre fatos relevantes ligados ao objeto deste contrato;</li>
+        <li>resguardar o sigilo das informações estratégicas, empresariais, regulatórias e institucionais a que tiver acesso;</li>
+        <li>abster-se de praticar qualquer ato que possa comprometer a imagem, a reputação ou os interesses legítimos da CONTRATANTE.</li>
+      </ol>
+    </section>
+
+    <section class="clause">
+      <div class="clause-title">Cláusula Sétima – Das Obrigações da Contratante</div>
+      <ol class="obrigacoes" type="I">
+        <li>fornecer, em tempo hábil, as informações, documentos e diretrizes necessárias à adequada execução dos serviços;</li>
+        <li>designar interlocutor(es) para alinhamento das demandas estratégicas e tomada de decisão;</li>
+        <li>efetuar os pagamentos nos prazos e condições estabelecidos neste contrato;</li>
+        <li>manifestar-se, sempre que necessário, sobre posicionamentos institucionais, prioridades, agendas e encaminhamentos relevantes.</li>
+      </ol>
+    </section>
+
+    <section class="clause">
+      <div class="clause-title">Cláusula Oitava – Da Confidencialidade</div>
+      <p>
+        As partes comprometem-se a manter, sob absoluto sigilo, todas as informações, documentos, dados, estratégias,
+        materiais, planos, posicionamentos, análises, agendas, tratativas e demais conteúdos a que tiverem acesso em razão
+        deste contrato, independentemente do meio em que se encontrem registrados.
+      </p>
+      <p>
+        A obrigação de confidencialidade abrange, inclusive, informações obtidas verbalmente, drafts, documentos preparatórios,
+        materiais internos, informações de negócio, dados pessoais eventualmente tratados e quaisquer informações que, por sua
+        natureza ou contexto, devam ser consideradas reservadas.
+      </p>
+      <p>
+        A obrigação prevista nesta cláusula permanecerá válida durante toda a vigência contratual e por <strong>5 (cinco) anos</strong>
+        após o seu término, ressalvadas apenas as hipóteses de divulgação exigida por lei, ordem de autoridade competente ou
+        informação que já seja comprovadamente pública sem violação deste instrumento.
+      </p>
+    </section>
+
+    <section class="clause">
+      <div class="clause-title">Cláusula Nona – Do Compliance, da Integridade e da Conformidade Legal</div>
+      <p>
+        As partes declaram que conduzirão sua atuação no âmbito deste contrato em estrita observância às normas de ética,
+        integridade, transparência, prevenção à corrupção, prevenção a conflitos de interesse e conformidade legal aplicáveis
+        às suas atividades, incluindo, quando cabível, a Lei nº 12.846/2013 e demais normas correlatas.
+      </p>
+      <p>
+        A CONTRATADA compromete-se a não prometer, oferecer, autorizar ou conceder vantagem indevida a agente público ou a
+        terceiro a ele relacionado, tampouco adotar conduta incompatível com padrões legítimos de representação institucional.
+      </p>
+      <p>
+        A ocorrência de violação grave comprovada a esta cláusula autorizará a parte inocente a rescindir imediatamente o contrato,
+        sem prejuízo da apuração de perdas e danos e das responsabilidades legais cabíveis.
+      </p>
+    </section>
+
+    <section class="clause">
+      <div class="clause-title">Cláusula Décima – Da Inexistência de Vínculo</div>
+      <p>
+        O presente contrato não estabelece, nem poderá ser interpretado como gerador de vínculo empregatício, societário,
+        associativo, representativo com poderes permanentes, mandato, exclusividade ou subordinação entre as partes, seus
+        sócios, empregados, prepostos ou colaboradores.
+      </p>
+      <p>
+        Cada parte permanecerá integralmente responsável por sua estrutura organizacional, por seus encargos trabalhistas,
+        previdenciários, fiscais e operacionais, não havendo solidariedade ou subsidiariedade entre elas, salvo imposição legal.
+      </p>
+    </section>
+
+    <section class="clause">
+      <div class="clause-title">Cláusula Décima Primeira – Da Rescisão</div>
+      <p>
+        O presente contrato poderá ser rescindido, imotivadamente, por qualquer das partes, mediante comunicação escrita à outra
+        parte com antecedência mínima de <strong>30 (trinta) dias</strong>.
+      </p>
+      <p>
+        Em qualquer hipótese de rescisão, permanecerão exigíveis os valores devidos até a data da efetiva extinção contratual,
+        assim como as obrigações de confidencialidade, integridade, responsabilização e demais disposições que, por sua natureza,
+        devam subsistir ao término do contrato.
+      </p>
+      <p>
+        O descumprimento contratual relevante, não sanado no prazo razoável indicado pela parte adimplente, também poderá ensejar
+        a rescisão motivada, sem prejuízo das medidas cabíveis.
+      </p>
+    </section>
+
+    <section class="clause">
+      <div class="clause-title">Cláusula Décima Segunda – Das Disposições Gerais</div>
+      <p>
+        Eventuais tolerâncias de uma parte para com a outra não constituirão novação, renúncia de direitos ou alteração contratual,
+        permanecendo íntegras as disposições deste instrumento.
+      </p>
+      <p>
+        Qualquer alteração das condições ora pactuadas somente terá validade se formalizada por escrito e assinada por representantes
+        legalmente habilitados de ambas as partes.
+      </p>
+    </section>
+
+    <section class="clause">
+      <div class="clause-title">Cláusula Décima Terceira – Do Foro</div>
+      <p>
+        Fica eleito o foro da Comarca de Brasília/DF, com renúncia expressa a qualquer outro, por mais privilegiado que seja,
+        para dirimir quaisquer controvérsias oriundas deste contrato.
+      </p>
+    </section>
+
+    <section class="signature-block">
+      <p><strong>Brasília, 07 de abril de 2026.</strong></p>
+
+      <div class="signature-grid">
+        <div class="signature">
+          <strong>CMPC</strong>
+          <span>[Nome do representante]</span><br />
+          <span>[Cargo]</span>
+        </div>
+        <div class="signature">
+          <strong>CAPITOL CONSULTORIA LTDA</strong>
+          <span>Luiz Carlos Saraiva</span><br />
+          <span>Sócio Diretor</span>
+        </div>
+      </div>
+
+      <div class="signature-grid">
+        <div class="signature">
+          <strong>Testemunha 1</strong>
+          <span>Nome: [●]</span><br />
+          <span>CPF: [●]</span>
+        </div>
+        <div class="signature">
+          <strong>Testemunha 2</strong>
+          <span>Nome: [●]</span><br />
+          <span>CPF: [●]</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="note">
+      Campos mantidos em aberto por ausência de dados objetivos na proposta: qualificação completa da CMPC
+      (CNPJ, endereço e representante), cargo do representante da CMPC, dia útil de vencimento mensal e dados das testemunhas.
+    </div>
+  </main>
+</body>
+</html>

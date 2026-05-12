@@ -1,0 +1,343 @@
+{
+  "_meta": {
+    "description": "LOCALRISE ADVISORY — Mock data para demo de automação operacional + financeiro",
+    "generated_at": "2026-04-08",
+    "currency": "BRL"
+  },
+
+  "current_balance": {
+    "balance": 38420.50,
+    "last_updated": "2026-04-08T07:00:00Z"
+  },
+
+  "fixed_costs": [
+    { "id": "fc-001", "name": "Aluguel do Galpão",       "monthly_amount": 8500.00,  "due_day": 5,  "category": "estrutura",    "supplier_name": "Imobiliária Central" },
+    { "id": "fc-002", "name": "Energia Elétrica",         "monthly_amount": 2300.00,  "due_day": 10, "category": "utilities",     "supplier_name": "CEMIG" },
+    { "id": "fc-003", "name": "Internet + Telefone",      "monthly_amount": 450.00,   "due_day": 15, "category": "utilities",     "supplier_name": "Claro" },
+    { "id": "fc-004", "name": "Sistema ERP",              "monthly_amount": 890.00,   "due_day": 1,  "category": "software",     "supplier_name": "TOTVS" },
+    { "id": "fc-005", "name": "Plataforma Shopify",       "monthly_amount": 380.00,   "due_day": 20, "category": "software",     "supplier_name": "Shopify" },
+    { "id": "fc-006", "name": "Folha de Pagamento",       "monthly_amount": 22000.00, "due_day": 5,  "category": "folha",        "supplier_name": "Interno" },
+    { "id": "fc-007", "name": "Contador / BPO Fiscal",   "monthly_amount": 1200.00,  "due_day": 10, "category": "contabilidade","supplier_name": "Escritório ABC" },
+    { "id": "fc-008", "name": "Seguro do Estoque",        "monthly_amount": 650.00,   "due_day": 25, "category": "seguros",      "supplier_name": "Porto Seguro" }
+  ],
+
+  "orders": [
+    {
+      "id": "ord-001",
+      "shopify_order_id": "SHP-2026-4421",
+      "status": "in_production",
+      "customer_name": "João Ferreira",
+      "customer_email": "joao@email.com",
+      "total_amount": 1890.00,
+      "payment_status": "paid",
+      "payment_method": "pix",
+      "line_items": [
+        { "sku": "CAM-001-G", "name": "Camisa Social Premium G", "qty": 3, "price": 210.00 },
+        { "sku": "CAL-002-42", "name": "Calça Social Slim 42",   "qty": 3, "price": 420.00 }
+      ],
+      "created_at": "2026-04-06T09:15:00Z"
+    },
+    {
+      "id": "ord-002",
+      "shopify_order_id": "SHP-2026-4422",
+      "status": "shipped",
+      "customer_name": "Restaurante Belo Sabor",
+      "customer_email": "compras@belosabor.com.br",
+      "total_amount": 4750.00,
+      "payment_status": "paid",
+      "payment_method": "boleto",
+      "line_items": [
+        { "sku": "UNI-001-KIT", "name": "Kit Uniforme Cozinha (10 peças)", "qty": 5, "price": 950.00 }
+      ],
+      "created_at": "2026-04-05T14:30:00Z"
+    },
+    {
+      "id": "ord-003",
+      "shopify_order_id": "SHP-2026-4423",
+      "status": "pending",
+      "customer_name": "Maria Santos",
+      "customer_email": "maria.s@gmail.com",
+      "total_amount": 385.00,
+      "payment_status": "pending",
+      "payment_method": "credit_card",
+      "line_items": [
+        { "sku": "CAM-002-M", "name": "Camisa Polo Premium M", "qty": 1, "price": 385.00 }
+      ],
+      "created_at": "2026-04-08T06:45:00Z"
+    },
+    {
+      "id": "ord-004",
+      "shopify_order_id": "SHP-2026-4410",
+      "status": "in_production",
+      "customer_name": "Escola Municipal Jardim Flor",
+      "customer_email": "diretoria@jardimflor.edu.br",
+      "total_amount": 12600.00,
+      "payment_status": "paid",
+      "payment_method": "transferencia",
+      "line_items": [
+        { "sku": "UNI-SCH-001", "name": "Uniforme Escolar Completo", "qty": 60, "price": 210.00 }
+      ],
+      "created_at": "2026-04-01T10:00:00Z"
+    },
+    {
+      "id": "ord-005",
+      "shopify_order_id": "SHP-2026-4390",
+      "status": "in_production",
+      "customer_name": "Hotel Imperial",
+      "customer_email": "suprimentos@hotelimperial.com.br",
+      "total_amount": 8900.00,
+      "payment_status": "pending",
+      "payment_method": "boleto",
+      "line_items": [
+        { "sku": "UNI-HTL-002", "name": "Uniforme Hoteleiro Recepção", "qty": 20, "price": 445.00 }
+      ],
+      "created_at": "2026-03-29T11:30:00Z",
+      "_warning": "PEDIDO TRAVADO: sem atualização há 10 dias"
+    }
+  ],
+
+  "accounts_payable": [
+    {
+      "id": "ap-001",
+      "description": "Tecido Oxford 30m — Fornecedor Têxtil Sul",
+      "supplier_name": "Têxtil Sul Ltda",
+      "amount": 4200.00,
+      "due_date": "2026-04-09",
+      "status": "open",
+      "priority": "critical",
+      "category": "materia_prima",
+      "_warning": "VENCE AMANHÃ"
+    },
+    {
+      "id": "ap-002",
+      "description": "Folha de Pagamento — Abril/2026",
+      "supplier_name": "Interno",
+      "amount": 22000.00,
+      "due_date": "2026-04-10",
+      "status": "open",
+      "priority": "critical",
+      "category": "folha"
+    },
+    {
+      "id": "ap-003",
+      "description": "Aluguel Galpão — Abril/2026",
+      "supplier_name": "Imobiliária Central",
+      "amount": 8500.00,
+      "due_date": "2026-04-05",
+      "status": "overdue",
+      "priority": "critical",
+      "category": "estrutura",
+      "_warning": "VENCIDO há 3 dias"
+    },
+    {
+      "id": "ap-004",
+      "description": "Frete Fontes Log — Lote Março",
+      "supplier_name": "Fontes Log",
+      "amount": 1850.00,
+      "due_date": "2026-04-12",
+      "status": "open",
+      "priority": "normal",
+      "category": "logistica"
+    },
+    {
+      "id": "ap-005",
+      "description": "Botões e Aviamentos — Aviamentos Norte",
+      "supplier_name": "Aviamentos Norte",
+      "amount": 980.00,
+      "due_date": "2026-04-15",
+      "status": "open",
+      "priority": "normal",
+      "category": "materia_prima"
+    },
+    {
+      "id": "ap-006",
+      "description": "Energia Elétrica — Março/2026",
+      "supplier_name": "CEMIG",
+      "amount": 2680.00,
+      "due_date": "2026-04-10",
+      "status": "open",
+      "priority": "high",
+      "category": "utilities",
+      "_warning": "Conta 16% acima da média (R$ 380 a mais)"
+    },
+    {
+      "id": "ap-007",
+      "description": "Marketing Digital — Agência Pixel",
+      "supplier_name": "Agência Pixel",
+      "amount": 3500.00,
+      "due_date": "2026-04-20",
+      "status": "open",
+      "priority": "normal",
+      "category": "marketing"
+    }
+  ],
+
+  "accounts_receivable": [
+    {
+      "id": "ar-001",
+      "order_id": "ord-002",
+      "description": "Boleto — Restaurante Belo Sabor",
+      "customer_name": "Restaurante Belo Sabor",
+      "amount": 4750.00,
+      "due_date": "2026-04-10",
+      "status": "open"
+    },
+    {
+      "id": "ar-002",
+      "order_id": "ord-005",
+      "description": "Boleto — Hotel Imperial (50% restante)",
+      "customer_name": "Hotel Imperial",
+      "amount": 4450.00,
+      "due_date": "2026-04-15",
+      "status": "open"
+    },
+    {
+      "id": "ar-003",
+      "description": "Parcela 2/3 — Escola Municipal Jardim Flor",
+      "customer_name": "Escola Municipal Jardim Flor",
+      "amount": 4200.00,
+      "due_date": "2026-04-08",
+      "status": "overdue",
+      "_warning": "VENCEU HOJE — sem confirmação de pagamento"
+    },
+    {
+      "id": "ar-004",
+      "description": "Cartão de Crédito — Parcela 1 (ord-003)",
+      "customer_name": "Maria Santos",
+      "amount": 385.00,
+      "due_date": "2026-04-20",
+      "status": "open"
+    }
+  ],
+
+  "cash_flow_projection": [
+    { "date": "2026-04-08", "opening": 38420.50, "income": 4200.00,  "expenses": 0,        "closing": 42620.50 },
+    { "date": "2026-04-09", "opening": 42620.50, "income": 0,        "expenses": 4200.00,  "closing": 38420.50, "_warning": "AP-001 vence" },
+    { "date": "2026-04-10", "opening": 38420.50, "income": 4750.00,  "expenses": 26680.00, "closing": 16490.50, "_warning": "Pagamento Folha + Energia + Recebimento Belo Sabor" },
+    { "date": "2026-04-11", "opening": 16490.50, "income": 0,        "expenses": 0,        "closing": 16490.50 },
+    { "date": "2026-04-12", "opening": 16490.50, "income": 0,        "expenses": 1850.00,  "closing": 14640.50 },
+    { "date": "2026-04-15", "opening": 14640.50, "income": 4450.00,  "expenses": 980.00,   "closing": 18110.50 },
+    { "date": "2026-04-20", "opening": 18110.50, "income": 385.00,   "expenses": 3500.00,  "closing": 14995.50 },
+    { "date": "2026-04-25", "opening": 14995.50, "income": 0,        "expenses": 650.00,   "closing": 14345.50 }
+  ],
+
+  "logistics_events": [
+    {
+      "order_id": "ord-002",
+      "tracking_code": "FL20260405001",
+      "carrier": "fontes_log",
+      "events": [
+        { "status": "posted",           "location": "São Paulo, SP",  "timestamp": "2026-04-06T08:00:00Z" },
+        { "status": "in_transit",       "location": "Belo Horizonte", "timestamp": "2026-04-07T14:00:00Z" },
+        { "status": "out_for_delivery", "location": "Belo Horizonte", "timestamp": "2026-04-08T07:30:00Z" }
+      ]
+    },
+    {
+      "order_id": "ord-001",
+      "tracking_code": null,
+      "carrier": "fontes_log",
+      "status": "waiting_production",
+      "events": []
+    },
+    {
+      "order_id": "ord-004",
+      "tracking_code": "FL20260401004",
+      "carrier": "fontes_log",
+      "events": [
+        { "status": "posted",     "location": "São Paulo, SP", "timestamp": "2026-04-03T10:00:00Z" },
+        { "status": "in_transit", "location": "Campinas, SP",  "timestamp": "2026-04-04T16:00:00Z" },
+        { "status": "exception",  "location": "Campinas, SP",  "timestamp": "2026-04-05T09:00:00Z",
+          "note": "Endereço não localizado — aguardando contato com destinatário" }
+      ],
+      "_warning": "EXCEÇÃO DE ENTREGA há 3 dias"
+    }
+  ],
+
+  "operations": [
+    { "order_id": "ord-001", "stage": "production", "priority": 2, "assigned_to": "Equipe B", "started_at": "2026-04-07T08:00:00Z", "updated_at": "2026-04-07T08:00:00Z" },
+    { "order_id": "ord-004", "stage": "packing",    "priority": 1, "assigned_to": "Equipe A", "started_at": "2026-04-02T08:00:00Z", "updated_at": "2026-04-02T10:00:00Z" },
+    { "order_id": "ord-005", "stage": "cutting",    "priority": 3, "assigned_to": "Equipe C", "started_at": "2026-03-30T08:00:00Z", "updated_at": "2026-03-30T09:00:00Z", "_warning": "SEM ATUALIZAÇÃO HÁ 9 DIAS" }
+  ],
+
+  "active_alerts": [
+    {
+      "id": "alr-001",
+      "type": "payment_due",
+      "severity": "critical",
+      "title": "Pagamento vence AMANHÃ: Têxtil Sul — R$ 4.200",
+      "message": "A conta AP-001 com Têxtil Sul Ltda vence em 2026-04-09 (amanhã). Saldo atual: R$ 38.420,50. Pagamento é viável mas deve ser priorizado.",
+      "triggered_at": "2026-04-08T07:00:00Z",
+      "status": "active"
+    },
+    {
+      "id": "alr-002",
+      "type": "payment_due",
+      "severity": "critical",
+      "title": "Aluguel VENCIDO há 3 dias — R$ 8.500",
+      "message": "A conta AP-003 (Aluguel Galpão) venceu em 2026-04-05 e ainda não foi paga. Risco de multa e juros. Ação imediata necessária.",
+      "triggered_at": "2026-04-05T23:59:00Z",
+      "status": "active"
+    },
+    {
+      "id": "alr-003",
+      "type": "insufficient_balance",
+      "severity": "warning",
+      "title": "Saldo cai para R$ 16.490 no dia 10/04",
+      "message": "Em 2026-04-10 haverá saída de R$ 26.680 (Folha + Energia). O saldo projetado cai de R$ 38.420 para R$ 16.490. Monitore de perto.",
+      "triggered_at": "2026-04-08T07:00:00Z",
+      "status": "active"
+    },
+    {
+      "id": "alr-004",
+      "type": "overdue_receivable",
+      "severity": "warning",
+      "title": "Recebimento vencido: Escola Jardim Flor — R$ 4.200",
+      "message": "A parcela 2/3 da Escola Municipal Jardim Flor venceu hoje (2026-04-08) sem confirmação. Entrar em contato imediatamente.",
+      "triggered_at": "2026-04-08T07:00:00Z",
+      "status": "active"
+    },
+    {
+      "id": "alr-005",
+      "type": "order_stuck",
+      "severity": "warning",
+      "title": "Pedido travado: Hotel Imperial (SHP-2026-4390) — 9 dias sem atualização",
+      "message": "O pedido do Hotel Imperial está na fase 'cutting' há 9 dias sem nenhuma atualização operacional. Valor: R$ 8.900. Verificar com a equipe C.",
+      "triggered_at": "2026-04-08T07:00:00Z",
+      "status": "active"
+    },
+    {
+      "id": "alr-006",
+      "type": "cost_anomaly",
+      "severity": "info",
+      "title": "Energia elétrica 16% acima da média",
+      "message": "A conta de energia (AP-006) veio R$ 380 acima da média histórica (R$ 2.300 → R$ 2.680). Verificar consumo no galpão.",
+      "triggered_at": "2026-04-08T07:00:00Z",
+      "status": "active"
+    },
+    {
+      "id": "alr-007",
+      "type": "logistics_exception",
+      "severity": "warning",
+      "title": "Exceção de entrega: Escola Jardim Flor — endereço não localizado",
+      "message": "O rastreamento FL20260401004 está em exceção há 3 dias em Campinas. Contatar transportadora e cliente urgentemente.",
+      "triggered_at": "2026-04-05T09:00:00Z",
+      "status": "active"
+    }
+  ],
+
+  "monthly_kpis": {
+    "month": "Abril/2026",
+    "total_orders": 12,
+    "total_revenue_projected": 47890.00,
+    "total_revenue_received": 29140.00,
+    "total_expenses_projected": 44930.00,
+    "total_expenses_paid": 8200.00,
+    "gross_margin_pct": 38.5,
+    "average_ticket": 3990.83,
+    "orders_in_production": 3,
+    "orders_delivered": 7,
+    "orders_cancelled": 2,
+    "active_alerts": 7,
+    "critical_alerts": 2
+  }
+}

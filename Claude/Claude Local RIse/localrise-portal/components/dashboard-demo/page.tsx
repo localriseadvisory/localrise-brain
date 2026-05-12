@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react'
 import {
-  Activity,
   Bot,
   Calendar,
   CalendarHeart,
@@ -15,8 +14,8 @@ import {
   Crown,
   Eye,
   Globe,
-  HandCoins,
   Landmark,
+  Link2Off,
   MessageSquareText,
   MessagesSquare,
   MousePointerClick,
@@ -24,12 +23,11 @@ import {
   ShieldCheck,
   Sparkles,
   Star,
-  Store,
   TrendingUp,
   Users,
 } from 'lucide-react'
 import Link from 'next/link'
-import type { DashboardData, DashboardSection } from '@/lib/dashboard/contracts'
+import type { DashboardConnections, DashboardData, DashboardSection } from '@/lib/dashboard/contracts'
 import {
   BulletList,
   ChannelKpiCard,
@@ -38,7 +36,6 @@ import {
   KpiCard,
   MiniBars,
   OnboardingChecklist,
-  PageIntro,
   Panel,
   ProgressList,
   SectionTitle,
@@ -208,48 +205,6 @@ function PeriodSelector({
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-const sectionMeta: Record<DashboardSection, { title: string; description: string }> = {
-  overview: {
-    title: 'Visao geral executiva do restaurante',
-    description:
-      'Um cockpit de crescimento que conecta receita, canais de aquisicao, CRM e operacao automatizada em linguagem de dono.',
-  },
-  aquisicao: {
-    title: 'Aquisicao organica e demanda local',
-    description:
-      'Onde a marca aparece, quais buscas geram descoberta e onde ainda existe demanda local para capturar.',
-  },
-  'trafego-pago': {
-    title: 'Google Ads por intencao',
-    description:
-      'Campanhas desenhadas para procura de marca, proximidade e ocasioes de alto ticket com leitura de eficiencia e escala.',
-  },
-  crm: {
-    title: 'CRM, recorrencia e base propria',
-    description:
-      'Retencao, retorno e campanhas acionadas para aumentar frequencia, ticket e relacionamento com a base.',
-  },
-  automacoes: {
-    title: 'Automacoes e IA operacional',
-    description:
-      'Fluxos, copilotos e respostas automaticas que reduzem friccao comercial e melhoram a experiencia do cliente.',
-  },
-  reputacao: {
-    title: 'Reputacao digital com leitura acionavel',
-    description:
-      'Volume, sentimento, temas recorrentes e prioridades de resposta para proteger a marca e elevar conversao.',
-  },
-  eventos: {
-    title: 'Pipeline de eventos e ticket incremental',
-    description:
-      'Acompanhamento da frente de eventos como unidade real de crescimento, nao apenas canal complementar.',
-  },
-  'sistema-localrise': {
-    title: 'Como a LocalRise impulsiona seu restaurante',
-    description:
-      'A tese de produto por tras da demo: aquisicao, conversao, retencao, inteligencia e previsibilidade em uma operacao unica.',
-  },
-}
 
 const sectionLinks: { key: DashboardSection; label: string }[] = [
   { key: 'overview', label: 'Visao Geral' },
@@ -279,10 +234,6 @@ function ExecutiveStrip({ data }: { data: DashboardData }) {
           <div className="absolute -right-20 -top-24 h-52 w-52 rounded-full bg-red-500/10 blur-3xl" />
           <div className="absolute right-20 top-8 h-32 w-32 rounded-full bg-blue-500/10 blur-3xl" />
           <div className="relative">
-            <div className="lr-badge mb-4">
-              <Store size={13} />
-              Restaurante demo
-            </div>
             <h2 className="text-2xl font-black tracking-tight text-white md:text-3xl">{restaurant.name}</h2>
             <p className="mt-2 text-sm text-zinc-300">{restaurant.segment}</p>
             <div className="mt-5 flex flex-wrap gap-3 text-sm text-zinc-400">
@@ -301,7 +252,13 @@ function ExecutiveStrip({ data }: { data: DashboardData }) {
           <div className="text-6xl font-black tracking-tight text-white">{restaurant.healthScore}</div>
           <div className="pb-2 text-sm leading-6 text-zinc-400">
             de 100 pontos
-            <div className="font-semibold text-emerald-300">Operacao pronta para escala com gargalos bem definidos.</div>
+            <div className="font-semibold text-emerald-300">
+              {restaurant.healthScore >= 85
+                ? 'Operacao em ritmo de crescimento acelerado.'
+                : restaurant.healthScore >= 75
+                  ? 'Operacao com boa base, pontos de escala identificados.'
+                  : 'Operacao em construcao, primeiros resultados registrados.'}
+            </div>
           </div>
         </div>
       </Panel>
@@ -342,8 +299,7 @@ function ExecutiveSummaryPanel({ data }: { data: DashboardData }) {
       <Panel>
         <SectionTitle
           title="Resumo executivo"
-          description="Leitura comercial pronta para apresentacao."
-          badge="Demo profissional"
+          description="Leitura comercial do periodo selecionado."
         />
         <p className="max-w-3xl text-sm leading-7 text-zinc-300">{data.overview.headline}</p>
         <div className="mt-6 grid gap-4 md:grid-cols-3">
@@ -367,65 +323,60 @@ function ExecutiveSummaryPanel({ data }: { data: DashboardData }) {
   )
 }
 
-// ─── KPI strip do topo ────────────────────────────────────────────────────────
-// TODO: quando as integrações com Google Business, Instagram, Analytics, Google
-//       Search Console e Google Ads estiverem ativas, substituir os valores
-//       abaixo por dados vindos do banco (ex: tabela metrics_snapshots ou via
-//       API routes em /api/metrics). Cada objeto tem: value (string exibida),
-//       change (variação textual) e positive (verde se true, âmbar se false).
-// ──────────────────────────────────────────────────────────────────────────────
-const TOP_KPIS = [
-  {
-    icon: Eye,
-    label: 'Impressões no Google Business',
-    value: '1.240',
-    change: '+12% esse mês',
-    positive: true,
-    iconColor: '#60a5fa',
-    iconBg: 'rgba(59,130,246,0.15)',
-  },
-  {
-    icon: Camera,
-    label: 'Seguidores no Instagram',
-    value: '847',
-    change: '+8% esse mês',
-    positive: true,
-    iconColor: '#e879f9',
-    iconBg: 'rgba(232,121,249,0.15)',
-  },
-  {
-    icon: Globe,
-    label: 'Visitas no Site',
-    value: '312',
-    change: '+5% esse mês',
-    positive: true,
-    iconColor: '#4ade80',
-    iconBg: 'rgba(74,222,128,0.15)',
-  },
-  {
-    icon: TrendingUp,
-    label: 'Posição Média SEO',
-    value: '4.2',
-    change: '-0.3 vs mês anterior',
-    positive: true,
-    iconColor: '#fb923c',
-    iconBg: 'rgba(251,146,60,0.15)',
-  },
-  {
-    icon: MousePointerClick,
-    label: 'Cliques no Google Ads',
-    value: '98',
-    change: '+21% esse mês',
-    positive: true,
-    iconColor: '#facc15',
-    iconBg: 'rgba(250,204,21,0.15)',
-  },
-] as const
+function ConnectionStatus({ connections }: { connections: DashboardConnections }) {
+  const items = [
+    { label: 'Google Business', connected: connections.gbp },
+    { label: 'Site & SEO', connected: connections.site },
+    { label: 'Google Ads', connected: connections.ads },
+    { label: 'Instagram', connected: connections.instagram },
+  ]
+  return (
+    <div className="mb-5 flex flex-wrap gap-2">
+      {items.map((item) => (
+        <span
+          key={item.label}
+          className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold ${
+            item.connected
+              ? 'border-emerald-500/20 bg-emerald-500/8 text-emerald-400'
+              : 'border-red-500/20 bg-red-500/8 text-red-400'
+          }`}
+        >
+          <span className={`h-1.5 w-1.5 rounded-full ${item.connected ? 'bg-emerald-400' : 'bg-red-400'}`} />
+          {item.label}
+        </span>
+      ))}
+    </div>
+  )
+}
 
-function TopKpiStrip() {
+function NotConnectedCard({ label, message }: { label: string; message: string }) {
+  return (
+    <div className="mb-6 flex min-h-[220px] items-center justify-center rounded-3xl border border-red-500/20 bg-red-500/[0.04] p-10">
+      <div className="text-center">
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-red-500/20 bg-red-500/10">
+          <Link2Off size={20} className="text-red-400" />
+        </div>
+        <div className="text-sm font-bold text-white">{label}</div>
+        <p className="mt-2 max-w-xs text-xs leading-5 text-zinc-500">{message}</p>
+        <div className="mt-3 text-[11px] font-semibold text-red-500/70">Não conectado</div>
+      </div>
+    </div>
+  )
+}
+
+function TopKpiStrip({ data }: { data: DashboardData }) {
+  const t = data.topStats
+  const c = data.connections
+  const kpis = [
+    { icon: Eye, label: 'Impressões no Google Business', value: t.gbpImpressions, change: t.gbpDelta, positive: true, iconColor: '#60a5fa', iconBg: 'rgba(59,130,246,0.15)', connected: c.gbp },
+    { icon: Camera, label: 'Seguidores no Instagram', value: t.instagramFollowers, change: t.instagramDelta, positive: true, iconColor: '#e879f9', iconBg: 'rgba(232,121,249,0.15)', connected: c.instagram },
+    { icon: Globe, label: 'Visitas no Site', value: t.siteVisits, change: t.siteDelta, positive: true, iconColor: '#4ade80', iconBg: 'rgba(74,222,128,0.15)', connected: c.site },
+    { icon: TrendingUp, label: 'Posição Média SEO', value: t.seoPosition, change: t.seoDelta, positive: true, iconColor: '#fb923c', iconBg: 'rgba(251,146,60,0.15)', connected: c.site },
+    { icon: MousePointerClick, label: 'Cliques no Google Ads', value: t.adsClicks, change: t.adsDelta, positive: true, iconColor: '#facc15', iconBg: 'rgba(250,204,21,0.15)', connected: c.ads },
+  ]
   return (
     <div className="mb-6 grid gap-4 grid-cols-2 sm:grid-cols-3 xl:grid-cols-5">
-      {TOP_KPIS.map((kpi) => (
+      {kpis.map((kpi) => (
         <ChannelKpiCard key={kpi.label} {...kpi} />
       ))}
     </div>
@@ -435,8 +386,8 @@ function TopKpiStrip() {
 function OverviewSection({ data }: { data: DashboardData }) {
   return (
     <>
-      <PageIntro eyebrow="Cockpit executivo" title={sectionMeta.overview.title} description={sectionMeta.overview.description} ctaHref="/dashboard/sistema-localrise" ctaLabel="Ver narrativa comercial" />
-      <TopKpiStrip />
+      <ConnectionStatus connections={data.connections} />
+      <TopKpiStrip data={data} />
       <ExecutiveStrip data={data} />
       <ExecutiveSummaryPanel data={data} />
       <div className="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -460,159 +411,179 @@ function OverviewSection({ data }: { data: DashboardData }) {
 }
 
 function AcquisitionSection({ data }: { data: DashboardData }) {
+  const { connections } = data
   return (
     <>
-      <PageIntro eyebrow="Google, SEO local e Maps" title={sectionMeta.aquisicao.title} description={sectionMeta.aquisicao.description} />
-      <ExecutiveStrip data={data} />
-      <div className="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {data.acquisition.performance.map((item, index) => (
-          <KpiCard
-            key={item.label}
-            label={item.label}
-            value={item.value}
-            delta={item.delta}
-            footnote={index % 2 === 0 ? 'Captura demanda existente e gera descoberta com menor custo.' : 'Sinal de ganho real de visibilidade local.'}
-            tone={index % 4 === 0 ? 'red' : index % 4 === 1 ? 'green' : index % 4 === 2 ? 'blue' : 'amber'}
-          />
-        ))}
-      </div>
-      <div className="mb-6 grid gap-4 xl:grid-cols-[1.3fr_1fr]">
-        <Panel>
-          <SectionTitle title="Palavras-chave prioritarias" description="Buscas de alta intencao que sustentam descoberta e visitas." />
-          <DataTable
-            headers={['Keyword', 'Intencao', 'Posicao', 'Cliques', 'Movimento']}
-            rows={data.acquisition.keywordTable.map((row) => [
-              <span key="k" className="font-semibold text-white">{row.keyword}</span>,
-              row.intent,
-              <span key="p" className="text-emerald-300">{row.position}</span>,
-              row.clicks,
-              <span key="m" className="text-zinc-100">{row.movement}</span>,
-            ])}
-          />
-        </Panel>
-        <Panel>
-          <SectionTitle title="Marca vs nao-branded" description="A proxima alavanca esta em converter procura que ainda nao conhece o restaurante." />
-          <ProgressList items={data.acquisition.brandedVsNonBranded} />
-          <div className="mt-6 border-t border-white/8 pt-6">
-            <SectionTitle title="Origem do trafego" />
-            <ProgressList items={data.acquisition.trafficOrigins} />
+      <ConnectionStatus connections={connections} />
+      {!connections.gbp && !connections.site ? (
+        <NotConnectedCard
+          label="Google Business Profile e Site não conectados"
+          message="Conecte o GBP e o site para visualizar palavras-chave, tráfego orgânico e métricas de aquisição."
+        />
+      ) : (
+        <>
+          <ExecutiveStrip data={data} />
+          <div className="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {data.acquisition.performance.map((item, index) => (
+              <KpiCard
+                key={item.label}
+                label={item.label}
+                value={item.value}
+                delta={item.delta}
+                footnote={index % 2 === 0 ? 'Captura demanda existente e gera descoberta com menor custo.' : 'Sinal de ganho real de visibilidade local.'}
+                tone={index % 4 === 0 ? 'red' : index % 4 === 1 ? 'green' : index % 4 === 2 ? 'blue' : 'amber'}
+              />
+            ))}
           </div>
-        </Panel>
-      </div>
-      <div className="grid gap-4 xl:grid-cols-[1.15fr_1fr]">
-        <Panel>
-          <SectionTitle title="Google Business Profile" description="O GBP nao aparece como anexo de SEO. Ele funciona como vitrine, prova social e ponto de captura local." badge="Ativo" />
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-3xl border border-white/8 bg-white/[0.03] p-5">
-              <div className="mb-3 flex items-center gap-2 text-amber-300">
-                <Star size={15} />
-                <span className="text-xs font-semibold uppercase tracking-[0.16em]">Reputacao</span>
+          <div className="mb-6 grid gap-4 xl:grid-cols-[1.3fr_1fr]">
+            <Panel>
+              <SectionTitle title="Palavras-chave prioritarias" description="Buscas de alta intencao que sustentam descoberta e visitas." />
+              <DataTable
+                headers={['Keyword', 'Intencao', 'Posicao', 'Cliques', 'Movimento']}
+                rows={data.acquisition.keywordTable.map((row) => [
+                  <span key="k" className="font-semibold text-white">{row.keyword}</span>,
+                  row.intent,
+                  <span key="p" className="text-emerald-300">{row.position}</span>,
+                  row.clicks,
+                  <span key="m" className="text-zinc-100">{row.movement}</span>,
+                ])}
+              />
+            </Panel>
+            <Panel>
+              <SectionTitle title="Marca vs nao-branded" description="A proxima alavanca esta em converter procura que ainda nao conhece o negocio." />
+              <ProgressList items={data.acquisition.brandedVsNonBranded} />
+              <div className="mt-6 border-t border-white/8 pt-6">
+                <SectionTitle title="Origem do trafego" />
+                <ProgressList items={data.acquisition.trafficOrigins} />
               </div>
-              <div className="text-5xl font-black tracking-tight text-white">{data.acquisition.googleBusinessProfile.rating}</div>
-              <div className="mt-2 text-sm text-zinc-400">{data.acquisition.googleBusinessProfile.reviews} reviews totais</div>
-              <div className="mt-4 rounded-2xl bg-white/[0.04] px-4 py-3 text-sm text-zinc-300">
-                +{data.acquisition.googleBusinessProfile.newReviews} novas avaliacoes no periodo
-              </div>
-            </div>
-            <div className="space-y-3">
-              {[
-                ['Visualizacoes em fotos', data.acquisition.googleBusinessProfile.photos],
-                ['Visualizacoes no Maps', data.acquisition.googleBusinessProfile.mapsViews],
-                ['Visualizacoes na Busca', data.acquisition.googleBusinessProfile.searchViews],
-              ].map(([label, value]) => (
-                <div key={label} className="rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-4">
-                  <div className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500">{label}</div>
-                  <div className="mt-2 text-xl font-bold text-white">{value}</div>
+            </Panel>
+          </div>
+          <div className="grid gap-4 xl:grid-cols-[1.15fr_1fr]">
+            <Panel>
+              <SectionTitle title="Google Business Profile" description="O GBP nao aparece como anexo de SEO. Ele funciona como vitrine, prova social e ponto de captura local." badge="Ativo" />
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="rounded-3xl border border-white/8 bg-white/[0.03] p-5">
+                  <div className="mb-3 flex items-center gap-2 text-amber-300">
+                    <Star size={15} />
+                    <span className="text-xs font-semibold uppercase tracking-[0.16em]">Reputacao</span>
+                  </div>
+                  <div className="text-5xl font-black tracking-tight text-white">{data.acquisition.googleBusinessProfile.rating}</div>
+                  <div className="mt-2 text-sm text-zinc-400">{data.acquisition.googleBusinessProfile.reviews} reviews totais</div>
+                  <div className="mt-4 rounded-2xl bg-white/[0.04] px-4 py-3 text-sm text-zinc-300">
+                    +{data.acquisition.googleBusinessProfile.newReviews} novas avaliacoes no periodo
+                  </div>
                 </div>
-              ))}
-            </div>
+                <div className="space-y-3">
+                  {[
+                    ['Visualizacoes em fotos', data.acquisition.googleBusinessProfile.photos],
+                    ['Visualizacoes no Maps', data.acquisition.googleBusinessProfile.mapsViews],
+                    ['Visualizacoes na Busca', data.acquisition.googleBusinessProfile.searchViews],
+                  ].map(([label, value]) => (
+                    <div key={label} className="rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-4">
+                      <div className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500">{label}</div>
+                      <div className="mt-2 text-xl font-bold text-white">{value}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Panel>
+            <Panel>
+              <SectionTitle title="Leituras estrategicas" description="O que o gestor deve enxergar rapidamente." />
+              <BulletList items={data.acquisition.googleBusinessProfile.highlights} />
+            </Panel>
           </div>
-        </Panel>
-        <Panel>
-          <SectionTitle title="Leituras estrategicas" description="O que o gestor deve enxergar rapidamente." />
-          <BulletList items={data.acquisition.googleBusinessProfile.highlights} />
-        </Panel>
-      </div>
-      <div className="mt-6">
-        <Panel>
-          <SectionTitle title="Painel de reviews" description="Amostra operacional para demonstrar contexto, tom e proxima acao." />
-          <DataTable
-            headers={['Cliente', 'Nota', 'Canal', 'Tom', 'Trecho', 'Acao']}
-            rows={data.reputation.reviewFeed.map((item) => [
-              <span key="author" className="font-semibold text-white">{item.author}</span>,
-              <span key="rating" className="text-amber-300">{item.rating}</span>,
-              item.channel,
-              <span key="sentiment" className="text-zinc-100">{item.sentiment}</span>,
-              <span key="text" className="text-zinc-300">{item.text}</span>,
-              <span key="response" className="text-emerald-300">{item.response}</span>,
-            ])}
-          />
-        </Panel>
-      </div>
+          <div className="mt-6">
+            <Panel>
+              <SectionTitle title="Painel de reviews" description="Contexto, tom e proxima acao para cada avaliacao recebida." />
+              <DataTable
+                headers={['Cliente', 'Nota', 'Canal', 'Tom', 'Trecho', 'Acao']}
+                rows={data.reputation.reviewFeed.map((item) => [
+                  <span key="author" className="font-semibold text-white">{item.author}</span>,
+                  <span key="rating" className="text-amber-300">{item.rating}</span>,
+                  item.channel,
+                  <span key="sentiment" className="text-zinc-100">{item.sentiment}</span>,
+                  <span key="text" className="text-zinc-300">{item.text}</span>,
+                  <span key="response" className="text-emerald-300">{item.response}</span>,
+                ])}
+              />
+            </Panel>
+          </div>
+        </>
+      )}
     </>
   )
 }
 
 function PaidTrafficSection({ data }: { data: DashboardData }) {
+  const { connections } = data
   return (
     <>
-      <PageIntro eyebrow="Trafego pago com logica de receita" title={sectionMeta['trafego-pago'].title} description={sectionMeta['trafego-pago'].description} />
-      <ExecutiveStrip data={data} />
-      <div className="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {data.paidTraffic.summary.map((item, index) => (
-          <KpiCard
-            key={item.label}
-            label={item.label}
-            value={item.value}
-            delta={item.delta}
-            footnote="Leitura de eficiencia por intencao, nao apenas volume."
-            tone={index === 0 ? 'purple' : index === 1 ? 'green' : index === 2 ? 'amber' : 'red'}
-          />
-        ))}
-      </div>
-      <div className="mb-6 grid gap-4 xl:grid-cols-[1.35fr_1fr]">
-        <Panel>
-          <SectionTitle title="Campanhas Google Ads" description="Estrutura premium com campanhas por intencao comercial." />
-          <DataTable
-            headers={['Campanha', 'Intencao', 'Budget', 'Leads', 'CPL', 'ROAS', 'Status']}
-            rows={data.paidTraffic.campaigns.map((item) => [
-              <span key="n" className="font-semibold text-white">{item.name}</span>,
-              item.intent,
-              item.budget,
-              <span key="l" className="text-emerald-300">{item.leads}</span>,
-              item.cpl,
-              <span key="r" className="text-zinc-100">{item.roas}</span>,
-              <span key="s" className="lr-badge">{item.status}</span>,
-            ])}
-          />
-        </Panel>
-        <Panel>
-          <SectionTitle title="Funil pago" description="Da demanda impressa ate a oportunidade real no WhatsApp." />
-          <FunnelBars points={data.paidTraffic.funnel} />
-        </Panel>
-      </div>
-      <div className="grid gap-4 xl:grid-cols-[1fr_1.15fr]">
-        <Panel>
-          <SectionTitle title="Por que vale investir" description="A campanha certa reduz ociosiade, protege marca e abre novas ocasioes de compra." />
-          <BulletList items={data.paidTraffic.scaleNotes} />
-        </Panel>
-        <Panel>
-          <SectionTitle title="Tese de escala" description="Quando a operacao esta pronta, midia paga deixa de ser custo e vira acelerador de receita." />
-          <div className="grid gap-4 md:grid-cols-3">
-            {[
-              { icon: <Landmark size={18} />, title: 'Marca', text: 'Capta demanda existente e impede perda para agregadores e concorrentes.' },
-              { icon: <Compass size={18} />, title: 'Perto de mim', text: 'Explora descoberta local em horarios de decisao imediata.' },
-              { icon: <CalendarHeart size={18} />, title: 'Eventos', text: 'Aumenta ticket e previsibilidade com uma esteira dedicada.' },
-            ].map((item) => (
-              <div key={item.title} className="rounded-3xl border border-white/8 bg-white/[0.03] p-5">
-                <div className="mb-3 text-red-300">{item.icon}</div>
-                <div className="text-base font-bold text-white">{item.title}</div>
-                <p className="mt-2 text-sm leading-6 text-zinc-300">{item.text}</p>
-              </div>
+      <ConnectionStatus connections={connections} />
+      {!connections.ads ? (
+        <NotConnectedCard
+          label="Google Ads não conectado"
+          message="Conecte o Google Ads para visualizar campanhas, funil pago e métricas de tráfego pago."
+        />
+      ) : (
+        <>
+          <ExecutiveStrip data={data} />
+          <div className="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {data.paidTraffic.summary.map((item, index) => (
+              <KpiCard
+                key={item.label}
+                label={item.label}
+                value={item.value}
+                delta={item.delta}
+                footnote="Leitura de eficiencia por intencao, nao apenas volume."
+                tone={index === 0 ? 'purple' : index === 1 ? 'green' : index === 2 ? 'amber' : 'red'}
+              />
             ))}
           </div>
-        </Panel>
-      </div>
+          <div className="mb-6 grid gap-4 xl:grid-cols-[1.35fr_1fr]">
+            <Panel>
+              <SectionTitle title="Campanhas Google Ads" description="Estrutura premium com campanhas por intencao comercial." />
+              <DataTable
+                headers={['Campanha', 'Intencao', 'Budget', 'Leads', 'CPL', 'ROAS', 'Status']}
+                rows={data.paidTraffic.campaigns.map((item) => [
+                  <span key="n" className="font-semibold text-white">{item.name}</span>,
+                  item.intent,
+                  item.budget,
+                  <span key="l" className="text-emerald-300">{item.leads}</span>,
+                  item.cpl,
+                  <span key="r" className="text-zinc-100">{item.roas}</span>,
+                  <span key="s" className="lr-badge">{item.status}</span>,
+                ])}
+              />
+            </Panel>
+            <Panel>
+              <SectionTitle title="Funil pago" description="Da demanda impressa ate a oportunidade real no WhatsApp." />
+              <FunnelBars points={data.paidTraffic.funnel} />
+            </Panel>
+          </div>
+          <div className="grid gap-4 xl:grid-cols-[1fr_1.15fr]">
+            <Panel>
+              <SectionTitle title="Por que vale investir" description="A campanha certa reduz ociosidade, protege marca e abre novas ocasioes de compra." />
+              <BulletList items={data.paidTraffic.scaleNotes} />
+            </Panel>
+            <Panel>
+              <SectionTitle title="Tese de escala" description="Quando a operacao esta pronta, midia paga deixa de ser custo e vira acelerador de receita." />
+              <div className="grid gap-4 md:grid-cols-3">
+                {[
+                  { icon: <Landmark size={18} />, title: 'Marca', text: 'Capta demanda existente e impede perda para agregadores e concorrentes.' },
+                  { icon: <Compass size={18} />, title: 'Perto de mim', text: 'Explora descoberta local em horarios de decisao imediata.' },
+                  { icon: <CalendarHeart size={18} />, title: 'Eventos', text: 'Aumenta ticket e previsibilidade com uma esteira dedicada.' },
+                ].map((item) => (
+                  <div key={item.title} className="rounded-3xl border border-white/8 bg-white/[0.03] p-5">
+                    <div className="mb-3 text-red-300">{item.icon}</div>
+                    <div className="text-base font-bold text-white">{item.title}</div>
+                    <p className="mt-2 text-sm leading-6 text-zinc-300">{item.text}</p>
+                  </div>
+                ))}
+              </div>
+            </Panel>
+          </div>
+        </>
+      )}
     </>
   )
 }
@@ -620,7 +591,7 @@ function PaidTrafficSection({ data }: { data: DashboardData }) {
 function CrmSection({ data }: { data: DashboardData }) {
   return (
     <>
-      <PageIntro eyebrow="Retencao e base propria" title={sectionMeta.crm.title} description={sectionMeta.crm.description} />
+      <ConnectionStatus connections={data.connections} />
       <ExecutiveStrip data={data} />
       <div className="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {data.crm.summary.map((item, index) => (
@@ -636,7 +607,7 @@ function CrmSection({ data }: { data: DashboardData }) {
       </div>
       <div className="mb-6 grid gap-4 xl:grid-cols-[0.8fr_1fr_1fr]">
         <Panel>
-          <SectionTitle title="Novos vs recorrentes" description="A boa operacao de restaurante precisa equilibrar descoberta e retorno." />
+          <SectionTitle title="Novos vs recorrentes" description="Uma boa operacao precisa equilibrar descoberta e retorno." />
           <ProgressList items={data.crm.customerMix} />
         </Panel>
         <Panel>
@@ -650,14 +621,14 @@ function CrmSection({ data }: { data: DashboardData }) {
       </div>
       <div className="grid gap-4 xl:grid-cols-[1fr_1.15fr]">
         <Panel>
-          <SectionTitle title="Jogadas com maior impacto" description="Fluxos de CRM que fazem sentido para restaurante local premium." />
+          <SectionTitle title="Jogadas com maior impacto" description="Fluxos de CRM para aumentar recorrencia e previsibilidade de receita." />
           <BulletList items={data.crm.plays} />
         </Panel>
         <Panel>
-          <SectionTitle title="Leitura comercial" description="A LocalRise nao entrega apenas campanha; entrega frequencia, recorrencia e previsibilidade." />
+          <SectionTitle title="Jornadas de retencao ativas" description="Automacoes que transformam contatos em visitas repetidas e indicacoes." />
           <div className="grid gap-4 md:grid-cols-3">
             {[
-              { title: 'Aniversarios', icon: <CalendarHeart size={18} />, text: 'Transforma datas em mesas reservadas e upsell de experiencia.' },
+              { title: 'Aniversarios', icon: <CalendarHeart size={18} />, text: 'Transforma datas especiais em visitas reservadas e upsell de experiencia.' },
               { title: 'Pos-visita', icon: <MessageSquareText size={18} />, text: 'Converte boa experiencia em review, lembranca de marca e retorno.' },
               { title: 'Reativacao', icon: <Users size={18} />, text: 'Recupera clientes frios antes que a marca saia do radar.' },
             ].map((item) => (
@@ -677,7 +648,7 @@ function CrmSection({ data }: { data: DashboardData }) {
 function AutomationsSection({ data }: { data: DashboardData }) {
   return (
     <>
-      <PageIntro eyebrow="Operacao assistida por IA" title={sectionMeta.automacoes.title} description={sectionMeta.automacoes.description} />
+      <ConnectionStatus connections={data.connections} />
       <ExecutiveStrip data={data} />
       <div className="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {data.automations.summary.map((item, index) => (
@@ -724,69 +695,79 @@ function AutomationsSection({ data }: { data: DashboardData }) {
 }
 
 function ReputationSection({ data }: { data: DashboardData }) {
+  const { connections } = data
   return (
     <>
-      <PageIntro eyebrow="Reputacao como motor de conversao" title={sectionMeta.reputacao.title} description={sectionMeta.reputacao.description} />
-      <ExecutiveStrip data={data} />
-      <div className="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {data.reputation.metrics.map((item, index) => (
-          <KpiCard
-            key={item.label}
-            label={item.label}
-            value={item.value}
-            delta={item.delta}
-            footnote="Reputacao afeta clique, rota, reserva e decisao final."
-            tone={index === 0 ? 'amber' : index === 1 ? 'green' : index === 2 ? 'red' : 'purple'}
-          />
-        ))}
-      </div>
-      <div className="mb-6 grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
-        <Panel>
-          <SectionTitle title="Sentimento das avaliacoes" description="Visao sintetica do humor da base de reviews." />
-          <ProgressList items={data.reputation.sentiment} />
-        </Panel>
-        <Panel>
-          <SectionTitle title="Temas mais citados" description="O que aparece com mais frequencia nas avaliacoes." />
-          <ProgressList items={data.reputation.themes} />
-        </Panel>
-      </div>
-      <div className="grid gap-4 xl:grid-cols-[1fr_1.15fr]">
-        <Panel>
-          <SectionTitle title="Alertas criticos" description="Pontos de atencao que pedem acao tatica." />
-          <BulletList items={data.reputation.alerts} />
-        </Panel>
-        <Panel>
-          <SectionTitle title="Oportunidade de resposta com IA" description="A IA organiza, sugere tom e acelera resposta sem comprometer a marca." />
-          <div className="grid gap-4 md:grid-cols-3">
-            {[
-              { title: 'Filtro', text: 'Classifica positivo, neutro e negativo para priorizar fila.' },
-              { title: 'Sugestao', text: 'Propoe resposta com contexto e tom compativel com a marca.' },
-              { title: 'Escalada', text: 'Encaminha casos criticos para operacao ou lideranca.' },
-            ].map((item) => (
-              <div key={item.title} className="rounded-3xl border border-white/8 bg-white/[0.03] p-5">
-                <div className="text-base font-bold text-white">{item.title}</div>
-                <p className="mt-2 text-sm leading-6 text-zinc-300">{item.text}</p>
-              </div>
+      <ConnectionStatus connections={connections} />
+      {!connections.gbp ? (
+        <NotConnectedCard
+          label="Google Business Profile não conectado"
+          message="Conecte o GBP para visualizar avaliações, sentimento e alertas de reputação."
+        />
+      ) : (
+        <>
+          <ExecutiveStrip data={data} />
+          <div className="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {data.reputation.metrics.map((item, index) => (
+              <KpiCard
+                key={item.label}
+                label={item.label}
+                value={item.value}
+                delta={item.delta}
+                footnote="Reputacao afeta clique, rota, reserva e decisao final."
+                tone={index === 0 ? 'amber' : index === 1 ? 'green' : index === 2 ? 'red' : 'purple'}
+              />
             ))}
           </div>
-        </Panel>
-      </div>
-      <div className="mt-6">
-        <Panel>
-          <SectionTitle title="Fila de reviews" description="Exemplos de contexto, sentimento e proxima resposta sugerida." />
-          <DataTable
-            headers={['Cliente', 'Quando', 'Nota', 'Canal', 'Tom', 'Proxima acao']}
-            rows={data.reputation.reviewFeed.map((item) => [
-              <span key="author" className="font-semibold text-white">{item.author}</span>,
-              item.when,
-              <span key="rating" className="text-amber-300">{item.rating}</span>,
-              item.channel,
-              <span key="sentiment" className="text-zinc-100">{item.sentiment}</span>,
-              <span key="response" className="text-emerald-300">{item.response}</span>,
-            ])}
-          />
-        </Panel>
-      </div>
+          <div className="mb-6 grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
+            <Panel>
+              <SectionTitle title="Sentimento das avaliacoes" description="Visao sintetica do humor da base de reviews." />
+              <ProgressList items={data.reputation.sentiment} />
+            </Panel>
+            <Panel>
+              <SectionTitle title="Temas mais citados" description="O que aparece com mais frequencia nas avaliacoes." />
+              <ProgressList items={data.reputation.themes} />
+            </Panel>
+          </div>
+          <div className="grid gap-4 xl:grid-cols-[1fr_1.15fr]">
+            <Panel>
+              <SectionTitle title="Alertas criticos" description="Pontos de atencao que pedem acao tatica." />
+              <BulletList items={data.reputation.alerts} />
+            </Panel>
+            <Panel>
+              <SectionTitle title="Oportunidade de resposta com IA" description="A IA organiza, sugere tom e acelera resposta sem comprometer a marca." />
+              <div className="grid gap-4 md:grid-cols-3">
+                {[
+                  { title: 'Filtro', text: 'Classifica positivo, neutro e negativo para priorizar fila.' },
+                  { title: 'Sugestao', text: 'Propoe resposta com contexto e tom compativel com a marca.' },
+                  { title: 'Escalada', text: 'Encaminha casos criticos para operacao ou lideranca.' },
+                ].map((item) => (
+                  <div key={item.title} className="rounded-3xl border border-white/8 bg-white/[0.03] p-5">
+                    <div className="text-base font-bold text-white">{item.title}</div>
+                    <p className="mt-2 text-sm leading-6 text-zinc-300">{item.text}</p>
+                  </div>
+                ))}
+              </div>
+            </Panel>
+          </div>
+          <div className="mt-6">
+            <Panel>
+              <SectionTitle title="Fila de reviews" description="Contexto, sentimento e proxima resposta para cada avaliacao." />
+              <DataTable
+                headers={['Cliente', 'Quando', 'Nota', 'Canal', 'Tom', 'Proxima acao']}
+                rows={data.reputation.reviewFeed.map((item) => [
+                  <span key="author" className="font-semibold text-white">{item.author}</span>,
+                  item.when,
+                  <span key="rating" className="text-amber-300">{item.rating}</span>,
+                  item.channel,
+                  <span key="sentiment" className="text-zinc-100">{item.sentiment}</span>,
+                  <span key="response" className="text-emerald-300">{item.response}</span>,
+                ])}
+              />
+            </Panel>
+          </div>
+        </>
+      )}
     </>
   )
 }
@@ -794,7 +775,7 @@ function ReputationSection({ data }: { data: DashboardData }) {
 function EventsSection({ data }: { data: DashboardData }) {
   return (
     <>
-      <PageIntro eyebrow="Linha de receita de alto ticket" title={sectionMeta.eventos.title} description={sectionMeta.eventos.description} />
+      <ConnectionStatus connections={data.connections} />
       <ExecutiveStrip data={data} />
       <div className="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {data.events.summary.map((item, index) => (
@@ -819,7 +800,7 @@ function EventsSection({ data }: { data: DashboardData }) {
         </Panel>
       </div>
       <Panel>
-        <SectionTitle title="Leitura da oportunidade" description="Por que eventos merecem tratamento como produto dentro do restaurante." badge="High ticket" />
+        <SectionTitle title="Leitura da oportunidade" description="Por que eventos merecem tratamento como produto dentro do negocio." badge="High ticket" />
         <p className="max-w-4xl text-sm leading-7 text-zinc-300">{data.events.note}</p>
       </Panel>
     </>
@@ -829,13 +810,12 @@ function EventsSection({ data }: { data: DashboardData }) {
 function SystemSection({ data }: { data: DashboardData }) {
   return (
     <>
-      <PageIntro eyebrow="Narrativa comercial LocalRise" title={sectionMeta['sistema-localrise'].title} description={sectionMeta['sistema-localrise'].description} />
       <ExecutiveStrip data={data} />
       <div className="mb-6 grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
         <Panel>
-          <SectionTitle title="O que esta demo representa" description="Nao e um painel para impressionar superficialmente. E uma proposta de sistema." />
+          <SectionTitle title="Como o sistema funciona" description="Aquisicao, conversao, retencao e reputacao integrados em uma unica camada de gestao." />
           <p className="max-w-3xl text-sm leading-7 text-zinc-300">
-            A LocalRise posiciona o restaurante como uma operacao guiada por demanda, dados e recorrencia. Em vez de enxergar marketing como posts isolados ou midia sem contexto, o sistema organiza aquisicao, conversao, retencao e reputacao em uma unica camada de gestao.
+            A LocalRise organiza as operacoes de crescimento do seu negocio em um sistema unico: cada canal gera dados, os dados alimentam decisoes e as decisoes se convertem em receita previsivel.
           </p>
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {data.systemPillars.map((pillar) => (
@@ -847,13 +827,13 @@ function SystemSection({ data }: { data: DashboardData }) {
           </div>
         </Panel>
         <Panel>
-          <SectionTitle title="Leitura executiva" description="Como vender o sistema para o decisor do restaurante." />
+          <SectionTitle title="Leitura executiva" description="Visao consolidada para o gestor do negocio." />
           <BulletList
             items={[
-              'A LocalRise aumenta visibilidade e transforma procura em reservas e eventos.',
-              'O CRM reduz dependencia de compra unica e aumenta frequencia de retorno.',
-              'IA e automacao organizam atendimento, reviews e follow-up sem inflar equipe.',
-              'O dashboard conecta tudo em uma linguagem de gestao, nao de vanity metrics.',
+              'Aquisicao organica e paga integradas para capturar demanda local em todos os canais.',
+              'CRM e automacoes reduzem dependencia de novos clientes e aumentam frequencia de retorno.',
+              'IA organiza atendimento, reviews e follow-up sem inflar equipe.',
+              'Dashboard conecta tudo em linguagem de gestao — nao de metricas de vaidade.',
             ]}
           />
         </Panel>
@@ -917,7 +897,7 @@ export function DemoDashboardPage({
     { label: 'Receita acompanhada', value: displayData.overview.kpis[0]?.value ?? 'R$ 0', icon: <CircleDollarSign size={18} /> },
     { label: 'Canal mais forte', value: strongestSourceLabel(displayData), icon: <Search size={18} /> },
     { label: 'Alavanca do mes', value: strongestOpportunityLabel(displayData), icon: <Crown size={18} /> },
-    { label: 'Modo de operacao', value: 'Supabase + IA + midia', icon: <ClipboardCheck size={18} /> },
+    { label: 'Health Score', value: `${displayData.restaurant.healthScore} / 100`, icon: <ClipboardCheck size={18} /> },
   ]
 
   return (
@@ -979,31 +959,6 @@ export function DemoDashboardPage({
         {section === 'eventos' && <EventsSection data={displayData} />}
         {section === 'sistema-localrise' && <SystemSection data={displayData} />}
 
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          {[
-            {
-              title: 'Produto demonstravel',
-              text: 'A narrativa deixa de ser fazer marketing e passa a ser operar crescimento.',
-              icon: <HandCoins size={18} />,
-            },
-            {
-              title: 'Base preparada para integracao',
-              text: 'Todos os blocos ja tem estrutura clara para receber dados de Supabase, GA4, Ads, WhatsApp e CRM.',
-              icon: <Activity size={18} />,
-            },
-            {
-              title: 'Clareza comercial',
-              text: 'Cada pagina explica valor de negocio, nao apenas numero isolado.',
-              icon: <Sparkles size={18} />,
-            },
-          ].map((item) => (
-            <Panel key={item.title}>
-              <div className="mb-3 text-red-300">{item.icon}</div>
-              <div className="text-base font-bold text-white">{item.title}</div>
-              <p className="mt-2 text-sm leading-6 text-zinc-300">{item.text}</p>
-            </Panel>
-          ))}
-        </div>
       </div>
     </div>
   )

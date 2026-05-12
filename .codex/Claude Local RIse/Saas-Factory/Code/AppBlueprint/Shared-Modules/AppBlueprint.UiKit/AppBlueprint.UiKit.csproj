@@ -1,0 +1,80 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <!-- Basic Project Properties -->
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>12.0</LangVersion>
+
+    <!-- NuGet Package Configuration -->
+    <Version>$(GITVERSION_SemVer)</Version>
+
+    <Authors>Casper Rubæk</Authors>
+    <Description>Reusable Razor Class Library with Blazor UI components using Tailwind CSS</Description>
+    <PackageTags>blazor razor components tailwindcss ui-kit razor-class-library</PackageTags>
+    <PackageProjectUrl>https://github.com/saas-factory-labs/Saas-Factory/blob/main/Code/AppBlueprint/Shared-Modules/AppBlueprint.UiKit/README.md</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/saas-factory-labs/Saas-Factory</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>uikit-icon.png</PackageIcon>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\assets\icons\uikit-icon.png" Pack="true" PackagePath="" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <SupportedPlatform Include="browser" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AppBlueprint.Infrastructure\AppBlueprint.Infrastructure.csproj" />
+    <ProjectReference Include="..\AppBlueprint.Domain\AppBlueprint.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Components">
+      <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\9.0.5\Microsoft.AspNetCore.Components.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Exclude example files from compilation - they are for documentation/reference only -->
+  <ItemGroup>
+    <Compile Remove="Examples\**" />
+    <EmbeddedResource Remove="Examples\**" />
+    <None Include="Examples\**" />
+
+    <!-- Exclude CruipBlazor source directory - components have been copied to Components/Layout/Cruip, Components/Dashboard/Cruip, Components/Shared/Cruip -->
+    <Compile Remove="CruipBlazor\**" />
+    <Content Remove="CruipBlazor\**" />
+    <EmbeddedResource Remove="CruipBlazor\**" />
+    <None Remove="CruipBlazor\**" />
+  </ItemGroup>
+
+  <!-- Automatically build Tailwind CSS before compilation -->
+  <Target Name="BuildTailwindCSS" BeforeTargets="BeforeBuild" Condition="Exists('CruipBlazor\package.json')">
+    <PropertyGroup>
+      <NpmCommand Condition="'$(OS)' == 'Windows_NT'">npm.cmd</NpmCommand>
+      <NpmCommand Condition="'$(OS)' != 'Windows_NT'">npm</NpmCommand>
+    </PropertyGroup>
+
+    <Message Text="Building Tailwind CSS..." Importance="high" />
+
+    <!-- Run npm install if node_modules doesn't exist -->
+    <Exec Command="$(NpmCommand) install"
+          WorkingDirectory="CruipBlazor"
+          Condition="!Exists('CruipBlazor\node_modules')"
+          ContinueOnError="false" />
+
+    <!-- Build Tailwind CSS -->
+    <Exec Command="$(NpmCommand) run build:css"
+          WorkingDirectory="CruipBlazor"
+          ContinueOnError="true" />
+  </Target>
+
+</Project>

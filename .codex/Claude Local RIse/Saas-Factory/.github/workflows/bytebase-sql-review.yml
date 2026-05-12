@@ -1,0 +1,24 @@
+name: "🛡️ Security: Bytebase SQL Review"
+on:  
+#  push:
+#    branches: ["main"]
+#    tags: ["v*.*.*"]
+#  pull_request:
+#    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  sql-review:
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    name: SQL Review
+    steps:
+      # SECURITY: Using full commit SHA for immutable, verifiable builds
+      # v4.3.1 (Nov 17, 2025): https://github.com/actions/checkout/releases/tag/v4.3.1
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
+      - name: Check SQL
+        uses: bytebase/sql-review-action@8ccd33832304934154de305b91cd9d09370460cf  # Latest from main (Jan 22, 2026)
+        with:
+          # override-file-path: "<Your SQL review rules configuration file path>"
+          # template-id: "<SQL review rule template id>"
+          database-type: "POSTGRES"
+          # file-pattern: "<The file pattern for your SQL files>"

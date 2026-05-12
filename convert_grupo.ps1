@@ -1,0 +1,14 @@
+
+  $htmlPath = "c:\Users\digui\Documents\localrise-brain\temp_grupo.html"
+  $docPath = "c:\Users\digui\Documents\localrise-brain\Relatorio_Estrategico_Grupo.docx"
+  $word = New-Object -ComObject Word.Application
+  $word.Visible = $false
+  try {
+    if (Test-Path $docPath) { Remove-Item $docPath -Force }
+    $doc = $word.Documents.Open($htmlPath)
+    $doc.SaveAs([ref]$docPath, [ref]16)
+    $doc.Close()
+  } finally {
+    $word.Quit()
+  }
+  

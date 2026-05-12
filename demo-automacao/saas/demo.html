@@ -1,0 +1,2319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LocalRise Advisory — Gestão Inteligente</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+/* ── LocalRise Design System ─────────────────────────────────────────── */
+:root {
+  --red:        #E31B23;
+  --red-dim:    rgba(227,27,35,0.12);
+  --red-glow:   rgba(227,27,35,0.25);
+  --bg:         #080808;
+  --surface:    #111111;
+  --surface2:   #181818;
+  --border:     #222222;
+  --border2:    #2a2a2a;
+  --text:       #ffffff;
+  --text2:      #aaaaaa;
+  --text3:      #555555;
+  --green:      #22C55E;
+  --green-dim:  rgba(34,197,94,0.12);
+  --amber:      #F59E0B;
+  --amber-dim:  rgba(245,158,11,0.12);
+  --blue:       #3B82F6;
+  --blue-dim:   rgba(59,130,246,0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 99px; }
+
+/* ── Cards ───────────────────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.card-2 {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+}
+
+/* ── Badges ──────────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 9px; border-radius: 99px;
+  font-size: 11px; font-weight: 600; letter-spacing: .01em;
+}
+.badge-red    { background: var(--red-dim);   color: #ff6b6b; border: 1px solid rgba(227,27,35,.3); }
+.badge-amber  { background: var(--amber-dim); color: #fbbf24; border: 1px solid rgba(245,158,11,.3); }
+.badge-green  { background: var(--green-dim); color: #4ade80; border: 1px solid rgba(34,197,94,.3); }
+.badge-blue   { background: var(--blue-dim);  color: #60a5fa; border: 1px solid rgba(59,130,246,.3); }
+.badge-gray   { background: #1a1a1a;          color: var(--text2); border: 1px solid var(--border2); }
+
+/* ── Dividers ────────────────────────────────────────────────────────── */
+.divider { border: none; border-top: 1px solid var(--border); }
+
+/* ── Glow effect nos cards de métrica ──────────────────────────────── */
+.metric-red   { border-color: rgba(227,27,35,.25) !important; box-shadow: 0 0 24px rgba(227,27,35,.06); }
+.metric-green { border-color: rgba(34,197,94,.2)  !important; box-shadow: 0 0 24px rgba(34,197,94,.05); }
+.metric-amber { border-color: rgba(245,158,11,.2) !important; box-shadow: 0 0 24px rgba(245,158,11,.05); }
+
+/* ── Nav item ──────────────────────────────────────────────────────── */
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 8px;
+  font-size: 13px; font-weight: 500;
+  color: var(--text3); cursor: pointer;
+  transition: all .15s ease;
+  border: 1px solid transparent;
+  width: 100%; text-align: left;
+}
+.nav-item:hover { color: var(--text2); background: #161616; }
+.nav-item.active {
+  color: var(--text);
+  background: var(--red-dim);
+  border-color: rgba(227,27,35,.2);
+}
+.nav-item.active svg { color: var(--red); }
+
+/* ── Table ─────────────────────────────────────────────────────────── */
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  text-align: left; padding: 10px 16px;
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--text3);
+  border-bottom: 1px solid var(--border);
+}
+tbody tr { border-bottom: 1px solid #141414; transition: background .1s; }
+tbody tr:hover { background: #131313; }
+tbody tr:last-child { border-bottom: none; }
+tbody td { padding: 11px 16px; font-size: 12.5px; }
+
+/* ── Progress bar ──────────────────────────────────────────────────── */
+.progress-track { height: 3px; background: var(--border2); border-radius: 99px; overflow: hidden; }
+.progress-fill  { height: 100%; border-radius: 99px; transition: width .6s ease; }
+
+/* ── Alert strip ───────────────────────────────────────────────────── */
+.alert-strip {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 14px; border-radius: 8px; border-left: 3px solid;
+}
+.alert-strip.red    { background: var(--red-dim);   border-color: var(--red); }
+.alert-strip.amber  { background: var(--amber-dim); border-color: var(--amber); }
+.alert-strip.blue   { background: var(--blue-dim);  border-color: var(--blue); }
+
+/* ── Kanban card ────────────────────────────────────────────────────── */
+.kanban-card {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 8px; padding: 10px;
+  font-size: 11.5px;
+}
+.kanban-card.stuck { border-color: rgba(227,27,35,.4); }
+
+/* ── Dot status ─────────────────────────────────────────────────────── */
+.dot { width: 6px; height: 6px; border-radius: 99px; flex-shrink: 0; }
+
+/* ── Button ─────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 8px;
+  font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all .15s; border: none;
+}
+.btn-primary { background: var(--red); color: white; }
+.btn-primary:hover { background: #c91018; }
+.btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border2); }
+.btn-ghost:hover { background: #161616; color: var(--text); }
+
+[x-cloak] { display: none !important; }
+
+/* ── Tabs ───────────────────────────────────────────────────────── */
+.tab-btn {
+  padding: 7px 16px; font-size: 12px; font-weight: 600;
+  border-radius: 6px; border: none; cursor: pointer;
+  background: transparent; color: var(--text3);
+  transition: all .15s;
+}
+.tab-btn:hover { color: var(--text2); background: #161616; }
+.tab-btn.active {
+  background: var(--red-dim); color: white;
+  border: 1px solid rgba(227,27,35,.2);
+}
+.tab-btn.active-b {
+  background: var(--blue-dim); color: #60a5fa;
+  border: 1px solid rgba(59,130,246,.2);
+}
+
+/* ── DRE table ──────────────────────────────────────────────────── */
+.dre-row { display:flex; align-items:center; padding:9px 0; border-bottom:1px solid #141414; }
+.dre-row:last-child { border-bottom:none; }
+.dre-row.subtotal { background:#131313; margin:0 -20px; padding:9px 20px; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+.dre-row.ebitda   { background:rgba(227,27,35,.05); margin:0 -20px; padding:10px 20px; border-top:1px solid rgba(227,27,35,.2); }
+.dre-row.revenue  { }
+.dre-label { flex:1; font-size:12.5px; color:var(--text2); }
+.dre-label.bold    { font-weight:700; color:white; }
+.dre-label.indent  { padding-left:16px; font-size:11.5px; color:var(--text3); }
+.dre-pct   { width:60px; text-align:right; font-size:11px; color:var(--text3); }
+.dre-value { width:100px; text-align:right; font-size:13px; font-weight:700; }
+.dre-note  { font-size:10.5px; color:var(--text3); margin-top:2px; }
+</style>
+</head>
+
+<body x-data="app()" x-cloak>
+<div class="flex" style="height:100vh; overflow:hidden;">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SIDEBAR
+══════════════════════════════════════════════════════════════════ -->
+<aside style="width:220px; background:#080808; border-right:1px solid #161616; display:flex; flex-direction:column; flex-shrink:0; position:relative; z-index:30;">
+
+  <!-- Logo -->
+  <div style="padding:20px 16px 16px; border-bottom:1px solid #141414;">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <div style="width:32px; height:32px; background:var(--red); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div>
+        <div style="font-size:13px; font-weight:800; color:white; letter-spacing:-.01em; line-height:1.2;">LocalRise</div>
+        <div style="font-size:10px; color:var(--red); font-weight:600; letter-spacing:.04em; text-transform:uppercase;">Advisory</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <nav style="flex:1; padding:12px 8px; overflow-y:auto; display:flex; flex-direction:column; gap:2px;">
+    <div style="font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--text3); padding:4px 12px 8px;">Menu</div>
+    <template x-for="item in nav" :key="item.id">
+      <button @click="page=item.id" :class="['nav-item', page===item.id ? 'active' : '']">
+        <span x-html="item.icon" style="flex-shrink:0; opacity:.7;" :style="page===item.id ? 'opacity:1' : ''"></span>
+        <span x-text="item.label" style="flex:1;"></span>
+        <template x-if="item.id==='alertas' && criticalCount > 0">
+          <span style="background:var(--red); color:white; font-size:10px; font-weight:800; width:18px; height:18px; border-radius:99px; display:flex; align-items:center; justify-content:center;" x-text="criticalCount > 9 ? '9+' : criticalCount"></span>
+        </template>
+      </button>
+    </template>
+  </nav>
+
+  <!-- User -->
+  <div style="padding:12px 10px; border-top:1px solid #141414;">
+    <div style="display:flex; align-items:center; gap:9px; padding:8px; border-radius:8px; background:#111;">
+      <div style="width:28px; height:28px; background:var(--red-dim); border:1px solid rgba(227,27,35,.2); border-radius:99px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <span style="font-size:10px; font-weight:800; color:var(--red);">CD</span>
+      </div>
+      <div style="min-width:0;">
+        <div style="font-size:11.5px; font-weight:600; color:white; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Cliente Demo</div>
+        <div style="font-size:10px; color:var(--text3);">Plano Pro</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MAIN
+══════════════════════════════════════════════════════════════════ -->
+<main style="flex:1; overflow-y:auto; display:flex; flex-direction:column; min-width:0;">
+
+  <!-- Top bar -->
+  <div style="position:sticky; top:0; z-index:20; background:#080808; border-bottom:1px solid #141414; padding:0 28px; height:52px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span style="font-size:11px; color:var(--text3);">Sistema</span>
+      <span style="font-size:11px; color:var(--text3);">/</span>
+      <span style="font-size:13px; font-weight:600; color:white;" x-text="nav.find(n=>n.id===page)?.label"></span>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span style="font-size:11px; color:var(--text3);">09/04/2026 · 07:00</span>
+      <div style="width:1px; height:16px; background:var(--border);"></div>
+      <div style="display:flex; align-items:center; gap:5px;">
+        <span class="dot" style="background:var(--green); box-shadow:0 0 6px rgba(34,197,94,.6);"></span>
+        <span style="font-size:11px; color:var(--text2);">Automação ativa</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DASHBOARD ──────────────────────────────────────────────── -->
+  <div x-show="page==='dashboard'" style="padding:28px; display:flex; flex-direction:column; gap:20px;">
+
+    <!-- Header -->
+    <div>
+      <h1 style="font-size:22px; font-weight:800; color:white; letter-spacing:-.02em;">Visão geral</h1>
+      <p style="font-size:13px; color:var(--text2); margin-top:3px;">Gestão operacional e financeira integrada — Abril 2026</p>
+    </div>
+
+    <!-- KPI row -->
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:14px;">
+      <template x-for="m in metrics" :key="m.label">
+        <div class="card" :class="m.glow" style="padding:18px 20px;">
+          <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px;">
+            <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em;" :style="{color: m.labelColor}" x-text="m.label"></span>
+            <div style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center;" :style="{background: m.iconBg}">
+              <span x-html="m.icon"></span>
+            </div>
+          </div>
+          <p style="font-size:26px; font-weight:900; letter-spacing:-.03em; line-height:1; color:white;" x-text="m.value"></p>
+          <p style="font-size:11px; margin-top:6px;" :style="{color: m.subColor}" x-text="m.sub"></p>
+        </div>
+      </template>
+    </div>
+
+    <!-- Row 2: gráfico + alertas -->
+    <div style="display:grid; grid-template-columns:1fr 340px; gap:14px;">
+
+      <!-- Gráfico -->
+      <div class="card" style="padding:0; overflow:hidden;">
+        <div style="padding:18px 22px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <h2 style="font-size:13px; font-weight:700; color:white;">Fluxo de Caixa</h2>
+            <p style="font-size:11px; color:var(--text3); margin-top:2px;">Projeção 12 dias — entradas, saídas e saldo</p>
+          </div>
+          <span class="badge badge-amber">⚠ Atenção em 10/04</span>
+        </div>
+        <div style="padding:20px 22px;">
+          <canvas id="cfChart" height="190"></canvas>
+          <hr class="divider" style="margin:16px 0 12px;">
+          <div style="display:flex; align-items:center; gap:24px;">
+            <div>
+              <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em;">Total entradas</p>
+              <p style="font-size:13px; font-weight:700; color:#4ade80; margin-top:2px;">R$ 27.885</p>
+            </div>
+            <div>
+              <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em;">Total saídas</p>
+              <p style="font-size:13px; font-weight:700; color:#f87171; margin-top:2px;">R$ 37.060</p>
+            </div>
+            <div>
+              <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em;">Menor saldo</p>
+              <p style="font-size:13px; font-weight:700; color:var(--amber); margin-top:2px;">R$ 13.750 · 15/04</p>
+            </div>
+            <button @click="page='financeiro'" class="btn btn-ghost" style="margin-left:auto; font-size:11px;">Ver completo →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alertas -->
+      <div class="card" style="display:flex; flex-direction:column; overflow:hidden;">
+        <div style="padding:16px 18px 12px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+          <h2 style="font-size:13px; font-weight:700; color:white;">Alertas ativos</h2>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="font-size:12px; font-weight:700; color:var(--red);" x-text="criticalCount + ' críticos'"></span>
+            <button @click="page='alertas'" class="btn btn-ghost" style="font-size:10px; padding:4px 9px;">Ver todos</button>
+          </div>
+        </div>
+        <div style="flex:1; overflow-y:auto; padding:12px; display:flex; flex-direction:column; gap:6px;">
+          <template x-for="a in alerts.slice(0,4)" :key="a.id">
+            <div class="alert-strip" :class="a.severity==='critical' ? 'red' : a.severity==='warning' ? 'amber' : 'blue'">
+              <span x-html="a.severity==='critical' ? iconAlertCircle('#ff6b6b','14') : iconAlertTri(a.severity==='warning' ? '#fbbf24':'#60a5fa','14')" style="flex-shrink:0; margin-top:1px;"></span>
+              <div>
+                <p style="font-size:11.5px; font-weight:600; color:white; line-height:1.3;" x-text="a.title"></p>
+                <p style="font-size:10.5px; color:var(--text2); margin-top:3px;" x-text="a.time"></p>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: pedidos + contas -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+
+      <!-- Pedidos -->
+      <div class="card" style="overflow:hidden;">
+        <div style="padding:16px 20px 12px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+          <h2 style="font-size:13px; font-weight:700; color:white;">Pedidos</h2>
+          <button @click="page='operacao'" class="btn btn-ghost" style="font-size:10px; padding:4px 9px;">Operação →</button>
+        </div>
+        <div style="padding:14px 20px 4px;">
+          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px;">
+            <div style="background:#131313; border:1px solid var(--border); border-radius:8px; padding:10px; text-align:center;">
+              <p style="font-size:20px; font-weight:800; color:var(--text2);">1</p>
+              <p style="font-size:10px; color:var(--text3); margin-top:2px;">Pendente</p>
+            </div>
+            <div style="background:var(--blue-dim); border:1px solid rgba(59,130,246,.2); border-radius:8px; padding:10px; text-align:center;">
+              <p style="font-size:20px; font-weight:800; color:#60a5fa;">3</p>
+              <p style="font-size:10px; color:#60a5fa; margin-top:2px; opacity:.7;">Em produção</p>
+            </div>
+            <div style="background:var(--green-dim); border:1px solid rgba(34,197,94,.2); border-radius:8px; padding:10px; text-align:center;">
+              <p style="font-size:20px; font-weight:800; color:#4ade80;">1</p>
+              <p style="font-size:10px; color:#4ade80; margin-top:2px; opacity:.7;">Enviado</p>
+            </div>
+          </div>
+          <table>
+            <tbody>
+              <template x-for="o in orders.slice(0,4)" :key="o.id">
+                <tr>
+                  <td style="font-family:monospace; font-size:11px; color:var(--text3);" x-text="o.ref"></td>
+                  <td style="color:var(--text2); max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" x-text="o.customer"></td>
+                  <td>
+                    <span :class="o.stuck ? 'badge badge-red' : o.status==='Enviado' ? 'badge badge-green' : 'badge badge-blue'" x-text="o.stuck ? '⚠ Travado' : o.status"></span>
+                  </td>
+                  <td style="text-align:right; font-weight:700; color:white;" x-text="o.value"></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Contas urgentes -->
+      <div class="card" style="overflow:hidden;">
+        <div style="padding:16px 20px 12px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+          <h2 style="font-size:13px; font-weight:700; color:white;">Contas a pagar — urgentes</h2>
+          <button @click="page='financeiro'" class="btn btn-ghost" style="font-size:10px; padding:4px 9px;">Ver todas →</button>
+        </div>
+        <div style="padding:14px 20px;">
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <template x-for="ap in payables.slice(0,5)" :key="ap.id">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div style="flex:1; min-width:0;">
+                  <p style="font-size:12px; font-weight:600; color:white; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" x-text="ap.desc"></p>
+                  <p style="font-size:10.5px; color:var(--text3); margin-top:1px;" x-text="ap.supplier + ' · ' + ap.due"></p>
+                </div>
+                <span :class="ap.urgencyCls" x-text="ap.urgency" style="flex-shrink:0;"></span>
+                <span style="font-size:13px; font-weight:800; color:white; flex-shrink:0;" x-text="ap.amount"></span>
+              </div>
+            </template>
+          </div>
+          <hr class="divider" style="margin:12px 0 10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:11px; color:var(--text3);">Total urgente (7 dias)</span>
+            <span style="font-size:14px; font-weight:800; color:#f87171;">R$ 37.680</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FINANCEIRO ─────────────────────────────────────────────── -->
+  <div x-show="page==='financeiro'" style="padding:28px; display:flex; flex-direction:column; gap:20px;">
+
+    <!-- Header + tabs -->
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+      <div>
+        <h1 style="font-size:22px; font-weight:800; color:white; letter-spacing:-.02em;">Financeiro</h1>
+        <p style="font-size:13px; color:var(--text2); margin-top:3px;">Fluxo de caixa, resultado e contas</p>
+      </div>
+      <div style="display:flex; gap:4px; background:#111; border:1px solid var(--border); border-radius:8px; padding:4px;">
+        <button @click="finTab='fluxo'"  :class="['tab-btn', finTab==='fluxo'  ? 'active' : '']">📈 Fluxo de Caixa</button>
+        <button @click="finTab='dre'"    :class="['tab-btn', finTab==='dre'    ? 'active' : '']">📊 DRE / Resultado</button>
+        <button @click="finTab='contas'" :class="['tab-btn', finTab==='contas' ? 'active' : '']">🧾 Contas</button>
+      </div>
+    </div>
+
+    <!-- KPIs — sempre visíveis -->
+    <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:12px;">
+      <div class="card metric-green" style="padding:16px 18px;">
+        <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:#4ade80; margin-bottom:8px;">Saldo atual</p>
+        <p style="font-size:24px; font-weight:900; letter-spacing:-.03em; color:white;">R$ 38.420</p>
+        <p style="font-size:10.5px; color:var(--text3); margin-top:4px;">Atualizado automaticamente</p>
+      </div>
+      <div class="card" style="padding:16px 18px;">
+        <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:#60a5fa; margin-bottom:8px;">A receber</p>
+        <p style="font-size:24px; font-weight:900; letter-spacing:-.03em; color:white;">R$ 13.785</p>
+        <p style="font-size:10.5px; color:var(--text3); margin-top:4px;">4 contas em aberto</p>
+      </div>
+      <div class="card metric-amber" style="padding:16px 18px;">
+        <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--amber); margin-bottom:8px;">A pagar</p>
+        <p style="font-size:24px; font-weight:900; letter-spacing:-.03em; color:#fbbf24;">R$ 43.710</p>
+        <p style="font-size:10.5px; color:var(--text3); margin-top:4px;">7 contas pendentes</p>
+      </div>
+      <div class="card" style="padding:16px 18px; border-color:rgba(227,27,35,.2); box-shadow:0 0 20px rgba(227,27,35,.04);">
+        <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:#ff6b6b; margin-bottom:8px;">Burn Rate/dia</p>
+        <p style="font-size:24px; font-weight:900; letter-spacing:-.03em; color:white;">R$ <span x-text="burnDiario.toLocaleString('pt-BR')"></span></p>
+        <p style="font-size:10.5px; color:var(--text3); margin-top:4px;">Custo médio diário</p>
+      </div>
+      <div class="card" style="padding:16px 18px;">
+        <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--amber); margin-bottom:8px;">Capital de Giro</p>
+        <p style="font-size:24px; font-weight:900; letter-spacing:-.03em; color:white;"><span x-text="runway"></span> dias</p>
+        <p style="font-size:10.5px; color:var(--text3); margin-top:4px;">Runway atual</p>
+      </div>
+    </div>
+
+    <!-- ── TAB: FLUXO ─────────────────────────────────────────── -->
+    <div x-show="finTab==='fluxo'" style="display:flex; flex-direction:column; gap:16px;">
+
+      <!-- Gráfico 30 dias -->
+      <div class="card" style="overflow:hidden;">
+        <div style="padding:18px 22px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <h2 style="font-size:13px; font-weight:700; color:white;">Projeção de Fluxo de Caixa — 30 dias</h2>
+            <p style="font-size:11px; color:var(--text3); margin-top:2px;">Risco pontual em 10/04 — monitorar de perto</p>
+          </div>
+          <span class="badge badge-amber">⚠ Atenção</span>
+        </div>
+        <div style="padding:20px 22px;">
+          <canvas id="cfChart30" height="170"></canvas>
+          <div style="margin-top:14px; padding:11px 14px; background:rgba(245,158,11,.08); border:1px solid rgba(245,158,11,.2); border-radius:8px; display:flex; align-items:center; gap:8px;">
+            <span style="color:var(--amber);" x-html="iconAlertCircle('#fbbf24','13')"></span>
+            <span style="font-size:11.5px; color:#fbbf24;">Menor saldo projetado: <strong>R$ 13.750</strong> em <strong>15/04/2026</strong> — antecipe um recebimento ou negocie prazo com o fornecedor.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Entradas e saídas concentradas -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+
+        <!-- Entradas próximas -->
+        <div class="card" style="overflow:hidden;">
+          <div style="padding:14px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+            <h2 style="font-size:13px; font-weight:700; color:white;">Entradas previstas</h2>
+            <span style="font-size:12px; font-weight:700; color:#4ade80;">+R$ 13.785</span>
+          </div>
+          <div style="padding:14px 18px; display:flex; flex-direction:column; gap:10px;">
+            <template x-for="ar in receivables" :key="ar.id">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:36px; height:36px; background:rgba(34,197,94,.08); border:1px solid rgba(34,197,94,.15); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                </div>
+                <div style="flex:1; min-width:0;">
+                  <p style="font-size:12px; font-weight:600; color:white; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" x-text="ar.customer"></p>
+                  <p style="font-size:10.5px; color:var(--text3); margin-top:1px;" x-text="ar.desc"></p>
+                </div>
+                <div style="text-align:right; flex-shrink:0;">
+                  <p style="font-size:13px; font-weight:800; color:#4ade80;" x-text="ar.amount"></p>
+                  <span :class="ar.statusCls" x-text="ar.status" style="font-size:10px;"></span>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Saídas próximas -->
+        <div class="card" style="overflow:hidden;">
+          <div style="padding:14px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+            <h2 style="font-size:13px; font-weight:700; color:white;">Saídas comprometidas</h2>
+            <span style="font-size:12px; font-weight:700; color:#f87171;">-R$ 43.710</span>
+          </div>
+          <div style="padding:14px 18px; display:flex; flex-direction:column; gap:10px;">
+            <template x-for="ap in payables.slice(0,5)" :key="ap.id">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:36px; height:36px; background:rgba(245,158,11,.06); border:1px solid rgba(245,158,11,.15); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+                </div>
+                <div style="flex:1; min-width:0;">
+                  <p style="font-size:12px; font-weight:600; color:white; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" x-text="ap.desc"></p>
+                  <p style="font-size:10.5px; color:var(--text3); margin-top:1px;" x-text="ap.supplier + ' · ' + ap.due"></p>
+                </div>
+                <div style="text-align:right; flex-shrink:0;">
+                  <p style="font-size:13px; font-weight:800; color:white;" x-text="ap.amount"></p>
+                  <span :class="ap.urgencyCls" x-text="ap.urgency" style="font-size:10px;"></span>
+                </div>
+              </div>
+            </template>
+            <div style="padding-top:8px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:11px; color:var(--text3);">+2 contas · venc. após 15/04</span>
+              <button @click="finTab='contas'" class="btn btn-ghost" style="font-size:10px; padding:4px 9px;">Ver todas →</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Análise de liquidez -->
+      <div class="card" style="padding:18px 22px;">
+        <h2 style="font-size:13px; font-weight:700; color:white; margin-bottom:14px;">Análise de Liquidez — próximos 30 dias</h2>
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px;">
+          <div style="background:#131313; border:1px solid var(--border2); border-radius:8px; padding:12px; text-align:center;">
+            <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.07em; margin-bottom:6px;">Saldo abertura</p>
+            <p style="font-size:16px; font-weight:900; color:#4ade80;">R$ 38.420</p>
+          </div>
+          <div style="background:#131313; border:1px solid var(--border2); border-radius:8px; padding:12px; text-align:center;">
+            <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.07em; margin-bottom:6px;">Entradas prev.</p>
+            <p style="font-size:16px; font-weight:900; color:#4ade80;">R$ 13.785</p>
+          </div>
+          <div style="background:#131313; border:1px solid rgba(227,27,35,.15); border-radius:8px; padding:12px; text-align:center;">
+            <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.07em; margin-bottom:6px;">Saídas comprometidas</p>
+            <p style="font-size:16px; font-weight:900; color:#f87171;">R$ 43.710</p>
+          </div>
+          <div style="background:rgba(245,158,11,.06); border:1px solid rgba(245,158,11,.2); border-radius:8px; padding:12px; text-align:center;">
+            <p style="font-size:10px; color:var(--amber); text-transform:uppercase; letter-spacing:.07em; margin-bottom:6px;">Saldo mínimo projetado</p>
+            <p style="font-size:16px; font-weight:900; color:#fbbf24;">R$ 13.750</p>
+            <p style="font-size:9.5px; color:var(--text3); margin-top:2px;">em 15/04</p>
+          </div>
+        </div>
+        <div style="margin-top:12px; padding:10px 14px; background:#0f0f0f; border:1px solid var(--border); border-radius:8px; display:flex; align-items:center; gap:8px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <span style="font-size:11.5px; color:var(--text2);"><strong style="color:white;">Alerta de concentração:</strong> R$ 24.680 de saídas no dia 10/04 (Folha + Energia). Antecipe o recebimento do Belo Sabor (R$ 4.750 · vence 10/04) para reforçar o caixa antes dessa data.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: DRE ────────────────────────────────────────────── -->
+    <div x-show="finTab==='dre'" style="display:flex; flex-direction:column; gap:16px;">
+
+      <!-- DRE table -->
+      <div class="card" style="overflow:hidden;">
+        <div style="padding:16px 22px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <h2 style="font-size:13px; font-weight:700; color:white;">Demonstrativo de Resultado (DRE)</h2>
+            <p style="font-size:11px; color:var(--text3); margin-top:2px;">Projeção Abril 2026 — mês em aberto</p>
+          </div>
+          <span class="badge badge-red">EBITDA -13%</span>
+        </div>
+        <div style="padding:4px 20px 16px;">
+          <template x-for="row in dre" :key="row.label">
+            <div :class="['dre-row', row.type==='subtotal'?'subtotal':'', row.type==='ebitda'?'ebitda':'']">
+              <div style="flex:1; min-width:0;">
+                <p :class="['dre-label', (row.type==='subtotal'||row.type==='ebitda'||row.type==='revenue')?'bold':'', row.indent?'indent':'']" x-text="row.label"></p>
+                <p x-show="row.note" class="dre-note" :style="row.note && row.note.includes('⚠') ? 'color:#fbbf24' : ''" x-text="row.note"></p>
+              </div>
+              <p class="dre-pct" x-text="row.pct || ''" style="opacity:.6;"></p>
+              <p class="dre-value"
+                :style="row.type==='subtotal' && row.value>0 ? 'color:#4ade80' :
+                        row.type==='ebitda' && row.value<0  ? 'color:#ff6b6b' :
+                        row.type==='ebitda' && row.value>=0 ? 'color:#4ade80' :
+                        row.value > 0 ? 'color:white' : 'color:#f87171'"
+                x-text="'R$ ' + Math.abs(row.value).toLocaleString('pt-BR')"></p>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- Estrutura de custos: fixo vs variável -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+
+        <!-- Fixos -->
+        <div class="card" style="padding:18px 20px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+            <div>
+              <h3 style="font-size:13px; font-weight:700; color:white;">Custos Fixos</h3>
+              <p style="font-size:11px; color:var(--text3); margin-top:2px;">Independem do volume</p>
+            </div>
+            <div style="text-align:right;">
+              <p style="font-size:16px; font-weight:900; color:#f87171;" x-text="'R$ ' + totalFixo.toLocaleString('pt-BR')"></p>
+              <p style="font-size:10px; color:var(--text3);" x-text="Math.round(totalFixo/47890*100) + '% da receita'"></p>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <template x-for="c in custos.fixos" :key="c.label">
+              <div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                  <span style="font-size:11.5px; color:var(--text2);" x-text="c.label"></span>
+                  <span style="font-size:11.5px; font-weight:700; color:white;" x-text="'R$ ' + c.value.toLocaleString('pt-BR')"></span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill" :style="'width:' + Math.round(c.value/totalFixo*100) + '%; background:#f87171;'"></div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Variáveis -->
+        <div class="card" style="padding:18px 20px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+            <div>
+              <h3 style="font-size:13px; font-weight:700; color:white;">Custos Variáveis</h3>
+              <p style="font-size:11px; color:var(--text3); margin-top:2px;">Variam com produção e vendas</p>
+            </div>
+            <div style="text-align:right;">
+              <p style="font-size:16px; font-weight:900; color:#fbbf24;" x-text="'R$ ' + totalVar.toLocaleString('pt-BR')"></p>
+              <p style="font-size:10px; color:var(--text3);" x-text="Math.round(totalVar/47890*100) + '% da receita'"></p>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <template x-for="c in custos.variaveis" :key="c.label">
+              <div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                  <span style="font-size:11.5px; color:var(--text2);" x-text="c.label"></span>
+                  <span style="font-size:11.5px; font-weight:700; color:white;" x-text="'R$ ' + c.value.toLocaleString('pt-BR')"></span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill" :style="'width:' + Math.round(c.value/totalVar*100) + '%; background:#fbbf24;'"></div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Resumo executivo DRE -->
+      <div class="card" style="padding:18px 22px;">
+        <h3 style="font-size:13px; font-weight:700; color:white; margin-bottom:12px;">Resumo Executivo — Abril 2026</h3>
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
+          <div style="background:#131313; border:1px solid var(--border2); border-radius:8px; padding:12px;">
+            <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.07em; margin-bottom:4px;">Receita Líquida</p>
+            <p style="font-size:18px; font-weight:900; color:white;">R$ 47.890</p>
+          </div>
+          <div style="background:#131313; border:1px solid rgba(34,197,94,.15); border-radius:8px; padding:12px;">
+            <p style="font-size:10px; color:#4ade80; text-transform:uppercase; letter-spacing:.07em; margin-bottom:4px;">Margem Bruta</p>
+            <p style="font-size:18px; font-weight:900; color:#4ade80;">40,1%</p>
+            <p style="font-size:10.5px; color:var(--text3); margin-top:2px;">R$ 19.220</p>
+          </div>
+          <div style="background:#131313; border:1px solid rgba(245,158,11,.15); border-radius:8px; padding:12px;">
+            <p style="font-size:10px; color:var(--amber); text-transform:uppercase; letter-spacing:.07em; margin-bottom:4px;">Desp. Operacionais</p>
+            <p style="font-size:18px; font-weight:900; color:#fbbf24;">53,2%</p>
+            <p style="font-size:10.5px; color:var(--text3); margin-top:2px;">R$ 25.460</p>
+          </div>
+          <div style="background:rgba(227,27,35,.05); border:1px solid rgba(227,27,35,.2); border-radius:8px; padding:12px;">
+            <p style="font-size:10px; color:#ff6b6b; text-transform:uppercase; letter-spacing:.07em; margin-bottom:4px;">EBITDA</p>
+            <p style="font-size:18px; font-weight:900; color:#ff6b6b;">-13,0%</p>
+            <p style="font-size:10.5px; color:var(--text3); margin-top:2px;">-R$ 6.240</p>
+          </div>
+        </div>
+        <div style="margin-top:12px; padding:10px 14px; background:rgba(227,27,35,.06); border:1px solid rgba(227,27,35,.2); border-radius:8px;">
+          <p style="font-size:11.5px; color:#ff9999; line-height:1.6;"><strong style="color:white;">⚠ Atenção:</strong> EBITDA negativo (-R$ 6.240) indica que as despesas operacionais superam a margem bruta. O principal driver é o aluguel (R$ 8.500) + folha adm (R$ 8.000) = R$ 16.500 de custos fixos que consomem toda a margem. Para fechar positivo, a receita precisaria ser <strong style="color:white;">≥ R$ 63.650</strong> com a estrutura atual — ou reduzir custos fixos em <strong style="color:white;">R$ 6.240</strong>.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: CONTAS ────────────────────────────────────────── -->
+    <div x-show="finTab==='contas'" style="display:flex; flex-direction:column; gap:14px;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+
+        <!-- AP -->
+        <div class="card" style="overflow:hidden;">
+          <div style="padding:14px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+            <div>
+              <h2 style="font-size:13px; font-weight:700; color:white;">Contas a Pagar</h2>
+              <p style="font-size:11px; color:var(--text3); margin-top:2px;">7 pendentes</p>
+            </div>
+            <span style="font-size:12px; font-weight:700; color:#f87171;">Total: R$ 43.710</span>
+          </div>
+          <table>
+            <thead><tr>
+              <th>Descrição</th><th style="text-align:right;">Valor</th><th style="text-align:center;">Prazo</th>
+            </tr></thead>
+            <tbody>
+              <template x-for="ap in payables" :key="ap.id">
+                <tr>
+                  <td>
+                    <p style="font-weight:600; color:white; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:160px;" x-text="ap.desc"></p>
+                    <p style="font-size:10.5px; color:var(--text3); margin-top:1px;" x-text="ap.supplier"></p>
+                  </td>
+                  <td style="text-align:right; font-weight:700; color:white;" x-text="ap.amount"></td>
+                  <td style="text-align:center;"><span :class="ap.urgencyCls" x-text="ap.urgency"></span></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- AR -->
+        <div class="card" style="overflow:hidden;">
+          <div style="padding:14px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+            <div>
+              <h2 style="font-size:13px; font-weight:700; color:white;">Contas a Receber</h2>
+              <p style="font-size:11px; color:var(--text3); margin-top:2px;">4 em aberto</p>
+            </div>
+            <span style="font-size:12px; font-weight:700; color:#4ade80;">Total: R$ 13.785</span>
+          </div>
+          <table>
+            <thead><tr>
+              <th>Cliente</th><th style="text-align:right;">Valor</th><th style="text-align:center;">Status</th>
+            </tr></thead>
+            <tbody>
+              <template x-for="ar in receivables" :key="ar.id">
+                <tr>
+                  <td>
+                    <p style="font-weight:600; color:white; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:160px;" x-text="ar.customer"></p>
+                    <p style="font-size:10.5px; color:var(--text3); margin-top:1px;" x-text="ar.desc"></p>
+                  </td>
+                  <td style="text-align:right; font-weight:700; color:#4ade80;" x-text="ar.amount"></td>
+                  <td style="text-align:center;"><span :class="ar.statusCls" x-text="ar.status"></span></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+          <!-- Cobrança pendente -->
+          <div style="padding:12px 16px; border-top:1px solid var(--border); display:flex; align-items:center; gap:8px; background:rgba(227,27,35,.05);">
+            <span x-html="iconAlertTri('#ff6b6b','12')" style="flex-shrink:0;"></span>
+            <span style="font-size:11px; color:#ff9999;">R$ 4.200 vencido — Escola Municipal Jardim Flor. Cobrar imediatamente para cobrir pagamento de amanhã (Têxtil Sul).</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Resumo posição líquida -->
+      <div class="card" style="padding:16px 22px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;">
+        <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
+          <div>
+            <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.07em; margin-bottom:4px;">Saldo atual</p>
+            <p style="font-size:20px; font-weight:900; color:#4ade80;">R$ 38.420</p>
+          </div>
+          <div style="font-size:18px; color:var(--text3);">+</div>
+          <div>
+            <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.07em; margin-bottom:4px;">A receber</p>
+            <p style="font-size:20px; font-weight:900; color:#60a5fa;">R$ 13.785</p>
+          </div>
+          <div style="font-size:18px; color:var(--text3);">−</div>
+          <div>
+            <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.07em; margin-bottom:4px;">A pagar</p>
+            <p style="font-size:20px; font-weight:900; color:#f87171;">R$ 43.710</p>
+          </div>
+          <div style="font-size:18px; color:var(--text3);">=</div>
+          <div style="background:rgba(245,158,11,.08); border:1px solid rgba(245,158,11,.2); border-radius:8px; padding:10px 16px;">
+            <p style="font-size:10px; color:var(--amber); text-transform:uppercase; letter-spacing:.07em; margin-bottom:4px;">Posição líquida</p>
+            <p style="font-size:20px; font-weight:900; color:#fbbf24;">R$ 8.495</p>
+          </div>
+        </div>
+        <div style="font-size:11.5px; color:var(--text2); max-width:240px; line-height:1.5;">
+          Posição líquida positiva mas <strong style="color:white;">apertada</strong>. O risco está no timing: saídas concentradas antes das entradas.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── OPERAÇÃO ───────────────────────────────────────────────── -->
+  <div x-show="page==='operacao'" style="padding:28px; display:flex; flex-direction:column; gap:20px;">
+
+    <!-- Header + tabs -->
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+      <div>
+        <h1 style="font-size:22px; font-weight:800; color:white; letter-spacing:-.02em;">Operação & Produção</h1>
+        <p style="font-size:13px; color:var(--text2); margin-top:3px;">Pipeline de produção, SLA por etapa e controle de gargalos</p>
+      </div>
+      <div style="display:flex; gap:4px; background:#111; border:1px solid var(--border); border-radius:8px; padding:4px;">
+        <button @click="opTab='kanban'"  :class="['tab-btn', opTab==='kanban'  ? 'active' : '']">🏭 Pipeline</button>
+        <button @click="opTab='sla'"     :class="['tab-btn', opTab==='sla'     ? 'active' : '']">⏱ SLA por Etapa</button>
+        <button @click="opTab='pedidos'" :class="['tab-btn', opTab==='pedidos' ? 'active' : '']">📋 Pedidos</button>
+      </div>
+    </div>
+
+    <!-- KPIs — sempre visíveis -->
+    <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:12px;">
+      <div class="card" style="padding:16px 18px; display:flex; align-items:center; gap:12px;">
+        <div style="width:36px; height:36px; background:var(--blue-dim); border:1px solid rgba(59,130,246,.2); border-radius:10px; display:flex; align-items:center; justify-content:center;" x-html="iconFactory('#60a5fa')"></div>
+        <div><p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.07em; font-weight:600;">Em produção</p><p style="font-size:22px; font-weight:900; color:#60a5fa;">3</p></div>
+      </div>
+      <div class="card metric-red" style="padding:16px 18px; display:flex; align-items:center; gap:12px;">
+        <div style="width:36px; height:36px; background:var(--red-dim); border:1px solid rgba(227,27,35,.2); border-radius:10px; display:flex; align-items:center; justify-content:center;" x-html="iconAlertTri('#ff6b6b','17')"></div>
+        <div>
+          <p style="font-size:10px; color:#ff6b6b; text-transform:uppercase; letter-spacing:.07em; font-weight:600;">Travados</p>
+          <p style="font-size:22px; font-weight:900; color:#ff6b6b; line-height:1.1;">2</p>
+          <p style="font-size:10px; color:var(--text3); margin-top:1px;">R$ 21.500 em risco</p>
+        </div>
+      </div>
+      <div class="card metric-amber" style="padding:16px 18px; display:flex; align-items:center; gap:12px;">
+        <div style="width:36px; height:36px; background:var(--amber-dim); border:1px solid rgba(245,158,11,.2); border-radius:10px; display:flex; align-items:center; justify-content:center;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div><p style="font-size:10px; color:var(--amber); text-transform:uppercase; letter-spacing:.07em; font-weight:600;">Etapas late</p><p style="font-size:22px; font-weight:900; color:#fbbf24;">2</p><p style="font-size:10px; color:var(--text3); margin-top:1px;">Corte + Produção</p></div>
+      </div>
+      <div class="card" style="padding:16px 18px; display:flex; align-items:center; gap:12px;">
+        <div style="width:36px; height:36px; background:#1a1a1a; border:1px solid var(--border2); border-radius:10px; display:flex; align-items:center; justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+        <div><p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.07em; font-weight:600;">Valor em aberto</p><p style="font-size:18px; font-weight:900; color:white;">R$ 23.390</p></div>
+      </div>
+      <div class="card" style="padding:16px 18px; display:flex; align-items:center; gap:12px;">
+        <div style="width:36px; height:36px; background:#1a1a1a; border:1px solid var(--border2); border-radius:10px; display:flex; align-items:center; justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+        <div><p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.07em; font-weight:600;">Total pedidos</p><p style="font-size:22px; font-weight:900; color:white;">5</p></div>
+      </div>
+    </div>
+
+    <!-- Alerta travados — sempre visível -->
+    <div class="alert-strip red">
+      <span x-html="iconAlertTri('#ff6b6b','15')" style="flex-shrink:0; margin-top:2px;"></span>
+      <div style="flex:1;">
+        <p style="font-size:12.5px; font-weight:700; color:white;">2 pedidos travados — R$ 21.500 em receita em risco</p>
+        <p style="font-size:11.5px; color:#ff9999; margin-top:3px;">SHP-2026-4410 (Escola Jardim Flor · R$ 12.600 · 8 dias) e SHP-2026-4390 (Hotel Imperial · R$ 8.900 · 11 dias) — verificar com equipes A e C imediatamente.</p>
+      </div>
+    </div>
+
+    <!-- ── TAB: PIPELINE (KANBAN) ─────────────────────────────── -->
+    <div x-show="opTab==='kanban'" style="display:flex; flex-direction:column; gap:14px;">
+      <div class="card" style="overflow:hidden;">
+        <div style="padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+          <h2 style="font-size:13px; font-weight:700; color:white;">Pipeline de Produção</h2>
+          <button @click="opTab='sla'" class="btn btn-ghost" style="font-size:11px; padding:5px 10px;">Ver SLA por etapa →</button>
+        </div>
+        <div style="padding:16px; overflow-x:auto;">
+          <div style="display:flex; gap:10px; min-width:max-content;">
+            <template x-for="stage in kanbanStages" :key="stage.key">
+              <div style="width:178px; flex-shrink:0; border-radius:10px; border:1px solid var(--border2); padding:12px; background:#0f0f0f;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                  <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.07em;" :style="{color: stage.color}" x-text="stage.label"></span>
+                  <span style="font-size:11px; font-weight:800; color:white; background:#1a1a1a; border:1px solid var(--border2); width:20px; height:20px; border-radius:99px; display:flex; align-items:center; justify-content:center;" x-text="kanbanItems(stage.key).length"></span>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:7px;">
+                  <template x-for="op in kanbanItems(stage.key)" :key="op.id">
+                    <div class="kanban-card" :class="op.stuck ? 'stuck' : ''">
+                      <template x-if="op.stuck">
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:5px;">
+                          <div style="display:flex; align-items:center; gap:5px; font-size:10px; font-weight:700; color:#ff6b6b;">
+                            <span x-html="iconAlertTri('#ff6b6b','10')"></span>
+                            <span x-text="'Travado ' + op.hoursStuck + 'h'"></span>
+                          </div>
+                        </div>
+                      </template>
+                      <p style="font-weight:700; color:white; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:monospace; font-size:11px;" x-text="op.ref"></p>
+                      <p style="color:var(--text3); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-top:2px; font-size:10.5px;" x-text="op.customer"></p>
+                      <p style="color:var(--text3); margin-top:1px; font-size:10px;" x-text="op.team"></p>
+                      <div style="display:flex; align-items:center; justify-content:space-between; margin-top:7px;">
+                        <p style="font-weight:800; color:white; font-size:12px;" x-text="op.value"></p>
+                        <template x-if="op.stuck">
+                          <span style="font-size:9.5px; color:#ff6b6b; font-weight:600; background:rgba(227,27,35,.1); padding:2px 5px; border-radius:4px;">impacto</span>
+                        </template>
+                      </div>
+                    </div>
+                  </template>
+                  <div x-show="kanbanItems(stage.key).length===0" style="text-align:center; padding:16px 0; font-size:11px; color:var(--text3);">—</div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: SLA ────────────────────────────────────────────── -->
+    <div x-show="opTab==='sla'" style="display:flex; flex-direction:column; gap:14px;">
+
+      <div class="card" style="overflow:hidden;">
+        <div style="padding:16px 22px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <h2 style="font-size:13px; font-weight:700; color:white;">SLA por Etapa de Produção</h2>
+            <p style="font-size:11px; color:var(--text3); margin-top:2px;">Tempo médio real vs tempo-alvo por fase — atualizado por ciclo</p>
+          </div>
+          <span class="badge badge-red">2 etapas em atraso</span>
+        </div>
+        <div style="padding:18px 22px; display:flex; flex-direction:column; gap:14px;">
+          <template x-for="s in stageMetrics" :key="s.key">
+            <div>
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span class="dot" :style="{background: s.color}"></span>
+                  <span style="font-size:12.5px; font-weight:600; color:white;" x-text="s.label"></span>
+                  <template x-if="s.late">
+                    <span class="badge badge-red" style="font-size:9.5px; padding:1px 7px;">LATE</span>
+                  </template>
+                  <template x-if="!s.late && s.avg !== null">
+                    <span class="badge badge-green" style="font-size:9.5px; padding:1px 7px;">OK</span>
+                  </template>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px; text-align:right;">
+                  <div>
+                    <p style="font-size:9.5px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em;">Real</p>
+                    <p style="font-size:13px; font-weight:800;" :style="s.avg === null ? 'color:var(--text3)' : s.late ? 'color:#ff6b6b' : 'color:#4ade80'" x-text="s.avg !== null ? s.avg + 'h' : '—'"></p>
+                  </div>
+                  <div style="color:var(--text3);">/</div>
+                  <div>
+                    <p style="font-size:9.5px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em;">SLA</p>
+                    <p style="font-size:13px; font-weight:800; color:var(--text2);" x-text="s.sla + 'h'"></p>
+                  </div>
+                  <div x-show="s.avg !== null && s.late" style="background:rgba(227,27,35,.1); border:1px solid rgba(227,27,35,.2); border-radius:6px; padding:3px 8px; text-align:center;">
+                    <p style="font-size:9.5px; color:#ff6b6b; font-weight:700;" x-text="'+' + (s.avg - s.sla) + 'h acima'"></p>
+                  </div>
+                </div>
+              </div>
+              <div class="progress-track" style="height:5px;">
+                <template x-if="s.avg !== null">
+                  <div class="progress-fill"
+                    :style="'width:' + Math.min(Math.round(s.avg/s.sla*100), 100) + '%; background:' + (s.late ? '#ef4444' : '#4ade80') + ';'">
+                  </div>
+                </template>
+                <template x-if="s.avg === null">
+                  <div class="progress-fill" style="width:0%; background:#555;"></div>
+                </template>
+              </div>
+              <template x-if="s.late">
+                <p style="font-size:10.5px; color:var(--text3); margin-top:4px;"
+                   x-text="s.key==='cutting' ? 'Gargalo no Corte — possível falta de capacidade ou material. Verificar Equipe C.' : 'Produção 12h acima do SLA — pedidos SHP-4410 e SHP-4390 estão nessa etapa.'">
+                </p>
+              </template>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- Impacto financeiro dos atrasos -->
+      <div class="card" style="padding:16px 22px;">
+        <h3 style="font-size:13px; font-weight:700; color:white; margin-bottom:12px;">Impacto Financeiro dos Atrasos</h3>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;">
+          <div style="background:rgba(227,27,35,.05); border:1px solid rgba(227,27,35,.2); border-radius:8px; padding:12px;">
+            <p style="font-size:10px; color:#ff6b6b; text-transform:uppercase; letter-spacing:.07em; margin-bottom:4px;">Receita bloqueada</p>
+            <p style="font-size:20px; font-weight:900; color:#ff6b6b;">R$ 21.500</p>
+            <p style="font-size:10.5px; color:var(--text3); margin-top:2px;">Pedidos travados — 2 ordens</p>
+          </div>
+          <div style="background:#131313; border:1px solid var(--border2); border-radius:8px; padding:12px;">
+            <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.07em; margin-bottom:4px;">Custo diário parado</p>
+            <p style="font-size:20px; font-weight:900; color:#fbbf24;">R$ 636</p>
+            <p style="font-size:10.5px; color:var(--text3); margin-top:2px;">M.O. + overhead alocados</p>
+          </div>
+          <div style="background:#131313; border:1px solid rgba(34,197,94,.15); border-radius:8px; padding:12px;">
+            <p style="font-size:10px; color:#4ade80; text-transform:uppercase; letter-spacing:.07em; margin-bottom:4px;">Ticket médio liberado</p>
+            <p style="font-size:20px; font-weight:900; color:white;">R$ 10.750</p>
+            <p style="font-size:10.5px; color:var(--text3); margin-top:2px;">Se resolvidos hoje</p>
+          </div>
+        </div>
+        <div style="margin-top:10px; padding:10px 14px; background:#0f0f0f; border:1px solid var(--border); border-radius:8px;">
+          <p style="font-size:11.5px; color:var(--text2); line-height:1.5;"><strong style="color:white;">Prioridade imediata:</strong> SHP-2026-4390 (Hotel Imperial, R$ 8.900) está travado há 11 dias na fase de Corte — o mais crítico. Resolver esse pedido desbloquearia o maior recebimento individual em aberto.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: PEDIDOS ───────────────────────────────────────── -->
+    <div x-show="opTab==='pedidos'" style="display:flex; flex-direction:column; gap:14px;">
+      <div class="card" style="overflow:hidden;">
+        <div style="padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+          <h2 style="font-size:13px; font-weight:700; color:white;">Todos os Pedidos</h2>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="badge badge-red">2 travados</span>
+            <span class="badge badge-gray">5 total</span>
+          </div>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Pedido</th><th>Cliente</th><th>Valor</th><th>Status</th><th>Aging</th><th>Pagamento</th><th>Entrada</th>
+          </tr></thead>
+          <tbody>
+            <template x-for="o in orders" :key="o.id">
+              <tr>
+                <td style="font-family:monospace; color:var(--text2); font-size:11px;" x-text="o.ref"></td>
+                <td style="color:var(--text2); max-width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" x-text="o.customer"></td>
+                <td style="font-weight:700; color:white;" x-text="o.value"></td>
+                <td><span :class="o.stuck ? 'badge badge-red' : o.status==='Enviado' ? 'badge badge-green' : o.status==='Pendente' ? 'badge badge-amber' : 'badge badge-blue'" x-text="o.stuck ? '⚠ Travado' : o.status"></span></td>
+                <td>
+                  <span :style="o.aging >= 7 ? 'color:#ff6b6b; font-weight:700;' : o.aging >= 4 ? 'color:#fbbf24; font-weight:600;' : 'color:var(--text3);'"
+                        x-text="o.aging + 'd'">
+                  </span>
+                </td>
+                <td><span :class="o.paid ? 'badge badge-green' : 'badge badge-amber'" x-text="o.paid ? '✓ Pago' : 'Pendente'"></span></td>
+                <td style="color:var(--text3);" x-text="o.date"></td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+        <div style="padding:10px 16px; border-top:1px solid var(--border); display:flex; align-items:center; gap:12px;">
+          <div style="display:flex; align-items:center; gap:5px;"><span style="width:8px; height:8px; border-radius:99px; background:#ff6b6b; display:inline-block;"></span><span style="font-size:10.5px; color:var(--text3);">≥ 7 dias — crítico</span></div>
+          <div style="display:flex; align-items:center; gap:5px;"><span style="width:8px; height:8px; border-radius:99px; background:#fbbf24; display:inline-block;"></span><span style="font-size:10.5px; color:var(--text3);">4–6 dias — atenção</span></div>
+          <div style="display:flex; align-items:center; gap:5px;"><span style="width:8px; height:8px; border-radius:99px; background:#555; display:inline-block;"></span><span style="font-size:10.5px; color:var(--text3);">≤ 3 dias — normal</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── LOGÍSTICA ─────────────────────────────────────────────── -->
+  <div x-show="page==='logistica'" style="padding:28px; display:flex; flex-direction:column; gap:20px;">
+
+    <!-- Header + tabs -->
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+      <div>
+        <h1 style="font-size:22px; font-weight:800; color:white; letter-spacing:-.02em;">Logística</h1>
+        <p style="font-size:13px; color:var(--text2); margin-top:3px;">Rastreamento em tempo real — Fontes Log</p>
+      </div>
+      <div style="display:flex; gap:4px; background:#111; border:1px solid var(--border); border-radius:8px; padding:4px;">
+        <button @click="logTab='envios'"       :class="['tab-btn', logTab==='envios'       ? 'active' : '']">🚚 Envios</button>
+        <button @click="logTab='rastreamento'" :class="['tab-btn', logTab==='rastreamento' ? 'active' : '']">📍 Rastreamento</button>
+      </div>
+    </div>
+
+    <!-- KPIs — sempre visíveis -->
+    <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:12px;">
+      <div class="card" style="padding:16px 18px; display:flex; align-items:center; gap:12px;">
+        <div style="width:36px; height:36px; background:var(--blue-dim); border:1px solid rgba(59,130,246,.2); border-radius:10px; display:flex; align-items:center; justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+        <div><p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.07em; font-weight:600;">Em trânsito</p><p style="font-size:22px; font-weight:900; color:#60a5fa;">2</p></div>
+      </div>
+      <div class="card metric-red" style="padding:16px 18px; display:flex; align-items:center; gap:12px;">
+        <div style="width:36px; height:36px; background:var(--red-dim); border:1px solid rgba(227,27,35,.2); border-radius:10px; display:flex; align-items:center; justify-content:center;" x-html="iconAlertTri('#ff6b6b','17')"></div>
+        <div>
+          <p style="font-size:10px; color:#ff6b6b; text-transform:uppercase; letter-spacing:.07em; font-weight:600;">Exceções</p>
+          <p style="font-size:22px; font-weight:900; color:#ff6b6b; line-height:1.1;">1</p>
+          <p style="font-size:10px; color:var(--text3); margin-top:1px;">R$ 12.600 em risco</p>
+        </div>
+      </div>
+      <div class="card" style="padding:16px 18px; display:flex; align-items:center; gap:12px;">
+        <div style="width:36px; height:36px; background:var(--green-dim); border:1px solid rgba(34,197,94,.2); border-radius:10px; display:flex; align-items:center; justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div><p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.07em; font-weight:600;">Entregues</p><p style="font-size:22px; font-weight:900; color:#4ade80;">0</p></div>
+      </div>
+      <div class="card" style="padding:16px 18px; display:flex; align-items:center; gap:12px;">
+        <div style="width:36px; height:36px; background:#1a1a1a; border:1px solid var(--border2); border-radius:10px; display:flex; align-items:center; justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+        <div><p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.07em; font-weight:600;">Valor em trânsito</p><p style="font-size:17px; font-weight:900; color:white;">R$ 17.350</p></div>
+      </div>
+      <div class="card metric-amber" style="padding:16px 18px; display:flex; align-items:center; gap:12px;">
+        <div style="width:36px; height:36px; background:var(--amber-dim); border:1px solid rgba(245,158,11,.2); border-radius:10px; display:flex; align-items:center; justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div><p style="font-size:10px; color:var(--amber); text-transform:uppercase; letter-spacing:.07em; font-weight:600;">SLA entrega</p><p style="font-size:17px; font-weight:900; color:#fbbf24;">5 dias</p><p style="font-size:10px; color:var(--text3); margin-top:1px;">Padrão Fontes Log</p></div>
+      </div>
+    </div>
+
+    <!-- Alerta exceção — sempre visível -->
+    <div class="alert-strip red">
+      <span x-html="iconAlertTri('#ff6b6b','15')" style="flex-shrink:0; margin-top:2px;"></span>
+      <div style="flex:1;">
+        <p style="font-size:12.5px; font-weight:700; color:white;">1 envio em exceção — R$ 12.600 em risco · ação necessária</p>
+        <p style="font-size:11.5px; color:#ff9999; margin-top:3px;">FL20260401004 (SHP-2026-4410 · Escola Jardim Flor) — Endereço não localizado há 3 dias em Campinas. Contatar Fontes Log e confirmar endereço com o cliente.</p>
+      </div>
+    </div>
+
+    <!-- ── TAB: ENVIOS ─────────────────────────────────────────── -->
+    <div x-show="logTab==='envios'" style="display:flex; flex-direction:column; gap:14px;">
+
+      <!-- Tabela de envios -->
+      <div class="card" style="overflow:hidden;">
+        <div style="padding:14px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+          <h2 style="font-size:13px; font-weight:700; color:white;">Envios Ativos</h2>
+          <span style="font-size:11px; color:var(--text3);">Transportadora: Fontes Log</span>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Rastreio</th><th>Pedido</th><th>Cliente</th><th>Destino</th><th>Valor</th><th>Dias</th><th>SLA</th><th>Status</th>
+          </tr></thead>
+          <tbody>
+            <template x-for="s in shipments" :key="s.id">
+              <tr>
+                <td style="font-family:monospace; font-size:11px; color:var(--text3);" x-text="s.code"></td>
+                <td style="font-family:monospace; font-size:11px; color:var(--text2);" x-text="s.order"></td>
+                <td style="color:var(--text2); max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" x-text="s.customer"></td>
+                <td style="color:var(--text3); font-size:11.5px;" x-text="s.dest"></td>
+                <td style="font-weight:700; color:white;" x-text="s.value"></td>
+                <td>
+                  <span :style="s.late ? 'color:#ff6b6b; font-weight:700;' : 'color:var(--text2);'" x-text="s.days + 'd'"></span>
+                </td>
+                <td style="color:var(--text3);" x-text="s.sla + 'd'"></td>
+                <td><span :class="s.statusCls" x-text="s.status"></span></td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Painel de SLA logística -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+
+        <div class="card" style="padding:16px 20px;">
+          <h3 style="font-size:12px; font-weight:700; color:white; margin-bottom:12px;">Performance de Entrega</h3>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span style="font-size:11.5px; color:var(--text2);">Dentro do SLA</span>
+                <span style="font-size:11.5px; font-weight:700; color:#4ade80;">50%</span>
+              </div>
+              <div class="progress-track"><div class="progress-fill" style="width:50%; background:#4ade80;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span style="font-size:11.5px; color:var(--text2);">Em exceção</span>
+                <span style="font-size:11.5px; font-weight:700; color:#ff6b6b;">50%</span>
+              </div>
+              <div class="progress-track"><div class="progress-fill" style="width:50%; background:#ef4444;"></div></div>
+            </div>
+          </div>
+          <div style="margin-top:12px; padding:9px 12px; background:rgba(227,27,35,.06); border:1px solid rgba(227,27,35,.15); border-radius:7px;">
+            <p style="font-size:11px; color:#ff9999; line-height:1.5;"><strong style="color:white;">1 de 2 envios</strong> em exceção — taxa acima do aceitável. Avaliar SLA contratual com Fontes Log e exigir resolução em 24h.</p>
+          </div>
+        </div>
+
+        <div class="card" style="padding:16px 20px;">
+          <h3 style="font-size:12px; font-weight:700; color:white; margin-bottom:12px;">Ações Prioritárias</h3>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; gap:10px; align-items:flex-start;">
+              <div style="width:20px; height:20px; background:var(--red-dim); border:1px solid rgba(227,27,35,.3); border-radius:99px; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">
+                <span style="font-size:9px; font-weight:800; color:#ff6b6b;">1</span>
+              </div>
+              <p style="font-size:11.5px; color:var(--text2); line-height:1.5;">Ligar para <strong style="color:white;">Escola Municipal Jardim Flor</strong> e confirmar endereço correto para re-entrega (FL20260401004)</p>
+            </div>
+            <div style="display:flex; gap:10px; align-items:flex-start;">
+              <div style="width:20px; height:20px; background:var(--amber-dim); border:1px solid rgba(245,158,11,.2); border-radius:99px; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">
+                <span style="font-size:9px; font-weight:800; color:#fbbf24;">2</span>
+              </div>
+              <p style="font-size:11.5px; color:var(--text2); line-height:1.5;">Abrir chamado na <strong style="color:white;">Fontes Log</strong> para re-tentativa de entrega em Campinas com endereço atualizado</p>
+            </div>
+            <div style="display:flex; gap:10px; align-items:flex-start;">
+              <div style="width:20px; height:20px; background:var(--blue-dim); border:1px solid rgba(59,130,246,.2); border-radius:99px; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">
+                <span style="font-size:9px; font-weight:800; color:#60a5fa;">3</span>
+              </div>
+              <p style="font-size:11.5px; color:var(--text2); line-height:1.5;">Monitorar <strong style="color:white;">FL20260405001</strong> (Belo Sabor) — saiu para entrega hoje, confirmar recebimento amanhã</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── TAB: RASTREAMENTO ───────────────────────────────────── -->
+    <div x-show="logTab==='rastreamento'" style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+
+      <!-- Envio 1 — normal -->
+      <div class="card" style="overflow:hidden;">
+        <div style="padding:14px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <p style="font-size:13px; font-weight:700; color:white;">SHP-2026-4422</p>
+            <p style="font-size:11px; color:var(--text3); margin-top:1px;">Restaurante Belo Sabor · R$ 4.750</p>
+          </div>
+          <span class="badge badge-amber">Saiu p/ entrega</span>
+        </div>
+        <div style="padding:14px 18px;">
+          <div style="display:flex; gap:14px; font-size:11px; color:var(--text3); margin-bottom:14px; flex-wrap:wrap;">
+            <span>📦 FL20260405001</span><span>📍 Belo Horizonte, MG</span><span>🚚 Fontes Log</span><span>⏱ 3/5 dias</span>
+          </div>
+          <!-- Progress bar de entrega -->
+          <div style="margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+              <span style="font-size:10px; color:var(--text3);">Progresso estimado</span>
+              <span style="font-size:10px; color:#fbbf24; font-weight:700;">3 de 5 dias</span>
+            </div>
+            <div class="progress-track" style="height:5px;">
+              <div class="progress-fill" style="width:60%; background:#fbbf24;"></div>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:0;">
+            <template x-for="(e,i) in logEvt1" :key="i">
+              <div style="display:flex; align-items:flex-start; gap:10px;">
+                <div style="display:flex; flex-direction:column; align-items:center; padding-top:4px;">
+                  <span class="dot" :style="{background: e.dotColor}"></span>
+                  <div x-show="i < logEvt1.length-1" style="width:1px; flex:1; background:var(--border2); min-height:16px; margin:3px 0;"></div>
+                </div>
+                <div style="padding-bottom:12px; flex:1;">
+                  <p style="font-size:12px; font-weight:600; color:white;" x-text="e.label"></p>
+                  <p style="font-size:10.5px; color:var(--text3); margin-top:2px;" x-text="e.loc + ' · ' + e.ts"></p>
+                </div>
+              </div>
+            </template>
+          </div>
+          <div style="padding:9px 12px; background:rgba(34,197,94,.06); border:1px solid rgba(34,197,94,.15); border-radius:7px; font-size:11px; color:#4ade80; font-weight:600;">✓ No prazo — entrega prevista para 10/04/2026</div>
+        </div>
+      </div>
+
+      <!-- Envio 2 — exceção -->
+      <div class="card metric-red" style="overflow:hidden;">
+        <div style="padding:14px 18px; border-bottom:1px solid rgba(227,27,35,.2); display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <p style="font-size:13px; font-weight:700; color:white;">SHP-2026-4410</p>
+            <p style="font-size:11px; color:var(--text3); margin-top:1px;">Escola Municipal Jardim Flor · R$ 12.600</p>
+          </div>
+          <span class="badge badge-red">Exceção</span>
+        </div>
+        <div style="padding:14px 18px;">
+          <div style="display:flex; gap:14px; font-size:11px; color:var(--text3); margin-bottom:14px; flex-wrap:wrap;">
+            <span>📦 FL20260401004</span><span>📍 Campinas, SP</span><span>🚚 Fontes Log</span><span style="color:#ff6b6b;">⏱ 7d — 2d fora do SLA</span>
+          </div>
+          <!-- Progress bar com estouro -->
+          <div style="margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+              <span style="font-size:10px; color:var(--text3);">Dias desde postagem</span>
+              <span style="font-size:10px; color:#ff6b6b; font-weight:700;">7 dias — SLA era 5</span>
+            </div>
+            <div class="progress-track" style="height:5px;">
+              <div class="progress-fill" style="width:100%; background:#ef4444;"></div>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:0;">
+            <template x-for="(e,i) in logEvt2" :key="i">
+              <div style="display:flex; align-items:flex-start; gap:10px;">
+                <div style="display:flex; flex-direction:column; align-items:center; padding-top:4px;">
+                  <span class="dot" :style="{background: e.dotColor}"></span>
+                  <div x-show="i < logEvt2.length-1" style="width:1px; flex:1; background:var(--border2); min-height:16px; margin:3px 0;"></div>
+                </div>
+                <div style="padding-bottom:12px; flex:1;">
+                  <p style="font-size:12px; font-weight:600; color:white;" x-text="e.label"></p>
+                  <template x-if="e.note"><p style="font-size:11px; color:#ff9999; margin-top:2px;" x-text="e.note"></p></template>
+                  <p style="font-size:10.5px; color:var(--text3); margin-top:2px;" x-text="e.loc + ' · ' + e.ts"></p>
+                </div>
+              </div>
+            </template>
+          </div>
+          <div style="padding:10px 12px; background:var(--red-dim); border:1px solid rgba(227,27,35,.3); border-radius:8px;">
+            <p style="font-size:11.5px; color:#ff9999; font-weight:600; margin-bottom:4px;">⚠ Ação imediata necessária</p>
+            <p style="font-size:11px; color:var(--text2); line-height:1.5;">1. Confirmar endereço com o cliente<br>2. Informar Fontes Log do endereço correto<br>3. Solicitar nova tentativa de entrega</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ── ALERTAS ────────────────────────────────────────────────── -->
+  <div x-show="page==='alertas'" style="padding:28px; display:flex; flex-direction:column; gap:20px; max-width:860px;">
+
+    <!-- Header -->
+    <div style="display:flex; align-items:flex-start; justify-content:space-between;">
+      <div>
+        <h1 style="font-size:22px; font-weight:800; color:white; letter-spacing:-.02em;">Central de Alertas</h1>
+        <p style="font-size:13px; color:var(--text2); margin-top:3px;">Engine automática · executa a cada 30s · notifica via WhatsApp e email</p>
+      </div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <span style="font-size:11px; color:var(--text3);" x-text="filteredAlerts.length + ' visíveis'"></span>
+        <button @click="ackAll()" class="btn btn-ghost">✓✓ Reconhecer todos</button>
+      </div>
+    </div>
+
+    <!-- Contadores por severidade -->
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px;">
+      <button @click="filterSev = filterSev==='critical'?'all':'critical'; filterCat='all'"
+              class="card" :style="filterSev==='critical' ? 'border-color:rgba(227,27,35,.4); box-shadow:0 0 20px rgba(227,27,35,.08)' : ''"
+              style="padding:16px 18px; text-align:left; cursor:pointer; display:flex; align-items:center; gap:14px;">
+        <div style="width:36px; height:36px; background:var(--red-dim); border:1px solid rgba(227,27,35,.2); border-radius:10px; display:flex; align-items:center; justify-content:center;" x-html="iconAlertCircle('#ff6b6b','16')"></div>
+        <div>
+          <p style="font-size:24px; font-weight:900; color:#ff6b6b;" x-text="alerts.filter(a=>a.severity==='critical'&&!a.acked).length"></p>
+          <p style="font-size:10.5px; color:var(--text3); margin-top:1px;">Crítico</p>
+          <p style="font-size:10px; color:#ff6b6b; margin-top:2px;">R$ 12.700 em risco</p>
+        </div>
+      </button>
+      <button @click="filterSev = filterSev==='warning'?'all':'warning'; filterCat='all'"
+              class="card" :style="filterSev==='warning' ? 'border-color:rgba(245,158,11,.4)' : ''"
+              style="padding:16px 18px; text-align:left; cursor:pointer; display:flex; align-items:center; gap:14px;">
+        <div style="width:36px; height:36px; background:var(--amber-dim); border:1px solid rgba(245,158,11,.2); border-radius:10px; display:flex; align-items:center; justify-content:center;" x-html="iconAlertTri('#fbbf24','16')"></div>
+        <div>
+          <p style="font-size:24px; font-weight:900; color:#fbbf24;" x-text="alerts.filter(a=>a.severity==='warning'&&!a.acked).length"></p>
+          <p style="font-size:10.5px; color:var(--text3); margin-top:1px;">Atenção</p>
+          <p style="font-size:10px; color:#fbbf24; margin-top:2px;">R$ 50.380 expostos</p>
+        </div>
+      </button>
+      <button @click="filterSev = filterSev==='info'?'all':'info'; filterCat='all'"
+              class="card" :style="filterSev==='info' ? 'border-color:rgba(59,130,246,.4)' : ''"
+              style="padding:16px 18px; text-align:left; cursor:pointer; display:flex; align-items:center; gap:14px;">
+        <div style="width:36px; height:36px; background:var(--blue-dim); border:1px solid rgba(59,130,246,.2); border-radius:10px; display:flex; align-items:center; justify-content:center;" x-html="iconInfo('#60a5fa','16')"></div>
+        <div>
+          <p style="font-size:24px; font-weight:900; color:#60a5fa;" x-text="alerts.filter(a=>a.severity==='info'&&!a.acked).length"></p>
+          <p style="font-size:10.5px; color:var(--text3); margin-top:1px;">Info</p>
+          <p style="font-size:10px; color:#60a5fa; margin-top:2px;">Para investigar</p>
+        </div>
+      </button>
+    </div>
+
+    <!-- Filtros por categoria -->
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+      <span style="font-size:11px; color:var(--text3); font-weight:600; text-transform:uppercase; letter-spacing:.06em;">Categoria:</span>
+      <div style="display:flex; gap:4px; background:#111; border:1px solid var(--border); border-radius:8px; padding:3px;">
+        <button @click="filterCat='all';      filterSev='all'" :class="['tab-btn', filterCat==='all'         ? 'active' : '']" style="padding:5px 12px; font-size:11px;">Todos</button>
+        <button @click="filterCat='financeiro'; filterSev='all'" :class="['tab-btn', filterCat==='financeiro' ? 'active' : '']" style="padding:5px 12px; font-size:11px;">💰 Financeiro</button>
+        <button @click="filterCat='operacional'; filterSev='all'" :class="['tab-btn', filterCat==='operacional' ? 'active' : '']" style="padding:5px 12px; font-size:11px;">🏭 Operacional</button>
+        <button @click="filterCat='logistica'; filterSev='all'" :class="['tab-btn', filterCat==='logistica'   ? 'active' : '']" style="padding:5px 12px; font-size:11px;">🚚 Logística</button>
+      </div>
+      <div x-show="filteredAlerts.length > 0" style="margin-left:auto; display:flex; align-items:center; gap:6px; padding:5px 12px; background:#131313; border:1px solid var(--border2); border-radius:7px;">
+        <span style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em;">Impacto total:</span>
+        <span style="font-size:13px; font-weight:800; color:#fbbf24;" x-text="'R$ ' + totalImpact.toLocaleString('pt-BR')"></span>
+      </div>
+    </div>
+
+    <!-- Lista de alertas -->
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <template x-for="a in filteredAlerts" :key="a.id">
+        <div class="card" style="overflow:hidden;"
+             :style="a.severity==='critical' ? 'border-color:rgba(227,27,35,.3); background:rgba(227,27,35,.03)' : a.severity==='warning' ? 'border-color:rgba(245,158,11,.2)' : 'border-color:rgba(59,130,246,.15)'">
+          <!-- Barra lateral colorida -->
+          <div style="display:flex;">
+            <div style="width:3px; flex-shrink:0; border-radius:99px 0 0 99px;"
+                 :style="a.severity==='critical' ? 'background:var(--red)' : a.severity==='warning' ? 'background:var(--amber)' : 'background:var(--blue)'">
+            </div>
+            <div style="flex:1; padding:14px 16px;">
+              <!-- Row 1: título + badges -->
+              <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:6px;">
+                <div style="display:flex; align-items:flex-start; gap:8px; flex:1;">
+                  <span x-html="a.severity==='critical' ? iconAlertCircle('#ff6b6b','14') : a.severity==='warning' ? iconAlertTri('#fbbf24','14') : iconInfo('#60a5fa','14')" style="flex-shrink:0; margin-top:2px;"></span>
+                  <p style="font-size:13px; font-weight:700; color:white; line-height:1.35;" x-text="a.title"></p>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                  <!-- Impact badge -->
+                  <div x-show="a.impact" style="background:#1a1a1a; border:1px solid var(--border2); border-radius:6px; padding:3px 9px; display:flex; align-items:center; gap:4px;">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                    <span style="font-size:11px; font-weight:700; color:white;" x-text="a.impact"></span>
+                  </div>
+                  <!-- Category badge -->
+                  <span style="font-size:10px; font-weight:600; padding:2px 8px; border-radius:99px;"
+                        :style="a.category==='financeiro' ? 'background:rgba(59,130,246,.1); color:#60a5fa; border:1px solid rgba(59,130,246,.2)' : a.category==='operacional' ? 'background:rgba(168,139,250,.1); color:#c4b5fd; border:1px solid rgba(168,139,250,.2)' : 'background:rgba(34,197,94,.1); color:#4ade80; border:1px solid rgba(34,197,94,.2)'"
+                        x-text="a.category==='financeiro' ? '💰 Financeiro' : a.category==='operacional' ? '🏭 Operacional' : '🚚 Logística'">
+                  </span>
+                  <!-- Severity badge -->
+                  <span :class="a.severity==='critical' ? 'badge badge-red' : a.severity==='warning' ? 'badge badge-amber' : 'badge badge-blue'"
+                        x-text="a.severity==='critical' ? 'Crítico' : a.severity==='warning' ? 'Atenção' : 'Info'">
+                  </span>
+                </div>
+              </div>
+              <!-- Row 2: mensagem -->
+              <p style="font-size:12px; color:var(--text2); line-height:1.6; margin-left:22px;" x-text="a.message"></p>
+              <!-- Row 3: meta + ack -->
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px; margin-left:22px;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <span style="font-size:10.5px; color:var(--text3);" x-text="a.time + ' · Engine automática'"></span>
+                  <div style="display:flex; align-items:center; gap:4px;">
+                    <span class="dot" style="background:var(--green); box-shadow:0 0 4px rgba(34,197,94,.5);"></span>
+                    <span style="font-size:10px; color:var(--text3);">Notificado</span>
+                  </div>
+                </div>
+                <button @click="a.acked=true" class="btn btn-ghost" style="padding:3px 10px; font-size:11px;">✓ Reconhecer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <div x-show="filteredAlerts.length===0" class="card" style="padding:48px; text-align:center; color:var(--text3);">
+        <p style="font-size:14px; font-weight:600;">Nenhum alerta para mostrar</p>
+        <p style="font-size:12px; margin-top:4px;">Sistema monitorado — próxima verificação em breve</p>
+      </div>
+    </div>
+
+    <!-- Rodapé da engine -->
+    <div style="padding:12px 16px; background:#111; border:1px solid var(--border); border-radius:8px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span class="dot" style="background:var(--green); box-shadow:0 0 6px rgba(34,197,94,.5);"></span>
+        <span style="font-size:11.5px; color:var(--text2);">Engine ativa · Alertas críticos enviados via <strong style="color:white;">WhatsApp</strong> e <strong style="color:white;">email</strong> em tempo real</span>
+      </div>
+      <button @click="page='insights'; insTab='decisoes'" class="btn btn-ghost" style="font-size:11px; padding:5px 10px;">Ver ações automáticas →</button>
+    </div>
+  </div>
+
+  <!-- ── INSIGHTS ───────────────────────────────────────────────── -->
+  <div x-show="page==='insights'" style="padding:28px; display:flex; flex-direction:column; gap:20px; max-width:940px;">
+
+    <!-- Header + tabs -->
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+      <div>
+        <h1 style="font-size:22px; font-weight:800; color:white; letter-spacing:-.02em;">Inteligência & Decisões</h1>
+        <p style="font-size:13px; color:var(--text2); margin-top:3px;">Engine automática · análise contínua · simulação de cenários</p>
+      </div>
+      <div style="display:flex; gap:4px; background:#111; border:1px solid var(--border); border-radius:8px; padding:4px;">
+        <button @click="insTab='decisoes'"  :class="['tab-btn', insTab==='decisoes'  ? 'active' : '']">⚡ Decisões Automáticas</button>
+        <button @click="insTab='simulador'" :class="['tab-btn', insTab==='simulador' ? 'active' : '']">🔮 Simulador What-If</button>
+        <button @click="insTab='insights'"  :class="['tab-btn', insTab==='insights'  ? 'active' : '']">💡 Insights</button>
+      </div>
+    </div>
+
+    <!-- KPIs — sempre visíveis -->
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px;">
+      <div class="card" style="padding:14px 16px; display:flex; align-items:center; gap:12px;">
+        <div style="width:34px; height:34px; background:var(--red-dim); border-radius:9px; display:flex; align-items:center; justify-content:center;" x-html="iconAlertTri('#ff6b6b','15')"></div>
+        <div><p style="font-size:20px; font-weight:900; color:#ff6b6b;">4</p><p style="font-size:10.5px; color:var(--text3); margin-top:2px;">Ações urgentes</p></div>
+      </div>
+      <div class="card" style="padding:14px 16px; display:flex; align-items:center; gap:12px;">
+        <div style="width:34px; height:34px; background:var(--blue-dim); border-radius:9px; display:flex; align-items:center; justify-content:center;" x-html="iconInfo('#60a5fa','15')"></div>
+        <div><p style="font-size:20px; font-weight:900; color:#60a5fa;">2</p><p style="font-size:10.5px; color:var(--text3); margin-top:2px;">Investigar</p></div>
+      </div>
+      <div class="card" style="padding:14px 16px; display:flex; align-items:center; gap:12px;">
+        <div style="width:34px; height:34px; background:var(--green-dim); border-radius:9px; display:flex; align-items:center; justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div><p style="font-size:20px; font-weight:900; color:#4ade80;">2</p><p style="font-size:10.5px; color:var(--text3); margin-top:2px;">Positivos</p></div>
+      </div>
+      <div class="card" style="padding:14px 16px; display:flex; align-items:center; gap:12px;">
+        <div style="width:34px; height:34px; background:#1a1a1a; border-radius:9px; display:flex; align-items:center; justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+        <div><p style="font-size:20px; font-weight:900; color:white;" x-text="decisions.length">8</p><p style="font-size:10.5px; color:var(--text3); margin-top:2px;">Ações automáticas</p></div>
+      </div>
+    </div>
+
+    <!-- ── TAB: DECISÕES AUTOMÁTICAS ──────────────────────────── -->
+    <div x-show="insTab==='decisoes'" style="display:flex; flex-direction:column; gap:14px;">
+
+      <div class="card" style="padding:16px 22px; display:flex; align-items:center; justify-content:space-between; gap:12px; background:rgba(34,197,94,.03); border-color:rgba(34,197,94,.15);">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span class="dot" style="background:var(--green); box-shadow:0 0 8px rgba(34,197,94,.6);"></span>
+          <span style="font-size:12.5px; font-weight:700; color:white;">Engine de Automação ativa</span>
+          <span style="font-size:11px; color:var(--text3);">Última execução: 09/04 · 07:00</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:16px; font-size:11px; color:var(--text3);">
+          <span>Alert Engine <span style="color:#4ade80; font-weight:700;">✓</span></span>
+          <span>Cash Flow Engine <span style="color:#4ade80; font-weight:700;">✓</span></span>
+          <span>ERP Sync <span style="color:#4ade80; font-weight:700;">✓</span></span>
+          <span>Logistics Sync <span style="color:#4ade80; font-weight:700;">✓</span></span>
+        </div>
+      </div>
+
+      <!-- Timeline de ações -->
+      <div class="card" style="overflow:hidden;">
+        <div style="padding:14px 22px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <h2 style="font-size:13px; font-weight:700; color:white;">Timeline de Ações Automáticas</h2>
+            <p style="font-size:11px; color:var(--text3); margin-top:2px;">O que o sistema fez automaticamente nas últimas 48h</p>
+          </div>
+          <span class="badge badge-green">8 ações executadas</span>
+        </div>
+        <div style="padding:16px 22px; display:flex; flex-direction:column; gap:0;">
+          <template x-for="(d,i) in decisions" :key="d.id">
+            <div style="display:flex; align-items:flex-start; gap:14px;">
+              <!-- Timeline line -->
+              <div style="display:flex; flex-direction:column; align-items:center; flex-shrink:0; padding-top:4px;">
+                <div style="width:28px; height:28px; border-radius:99px; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
+                     :style="d.severity==='critical' ? 'background:rgba(227,27,35,.12); border:1px solid rgba(227,27,35,.3)' : d.severity==='warning' ? 'background:rgba(245,158,11,.1); border:1px solid rgba(245,158,11,.2)' : 'background:rgba(59,130,246,.08); border:1px solid rgba(59,130,246,.15)'">
+                  <span x-html="d.severity==='critical' ? iconAlertCircle('#ff6b6b','12') : d.severity==='warning' ? iconAlertTri('#fbbf24','12') : iconInfo('#60a5fa','12')"></span>
+                </div>
+                <div x-show="i < decisions.length-1" style="width:1px; flex:1; min-height:24px; margin:4px 0;"
+                     :style="d.severity==='critical' ? 'background:rgba(227,27,35,.15)' : d.severity==='warning' ? 'background:rgba(245,158,11,.1)' : 'background:var(--border)'">
+                </div>
+              </div>
+              <!-- Conteúdo -->
+              <div style="flex:1; padding-bottom:16px; min-width:0;">
+                <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px;">
+                  <p style="font-size:12.5px; font-weight:700; color:white; line-height:1.3;" x-text="d.title"></p>
+                  <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                    <span style="font-size:10px; padding:2px 8px; border-radius:99px; background:#1a1a1a; border:1px solid var(--border2); color:var(--text3);" x-text="d.trigger"></span>
+                    <span style="font-size:10px; padding:2px 8px; border-radius:99px; font-weight:600;"
+                          :style="d.channel.includes('WhatsApp') ? 'background:rgba(34,197,94,.1); border:1px solid rgba(34,197,94,.2); color:#4ade80' : 'background:rgba(59,130,246,.08); border:1px solid rgba(59,130,246,.15); color:#60a5fa'"
+                          x-text="d.channel">
+                    </span>
+                  </div>
+                </div>
+                <p style="font-size:11.5px; color:var(--text2); margin-top:4px; line-height:1.5;" x-text="d.detail"></p>
+                <p style="font-size:10.5px; color:var(--text3); margin-top:4px;" x-text="d.ts"></p>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- Próximas execuções -->
+      <div class="card" style="padding:16px 22px;">
+        <h3 style="font-size:12px; font-weight:700; color:white; margin-bottom:12px;">Próximas execuções agendadas</h3>
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
+          <div style="background:#131313; border:1px solid var(--border2); border-radius:8px; padding:10px; text-align:center;">
+            <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Alert Engine</p>
+            <p style="font-size:13px; font-weight:700; color:white;">30s</p>
+            <p style="font-size:10px; color:#4ade80; margin-top:2px;">● ativo</p>
+          </div>
+          <div style="background:#131313; border:1px solid var(--border2); border-radius:8px; padding:10px; text-align:center;">
+            <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Cash Flow</p>
+            <p style="font-size:13px; font-weight:700; color:white;">2 min</p>
+            <p style="font-size:10px; color:#4ade80; margin-top:2px;">● ativo</p>
+          </div>
+          <div style="background:#131313; border:1px solid var(--border2); border-radius:8px; padding:10px; text-align:center;">
+            <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">ERP Sync</p>
+            <p style="font-size:13px; font-weight:700; color:white;">1 min</p>
+            <p style="font-size:10px; color:#4ade80; margin-top:2px;">● ativo</p>
+          </div>
+          <div style="background:#131313; border:1px solid var(--border2); border-radius:8px; padding:10px; text-align:center;">
+            <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Logistics</p>
+            <p style="font-size:13px; font-weight:700; color:white;">45s</p>
+            <p style="font-size:10px; color:#4ade80; margin-top:2px;">● ativo</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: SIMULADOR WHAT-IF ─────────────────────────────── -->
+    <div x-show="insTab==='simulador'" style="display:flex; flex-direction:column; gap:14px;">
+
+      <div class="card" style="padding:22px 26px;">
+        <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:20px;">
+          <div style="width:36px; height:36px; background:rgba(168,139,250,.1); border:1px solid rgba(168,139,250,.2); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c4b5fd" stroke-width="2"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+          </div>
+          <div>
+            <h2 style="font-size:14px; font-weight:700; color:white;">Simulador de Antecipação de Recebimentos</h2>
+            <p style="font-size:12px; color:var(--text2); margin-top:3px; line-height:1.5;">Selecione um recebimento, simule quantos dias antecipar e veja o impacto direto no saldo mínimo projetado. O sistema recalcula automaticamente.</p>
+          </div>
+        </div>
+
+        <!-- Controles -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+          <div>
+            <label style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--text3); display:block; margin-bottom:8px;">Recebimento a antecipar</label>
+            <select x-model="simReceivable" style="width:100%; background:#131313; border:1px solid var(--border2); border-radius:8px; padding:10px 14px; font-size:13px; color:white; outline:none; cursor:pointer; -webkit-appearance:none;">
+              <option value="" style="background:#131313;">— Selecionar recebimento —</option>
+              <option value="ar-001" style="background:#131313;">Restaurante Belo Sabor · R$ 4.750 · vence 10/04</option>
+              <option value="ar-002" style="background:#131313;">Hotel Imperial · R$ 4.450 · vence 15/04</option>
+              <option value="ar-003" style="background:#131313;">Escola Jardim Flor · R$ 4.200 · vence 08/04 (vencido)</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--text3); display:block; margin-bottom:8px;">
+              Antecipar em: <span style="color:white;" x-text="simDays + ' dia(s)'"></span>
+            </label>
+            <input type="range" x-model.number="simDays" min="1" max="10" step="1"
+                   style="width:100%; accent-color:var(--red); height:4px; cursor:pointer; margin-top:10px;" />
+            <div style="display:flex; justify-content:space-between; margin-top:4px;">
+              <span style="font-size:10px; color:var(--text3);">1 dia</span>
+              <span style="font-size:10px; color:var(--text3);">10 dias</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resultado -->
+        <div x-show="!simReceivable" style="padding:28px; background:#0f0f0f; border:1px solid var(--border); border-radius:10px; text-align:center;">
+          <p style="font-size:13px; color:var(--text3);">← Selecione um recebimento para simular</p>
+          <p style="font-size:11px; color:var(--text3); margin-top:4px; opacity:.6;">O sistema calculará o impacto no saldo mínimo projetado em 15/04</p>
+        </div>
+
+        <div x-show="simReceivable && simResult" style="display:flex; flex-direction:column; gap:12px;">
+          <!-- Comparativo before/after -->
+          <div style="display:grid; grid-template-columns:1fr auto 1fr; gap:12px; align-items:center;">
+            <div style="background:#131313; border:1px solid var(--border2); border-radius:10px; padding:16px; text-align:center;">
+              <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.07em; margin-bottom:6px;">Saldo mínimo ATUAL</p>
+              <p style="font-size:26px; font-weight:900; color:#fbbf24;">R$ 13.750</p>
+              <p style="font-size:11px; color:var(--text3); margin-top:4px;">em 15/04 · risco moderado</p>
+            </div>
+            <div style="text-align:center; padding:0 10px;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+            <div :style="simResult && 'border-color:' + simResult.riskColor + '33'" style="border-radius:10px; padding:16px; text-align:center; border:1px solid; transition:all .3s;"
+                 :style="simResult ? 'background:' + simResult.riskColor + '08; border-color:' + simResult.riskColor + '33' : 'background:#131313; border-color:var(--border2)'">
+              <p style="font-size:10px; text-transform:uppercase; letter-spacing:.07em; margin-bottom:6px;" :style="simResult ? 'color:' + simResult.riskColor : 'color:var(--text3)'">Saldo mínimo SIMULADO</p>
+              <p style="font-size:26px; font-weight:900;" :style="simResult ? 'color:' + simResult.riskColor : 'color:white'" x-text="simResult ? 'R$ ' + simResult.newMin.toLocaleString('pt-BR') : '—'"></p>
+              <p style="font-size:11px; margin-top:4px;" :style="simResult ? 'color:' + simResult.riskColor : 'color:var(--text3)'" x-text="simResult ? simResult.riskLabel : ''"></p>
+            </div>
+          </div>
+
+          <!-- Métricas do resultado -->
+          <div x-show="simResult" style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;">
+            <div style="background:#131313; border:1px solid var(--border2); border-radius:8px; padding:12px; text-align:center;">
+              <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Recebimento</p>
+              <p style="font-size:15px; font-weight:800; color:#4ade80;" x-text="simResult ? 'R$ ' + simResult.amount.toLocaleString('pt-BR') : ''"></p>
+            </div>
+            <div style="background:#131313; border:1px solid var(--border2); border-radius:8px; padding:12px; text-align:center;">
+              <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Melhora no mínimo</p>
+              <p style="font-size:15px; font-weight:800;" :style="simResult && simResult.improvement > 0 ? 'color:#4ade80' : 'color:var(--text2)'" x-text="simResult ? (simResult.improvement > 0 ? '+R$ ' : 'R$ ') + Math.abs(simResult.improvement).toLocaleString('pt-BR') : ''"></p>
+            </div>
+            <div style="background:#131313; border:1px solid var(--border2); border-radius:8px; padding:12px; text-align:center;">
+              <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Antecipação</p>
+              <p style="font-size:15px; font-weight:800; color:white;" x-text="simDays + ' dia(s)'"></p>
+            </div>
+          </div>
+
+          <!-- Recomendação -->
+          <div x-show="simResult" style="padding:12px 16px; border-radius:8px; border:1px solid; display:flex; align-items:flex-start; gap:10px;"
+               :style="simResult ? 'background:' + simResult.riskColor + '08; border-color:' + simResult.riskColor + '22' : ''">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" :style="simResult ? 'stroke:' + simResult.riskColor : ''"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <div>
+              <p style="font-size:12.5px; font-weight:700; color:white; margin-bottom:3px;" x-text="simResult ? simResult.riskLabel : ''"></p>
+              <p style="font-size:11.5px; color:var(--text2); line-height:1.5;" x-text="simResult ? simResult.recommendation : ''"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cenário resumido -->
+      <div class="card" style="padding:16px 22px;">
+        <h3 style="font-size:12px; font-weight:700; color:white; margin-bottom:10px;">Contexto: por que o dia 15/04 é crítico?</h3>
+        <div style="font-size:12px; color:var(--text2); line-height:1.7;">
+          <p>O saldo atual de <strong style="color:white;">R$ 38.420</strong> parece confortável, mas há <strong style="color:#fbbf24;">R$ 24.680 de saídas concentradas em 10/04</strong> (Folha R$ 22.000 + Energia R$ 2.680). Após esse dia, o saldo cai para ~R$ 16.490.</p>
+          <p style="margin-top:6px;">Entre 10/04 e 15/04 ainda saem mais R$ 2.730 (frete + aviamentos). O Hotel Imperial (R$ 4.450) só entra em 15/04. Por isso o saldo mínimo projetado é <strong style="color:#fbbf24;">R$ 13.750 em 15/04</strong>.</p>
+          <p style="margin-top:6px;">Antecipar qualquer recebimento que caia nesse período muda estruturalmente o risco.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: INSIGHTS ──────────────────────────────────────── -->
+    <div x-show="insTab==='insights'" style="display:flex; flex-direction:column; gap:8px;">
+      <template x-for="ins in insights" :key="ins.id">
+        <div class="card" style="padding:18px 20px;" :style="ins.borderColor">
+          <div style="display:flex; align-items:flex-start; gap:14px;">
+            <div style="width:36px; height:36px; flex-shrink:0; border-radius:10px; display:flex; align-items:center; justify-content:center;" :style="ins.iconBg">
+              <span x-html="ins.iconHtml"></span>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:6px;">
+                <p style="font-size:13px; font-weight:700; color:white; line-height:1.3;" x-text="ins.title"></p>
+                <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+                  <span x-show="ins.value" style="font-size:14px; font-weight:900; color:white;" x-text="ins.value"></span>
+                  <span :class="ins.badge" x-text="ins.badgeLabel"></span>
+                </div>
+              </div>
+              <p style="font-size:12px; color:var(--text2); line-height:1.6;" x-text="ins.detail"></p>
+              <div x-show="ins.cta" style="margin-top:10px; display:flex; align-items:center; gap:12px;">
+                <button @click="page=ins.ctaPage" style="font-size:11.5px; font-weight:700; color:var(--red); background:none; border:none; cursor:pointer; padding:0; display:flex; align-items:center; gap:4px;">
+                  <span x-text="ins.cta"></span> →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <!-- Rodapé engine -->
+    <div style="padding:12px 16px; background:#111; border:1px solid var(--border); border-radius:8px; display:flex; align-items:center; gap:8px;">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      <span style="font-size:11.5px; color:var(--text2);">Análise calculada automaticamente com base em saldo, fluxo projetado, AP/AR, SLA de produção, logística e histórico de custos.</span>
+    </div>
+  </div>
+
+  <!-- ── PRODUÇÃO ────────────────────────────────────────────────── -->
+  <div x-show="page==='producao'" style="padding:28px; display:flex; flex-direction:column; gap:20px;">
+
+    <!-- Header + tabs -->
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+      <div>
+        <h1 style="font-size:22px; font-weight:800; color:white; letter-spacing:-.02em;">Produção & Insumos</h1>
+        <p style="font-size:13px; color:var(--text2); margin-top:3px;">Planejamento, controle de estoque e necessidade de compra</p>
+      </div>
+      <div style="display:flex; gap:4px; background:#111; border:1px solid var(--border); border-radius:8px; padding:4px;">
+        <button @click="prodTab='plano'"   :class="['tab-btn', prodTab==='plano'   ? 'active' : '']">📋 Plano de Produção</button>
+        <button @click="prodTab='insumos'" :class="['tab-btn', prodTab==='insumos' ? 'active' : '']">📦 Insumos</button>
+        <button @click="prodTab='compras'" :class="['tab-btn', prodTab==='compras' ? 'active' : '']">🛒 Compras</button>
+      </div>
+    </div>
+
+    <!-- KPIs — sempre visíveis -->
+    <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:12px;">
+      <div class="card" style="padding:16px 18px; display:flex; align-items:center; gap:12px;">
+        <div style="width:36px; height:36px; background:var(--blue-dim); border:1px solid rgba(59,130,246,.2); border-radius:10px; display:flex; align-items:center; justify-content:center;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <div>
+          <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.07em; font-weight:600; margin-bottom:2px;">Em produção</p>
+          <p style="font-size:22px; font-weight:900; color:#60a5fa;" x-text="producaoAtiva.length"></p>
+        </div>
+      </div>
+      <div class="card metric-red" style="padding:16px 18px; display:flex; align-items:center; gap:12px;">
+        <div style="width:36px; height:36px; background:var(--red-dim); border:1px solid rgba(227,27,35,.2); border-radius:10px; display:flex; align-items:center; justify-content:center;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div>
+          <p style="font-size:10px; color:#ff6b6b; text-transform:uppercase; letter-spacing:.07em; font-weight:600; margin-bottom:2px;">Insumos em risco</p>
+          <p style="font-size:22px; font-weight:900; color:#ff6b6b;" x-text="insumosEmRisco"></p>
+        </div>
+      </div>
+      <div class="card metric-amber" style="padding:16px 18px; display:flex; align-items:center; gap:12px;">
+        <div style="width:36px; height:36px; background:var(--amber-dim); border:1px solid rgba(245,158,11,.2); border-radius:10px; display:flex; align-items:center; justify-content:center;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 001.99-1.77l.86-8.23H6"/></svg>
+        </div>
+        <div>
+          <p style="font-size:10px; color:var(--amber); text-transform:uppercase; letter-spacing:.07em; font-weight:600; margin-bottom:2px;">Compras críticas</p>
+          <p style="font-size:22px; font-weight:900; color:#fbbf24;" x-text="comprasCriticas"></p>
+        </div>
+      </div>
+      <div class="card" style="padding:16px 18px; display:flex; align-items:center; gap:12px;">
+        <div style="width:36px; height:36px; background:#1a1a1a; border:1px solid var(--border2); border-radius:10px; display:flex; align-items:center; justify-content:center;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div>
+          <p style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.07em; font-weight:600; margin-bottom:2px;">Invest. necessário</p>
+          <p style="font-size:17px; font-weight:900; color:white;" x-text="'R$ ' + totalComprasPendentes.toLocaleString('pt-BR')"></p>
+        </div>
+      </div>
+      <div class="card metric-green" style="padding:16px 18px; display:flex; align-items:center; gap:12px;">
+        <div style="width:36px; height:36px; background:var(--green-dim); border:1px solid rgba(34,197,94,.2); border-radius:10px; display:flex; align-items:center; justify-content:center;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div>
+          <p style="font-size:10px; color:#4ade80; text-transform:uppercase; letter-spacing:.07em; font-weight:600; margin-bottom:2px;">Concluídas</p>
+          <p style="font-size:22px; font-weight:900; color:#4ade80;" x-text="producoes.filter(p=>p.status==='concluido').length"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alertas de produção — sempre visíveis quando há problemas -->
+    <template x-if="prodAlerts.length > 0">
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <template x-for="(pa, i) in prodAlerts" :key="i">
+          <div class="alert-strip" :class="pa.severity==='critical' ? 'red' : 'amber'">
+            <span x-html="pa.severity==='critical' ? iconAlertCircle('#ff6b6b','14') : iconAlertTri('#fbbf24','14')" style="flex-shrink:0; margin-top:1px;"></span>
+            <p style="font-size:12px; font-weight:600; color:white;" x-text="pa.msg"></p>
+          </div>
+        </template>
+      </div>
+    </template>
+
+    <!-- ── TAB: PLANO DE PRODUÇÃO ──────────────────────────────── -->
+    <div x-show="prodTab==='plano'" style="display:flex; flex-direction:column; gap:14px;">
+
+      <template x-for="p in producoes" :key="p.id">
+        <div class="card" style="overflow:hidden;"
+             :style="p.status==='em_producao' ? 'border-color:rgba(59,130,246,.2)' : p.status==='concluido' ? 'border-color:rgba(34,197,94,.15)' : 'border-color:var(--border)'">
+          <div style="padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+            <div>
+              <p style="font-size:13px; font-weight:700; color:white;" x-text="p.nome"></p>
+              <p style="font-size:11px; color:var(--text3); margin-top:2px;"
+                 x-text="p.inicio + ' → ' + p.previsao + ' · ' + p.diasUteis + ' dias úteis'"></p>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span :class="p.status==='concluido' ? 'badge badge-green' : p.status==='em_producao' ? 'badge badge-blue' : 'badge badge-gray'"
+                    x-text="p.status==='concluido' ? '✓ Concluído' : p.status==='em_producao' ? '⚙ Em produção' : '◷ Planejado'">
+              </span>
+              <span style="font-size:12px; font-weight:700; color:white;" x-text="p.qty + ' unidades'"></span>
+            </div>
+          </div>
+          <div style="padding:14px 20px; display:flex; flex-direction:column; gap:12px;">
+            <!-- Progresso de produção -->
+            <template x-if="p.status !== 'planejado'">
+              <div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                  <span style="font-size:11px; color:var(--text3);">Progresso</span>
+                  <span style="font-size:11px; font-weight:700; color:white;" x-text="p.qtyFeita + ' / ' + p.qty + ' un (' + Math.round(p.qtyFeita/p.qty*100) + '%)'"></span>
+                </div>
+                <div class="progress-track" style="height:6px;">
+                  <div class="progress-fill"
+                       :style="'width:' + Math.round(p.qtyFeita/p.qty*100) + '%; background:' + (p.status==='concluido' ? '#4ade80' : '#3b82f6') + ';'">
+                  </div>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-top:4px;">
+                  <span style="font-size:10px; color:var(--text3);" x-text="'Dia ' + p.diasDecorridos + ' de ' + p.diasUteis"></span>
+                  <span style="font-size:10px;" :style="p.diasDecorridos >= p.diasUteis ? 'color:#4ade80' : 'color:var(--text3)'"
+                        x-text="p.diasDecorridos >= p.diasUteis ? 'Prazo atingido' : (p.diasUteis - p.diasDecorridos) + ' dias restantes'"></span>
+                </div>
+              </div>
+            </template>
+            <!-- Métricas financeiras -->
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px;">
+              <div style="background:#131313; border:1px solid var(--border2); border-radius:7px; padding:10px; text-align:center;">
+                <p style="font-size:9.5px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:3px;">Custo</p>
+                <p style="font-size:14px; font-weight:800; color:#f87171;" x-text="'R$ ' + p.custo.toLocaleString('pt-BR')"></p>
+              </div>
+              <div style="background:#131313; border:1px solid var(--border2); border-radius:7px; padding:10px; text-align:center;">
+                <p style="font-size:9.5px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:3px;">Receita prev.</p>
+                <p style="font-size:14px; font-weight:800; color:#4ade80;" x-text="'R$ ' + p.receita.toLocaleString('pt-BR')"></p>
+              </div>
+              <div style="background:#131313; border:1px solid var(--border2); border-radius:7px; padding:10px; text-align:center;">
+                <p style="font-size:9.5px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:3px;">Margem bruta</p>
+                <p style="font-size:14px; font-weight:800; color:white;" x-text="Math.round((p.receita-p.custo)/p.receita*100) + '%'"></p>
+              </div>
+              <div style="background:#131313; border:1px solid var(--border2); border-radius:7px; padding:10px; text-align:center;">
+                <p style="font-size:9.5px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:3px;">Custo/und</p>
+                <p style="font-size:14px; font-weight:800; color:white;" x-text="'R$ ' + (p.custo/p.qty).toFixed(2)"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+
+    </div>
+
+    <!-- ── TAB: INSUMOS ────────────────────────────────────────── -->
+    <div x-show="prodTab==='insumos'" style="display:flex; flex-direction:column; gap:14px;">
+
+      <div class="card" style="overflow:hidden;">
+        <div style="padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+          <h2 style="font-size:13px; font-weight:700; color:white;">Estoque de Insumos</h2>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="badge badge-red" x-text="insumos.filter(i=>i.statusEstoque==='crítico').length + ' crítico(s)'"></span>
+            <span class="badge badge-amber" x-text="insumos.filter(i=>i.statusEstoque==='baixo').length + ' baixo(s)'"></span>
+          </div>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Insumo</th>
+            <th style="text-align:right;">Estoque</th>
+            <th style="text-align:right;">Necessidade</th>
+            <th style="text-align:right;">Produz (und)</th>
+            <th style="text-align:right;">Custo unit.</th>
+            <th style="text-align:center;">Status</th>
+          </tr></thead>
+          <tbody>
+            <template x-for="ins in insumos" :key="ins.id">
+              <tr>
+                <td>
+                  <p style="font-weight:600; color:white;" x-text="ins.nome"></p>
+                  <p style="font-size:10.5px; color:var(--text3); margin-top:1px;" x-text="ins.fornecedor"></p>
+                </td>
+                <td style="text-align:right; font-weight:700;"
+                    :style="ins.statusEstoque==='crítico' ? 'color:#ff6b6b' : ins.statusEstoque==='baixo' ? 'color:#fbbf24' : 'color:#4ade80'"
+                    x-text="ins.estoqueAtual + ' ' + ins.unidade">
+                </td>
+                <td style="text-align:right; color:var(--text2); font-size:12px;"
+                    x-text="necessidadeInsumo(ins.id) > 0 ? necessidadeInsumo(ins.id).toFixed(0) + ' ' + ins.unidade : '—'">
+                </td>
+                <td style="text-align:right; color:white; font-weight:600;"
+                    x-text="unidadesPossiveis(ins) + ' un'">
+                </td>
+                <td style="text-align:right; color:var(--text3);" x-text="'R$ ' + ins.custoUnitario.toFixed(2)"></td>
+                <td style="text-align:center;">
+                  <span :class="ins.statusEstoque==='crítico' ? 'badge badge-red' : ins.statusEstoque==='baixo' ? 'badge badge-amber' : 'badge badge-green'"
+                        x-text="ins.statusEstoque==='crítico' ? '⚠ Crítico' : ins.statusEstoque==='baixo' ? 'Baixo' : 'OK'">
+                  </span>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Capacidade atual por insumo limitante -->
+      <div class="card" style="padding:16px 22px;">
+        <h3 style="font-size:12px; font-weight:700; color:white; margin-bottom:12px;">Capacidade de produção — estoque atual</h3>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <template x-for="ins in insumos" :key="'cap-' + ins.id">
+            <div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span style="font-size:11.5px; color:var(--text2);" x-text="ins.nome"></span>
+                <span style="font-size:11.5px; font-weight:700;"
+                      :style="unidadesPossiveis(ins) < 50 ? 'color:#ff6b6b' : unidadesPossiveis(ins) < 150 ? 'color:#fbbf24' : 'color:#4ade80'"
+                      x-text="unidadesPossiveis(ins) + ' unidades possíveis'">
+                </span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill"
+                     :style="'width:' + Math.min(Math.round(unidadesPossiveis(ins)/500*100), 100) + '%; background:' + (unidadesPossiveis(ins) < 50 ? '#ef4444' : unidadesPossiveis(ins) < 150 ? '#fbbf24' : '#4ade80') + ';'">
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+        <div style="margin-top:12px; padding:10px 14px; background:#0f0f0f; border:1px solid var(--border); border-radius:8px;">
+          <p style="font-size:11.5px; color:var(--text2); line-height:1.5;">
+            <strong style="color:white;">Gargalo atual:</strong> Botões (8 pacotes → apenas 8 unidades possíveis) bloqueia a produção do Lote Abril em andamento. Compra mínima: 20 pacotes · R$ 240.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── TAB: COMPRAS ────────────────────────────────────────── -->
+    <div x-show="prodTab==='compras'" style="display:flex; flex-direction:column; gap:14px;">
+
+      <!-- Necessidade calculada -->
+      <div class="card" style="padding:16px 22px; background:rgba(245,158,11,.03); border-color:rgba(245,158,11,.2);">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+          <h2 style="font-size:13px; font-weight:700; color:white;">Necessidade de Compra — calculada automaticamente</h2>
+          <span style="font-size:13px; font-weight:800; color:#fbbf24;" x-text="'Total: R$ ' + totalComprasPendentes.toLocaleString('pt-BR')"></span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:12px;">
+          <div style="background:#131313; border:1px solid rgba(227,27,35,.2); border-radius:8px; padding:12px; text-align:center;">
+            <p style="font-size:9.5px; color:#ff6b6b; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Urgência crítica</p>
+            <p style="font-size:18px; font-weight:900; color:#ff6b6b;" x-text="'R$ ' + compras.filter(c=>c.urgencia==='crítica').reduce((s,c)=>s+c.custoTotal,0).toLocaleString('pt-BR')"></p>
+            <p style="font-size:10px; color:var(--text3); margin-top:2px;">Bloqueia produção hoje</p>
+          </div>
+          <div style="background:#131313; border:1px solid rgba(245,158,11,.15); border-radius:8px; padding:12px; text-align:center;">
+            <p style="font-size:9.5px; color:var(--amber); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Urgência alta</p>
+            <p style="font-size:18px; font-weight:900; color:#fbbf24;" x-text="'R$ ' + compras.filter(c=>c.urgencia==='alta').reduce((s,c)=>s+c.custoTotal,0).toLocaleString('pt-BR')"></p>
+            <p style="font-size:10px; color:var(--text3); margin-top:2px;">Necessário esta semana</p>
+          </div>
+          <div style="background:#131313; border:1px solid var(--border2); border-radius:8px; padding:12px; text-align:center;">
+            <p style="font-size:9.5px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Média / baixa</p>
+            <p style="font-size:18px; font-weight:900; color:white;" x-text="'R$ ' + compras.filter(c=>c.urgencia!=='crítica'&&c.urgencia!=='alta').reduce((s,c)=>s+c.custoTotal,0).toLocaleString('pt-BR')"></p>
+            <p style="font-size:10px; color:var(--text3); margin-top:2px;">Pode aguardar</p>
+          </div>
+        </div>
+        <!-- Impacto no caixa -->
+        <div style="padding:10px 14px; background:rgba(227,27,35,.05); border:1px solid rgba(227,27,35,.15); border-radius:8px; display:flex; align-items:center; gap:8px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff9999" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          <span style="font-size:11.5px; color:#ff9999;">
+            Impacto no caixa: <strong style="color:white;" x-text="'R$ ' + totalComprasPendentes.toLocaleString('pt-BR')"></strong> em compras de insumos.
+            Saldo atual <strong style="color:white;">R$ 38.420</strong> suporta, mas aumenta a pressão sobre o fluxo de 10/04.
+          </span>
+        </div>
+      </div>
+
+      <!-- Lista de compras -->
+      <div class="card" style="overflow:hidden;">
+        <div style="padding:14px 20px; border-bottom:1px solid var(--border);">
+          <h2 style="font-size:13px; font-weight:700; color:white;">Lista de Compras</h2>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Insumo</th>
+            <th style="text-align:right;">Qtd. mín.</th>
+            <th style="text-align:right;">Custo total</th>
+            <th style="text-align:center;">Urgência</th>
+            <th style="text-align:left;">Motivo</th>
+            <th style="text-align:center;">Prazo</th>
+          </tr></thead>
+          <tbody>
+            <template x-for="c in compras" :key="c.id">
+              <tr>
+                <td style="font-weight:600; color:white;" x-text="c.insumo"></td>
+                <td style="text-align:right; color:var(--text2);" x-text="c.qty + ' un'"></td>
+                <td style="text-align:right; font-weight:700; color:white;" x-text="'R$ ' + c.custoTotal.toLocaleString('pt-BR')"></td>
+                <td style="text-align:center;">
+                  <span :class="c.urgencia==='crítica' ? 'badge badge-red' : c.urgencia==='alta' ? 'badge badge-amber' : c.urgencia==='média' ? 'badge badge-blue' : 'badge badge-gray'"
+                        x-text="c.urgencia.charAt(0).toUpperCase() + c.urgencia.slice(1)">
+                  </span>
+                </td>
+                <td style="color:var(--text3); font-size:11.5px; max-width:200px;" x-text="c.motivo"></td>
+                <td style="text-align:center; color:var(--text3);" x-text="c.vencimento"></td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+        <div style="padding:10px 16px; border-top:1px solid var(--border); display:flex; align-items:center; gap:8px; background:rgba(59,130,246,.03);">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <span style="font-size:11px; color:var(--text2);">Compras calculadas com base no estoque atual vs necessidade das produções ativas e planejadas. Priorize os itens críticos para não parar a linha.</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════════════════════ -->
+<script>
+// ── SVG helpers ──────────────────────────────────────────────────
+function iconAlertCircle(color, size = '16') {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`
+}
+function iconAlertTri(color, size = '16') {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`
+}
+function iconInfo(color, size = '16') {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`
+}
+function iconFactory(color) {
+  return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20M4 20V10l8-6 8 6v10"/></svg>`
+}
+
+function app() {
+  return {
+    page: 'dashboard',
+    filterSev: 'all',
+    filterCat: 'all',
+    finTab: 'fluxo',
+    insTab: 'decisoes',
+    simReceivable: '',
+    simDays: 5,
+
+    get simResult() {
+      if (!this.simReceivable) return null
+      const map = {
+        'ar-001': { label:'Restaurante Belo Sabor',    amount:4750, origDay:10 },
+        'ar-002': { label:'Hotel Imperial',             amount:4450, origDay:15 },
+        'ar-003': { label:'Escola Municipal Jardim Flor', amount:4200, origDay:8 },
+      }
+      const rec = map[this.simReceivable]
+      if (!rec) return null
+      const newDay    = rec.origDay - this.simDays
+      const currentMin = 13750
+      // Se antecipação traz o recebimento para antes do dia 15 (ponto mais crítico) e originalmente era depois
+      let newMin = currentMin
+      if (newDay <= 14 && rec.origDay > 14) newMin = currentMin + rec.amount
+      else if (newDay <= 9  && rec.origDay > 9)  newMin = currentMin + rec.amount * 0.6
+      const improvement = Math.round(newMin - currentMin)
+      const riskLabel = newMin < 15000 ? 'Crítico' : newMin < 22000 ? 'Moderado' : 'Controlado'
+      const riskColor = newMin < 15000 ? '#ff6b6b' : newMin < 22000 ? '#fbbf24' : '#4ade80'
+      const recommendation = newMin < 15000
+        ? 'Caixa ainda abaixo de R$ 15k. Combinar com negociação de prazo com fornecedor.'
+        : newMin < 22000
+        ? 'Melhora significativa. Risco reduzido — monitorar de perto.'
+        : 'Risco eliminado. Saldo mínimo confortável para cobrir os compromissos.'
+      return { newMin: Math.round(newMin), improvement, riskColor, riskLabel, recommendation, label: rec.label, amount: rec.amount }
+    },
+
+    decisions: [
+      { id:'d1', ts:'09/04 · 06:01', severity:'critical', channel:'WhatsApp + Email', trigger:'Alert Engine',        title:'Notificação crítica enviada — Aluguel vencido há 3 dias',      detail:'AP-003 (Imobiliária Central · R$ 8.500) identificada com 3 dias de atraso. Notificação enviada automaticamente ao gestor via WhatsApp e email.' },
+      { id:'d2', ts:'09/04 · 06:01', severity:'critical', channel:'WhatsApp',         trigger:'Alert Engine',        title:'Alerta disparado — Vencimento crítico amanhã (Têxtil Sul)',      detail:'AP-001 (R$ 4.200) vence em 09/04. Engine calculou risco de inadimplência com base no saldo e gerou alerta imediato. WhatsApp enviado.' },
+      { id:'d3', ts:'09/04 · 06:02', severity:'warning',  channel:'Insight gerado',   trigger:'Cash Flow Engine',    title:'Risco de caixa projetado — saldo mínimo R$ 13.750 em 15/04',   detail:'Engine recalculou projeção 30 dias. Concentração de R$ 24.680 em saídas no dia 10/04 identificada como risco. Insight e badge de atenção ativados.' },
+      { id:'d4', ts:'09/04 · 06:02', severity:'warning',  channel:'WhatsApp',         trigger:'Stuck Orders Engine', title:'Pedido travado detectado — Hotel Imperial (216h em Corte)',      detail:'SHP-2026-4390 sem atualização há 216h na fase de Corte. Alerta criado e Equipe C notificada automaticamente. Impacto: R$ 8.900.' },
+      { id:'d5', ts:'08/04 · 18:30', severity:'warning',  channel:'Dashboard + Email', trigger:'Logistics Sync',     title:'Exceção logística registrada — FL20260401004',                  detail:'Fontes Log reportou falha de endereço em Campinas. Sistema capturou via webhook, registrou exceção e gerou alerta para a equipe de atendimento.' },
+      { id:'d6', ts:'08/04 · 08:00', severity:'info',     channel:'Sistema',           trigger:'ERP Sync',           title:'Sincronização ERP concluída — 7 AP + 4 AR atualizadas',        detail:'Integração com ERP rodou automaticamente. 7 contas a pagar e 4 contas a receber sincronizadas com valores e status atualizados.' },
+      { id:'d7', ts:'07/04 · 14:00', severity:'info',     channel:'Insight gerado',    trigger:'Alert Engine',       title:'Anomalia de energia detectada — +16% vs média histórica',       detail:'Conta de energia R$ 2.680 vs média R$ 2.300. Engine comparou com histórico e gerou insight para investigação de consumo no galpão.' },
+      { id:'d8', ts:'06/04 · 09:00', severity:'info',     channel:'Sistema',           trigger:'Shopify Sync',       title:'5 pedidos sincronizados via Shopify — R$ 47.890 em receita',    detail:'Webhook Shopify recebeu atualizações de status. Receita total do mês atualizada no dashboard automaticamente.' },
+    ],
+
+    dre: [
+      { label:'Receita Bruta',            value:  47890, pct:'—',      indent:false, type:'revenue',  note:'5 pedidos Shopify — Abril 2026' },
+      { label:'(-) Devoluções / Descontos',value:      0, pct:'0%',    indent:true,  type:'cost',     note:'' },
+      { label:'Receita Líquida',           value:  47890, pct:'100%',  indent:false, type:'subtotal', note:'' },
+      { label:'(-) CMV — Custo Mercadoria',value: -28670, pct:'59,9%', indent:false, type:'cost',     note:'Mat. prima + M.O. produção + aviamentos' },
+      { label:'Tecidos e Matéria-Prima',   value: -11520, pct:'24,1%', indent:true,  type:'cost',     note:'' },
+      { label:'Mão de Obra Direta',        value: -14000, pct:'29,2%', indent:true,  type:'cost',     note:'Parte da folha — produção' },
+      { label:'Aviamentos e Insumos',      value:   -980, pct:'2,0%',  indent:true,  type:'cost',     note:'' },
+      { label:'Outros custos diretos',     value:  -2170, pct:'4,5%',  indent:true,  type:'cost',     note:'' },
+      { label:'Margem Bruta',              value:  19220, pct:'40,1%', indent:false, type:'subtotal', note:'' },
+      { label:'(-) Despesas Operacionais', value: -25460, pct:'53,2%', indent:false, type:'cost',     note:'' },
+      { label:'Folha Adm / Vendas',        value:  -8000, pct:'16,7%', indent:true,  type:'cost',     note:'Gestão, admin, vendas' },
+      { label:'Aluguel Galpão',            value:  -8500, pct:'17,8%', indent:true,  type:'cost',     note:'Vencido 05/04 — em atraso ⚠' },
+      { label:'Marketing Digital',         value:  -3500, pct:'7,3%',  indent:true,  type:'cost',     note:'Agência Pixel — vence 20/04' },
+      { label:'Energia Elétrica',          value:  -2680, pct:'5,6%',  indent:true,  type:'cost',     note:'+16% vs média histórica ⚠' },
+      { label:'Frete / Logística',         value:  -1850, pct:'3,9%',  indent:true,  type:'cost',     note:'Fontes Log — Lote Março' },
+      { label:'Outros operacionais',       value:   -930, pct:'1,9%',  indent:true,  type:'cost',     note:'Contabilidade, licenças, etc.' },
+      { label:'EBITDA (projetado)',         value:  -6240, pct:'-13,0%',indent:false, type:'ebitda',   note:'Mês em aberto — projeção p/ 30/04' },
+    ],
+
+    custos: {
+      fixos:    [
+        { label:'Aluguel Galpão',      value: 8500, cat:'fixo' },
+        { label:'Folha Adm',           value: 8000, cat:'fixo' },
+        { label:'Contabilidade',       value:  600, cat:'fixo' },
+        { label:'Licenças SaaS',       value:  330, cat:'fixo' },
+      ],
+      variaveis: [
+        { label:'CMV — Mat. Prima',    value: 11520, cat:'var' },
+        { label:'Mão de Obra Direta',  value: 14000, cat:'var' },
+        { label:'Aviamentos',          value:   980, cat:'var' },
+        { label:'Frete',               value:  1850, cat:'var' },
+        { label:'Marketing',           value:  3500, cat:'var' },
+        { label:'Energia Elétrica',    value:  2680, cat:'var' },
+      ],
+    },
+
+    get totalFixo() { return this.custos.fixos.reduce((s,c)=>s+c.value,0) },
+    get totalVar()  { return this.custos.variaveis.reduce((s,c)=>s+c.value,0) },
+    get margemBruta() { return 19220 },
+    get ebitda()    { return -6240 },
+    get burnDiario(){ return Math.round((this.totalFixo + this.totalVar) / 22) },
+    get runway()    { return Math.round(38420 / this.burnDiario) },
+
+    nav: [
+      { id:'dashboard', label:'Dashboard',  icon:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>` },
+      { id:'financeiro',label:'Financeiro', icon:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>` },
+      { id:'operacao',  label:'Operação',   icon:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20M4 20V10l8-6 8 6v10"/></svg>` },
+      { id:'logistica', label:'Logística',  icon:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>` },
+      { id:'alertas',   label:'Alertas',    icon:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>` },
+      { id:'insights',  label:'Insights',   icon:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>` },
+      { id:'producao',  label:'Produção',   icon:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>` },
+    ],
+
+    // ── MÓDULO PRODUÇÃO ────────────────────────────────────────
+    prodTab: 'plano',   // 'plano' | 'insumos' | 'compras'
+
+    producoes: [
+      { id:'p1', nome:'Uniforme Escolar — Lote Abril',  qty:300, qtyFeita:180, diasUteis:20, diasDecorridos:12, status:'em_producao', custo:18600, receita:28500, inicio:'01/04', previsao:'28/04',
+        insumos: [
+          { id:'ins1', qtdUsada: 90  },
+          { id:'ins2', qtdUsada: 150 },
+          { id:'ins3', qtdUsada: 300 },
+        ]
+      },
+      { id:'p2', nome:'Avental Corporativo — Piloto',   qty:100, qtyFeita:0,   diasUteis:10, diasDecorridos:0,  status:'planejado',   custo:4200,  receita:7500,  inicio:'15/04', previsao:'28/04',
+        insumos: [
+          { id:'ins1', qtdUsada: 20  },
+          { id:'ins4', qtdUsada: 50  },
+          { id:'ins3', qtdUsada: 100 },
+        ]
+      },
+      { id:'p3', nome:'Camiseta Técnica — Lote Março',  qty:500, qtyFeita:500, diasUteis:18, diasDecorridos:18, status:'concluido',    custo:22000, receita:38000, inicio:'10/03', previsao:'04/04',
+        insumos: []
+      },
+    ],
+
+    insumos: [
+      { id:'ins1', nome:'Tecido Oxford (metro)',    unidade:'m',   estoqueAtual:42,  consumoPorUnd:0.30, compraMinima:100, custoUnitario:18.50, fornecedor:'Têxtil Sul Ltda',    statusEstoque:'baixo'   },
+      { id:'ins2', nome:'Linha de costura (bobina)',unidade:'un',  estoqueAtual:28,  consumoPorUnd:0.50, compraMinima:50,  custoUnitario:4.20,  fornecedor:'Aviamentos Norte',   statusEstoque:'ok'      },
+      { id:'ins3', nome:'Botões (pacote 100un)',    unidade:'pct', estoqueAtual:8,   consumoPorUnd:1.00, compraMinima:20,  custoUnitario:12.00, fornecedor:'Aviamentos Norte',   statusEstoque:'crítico' },
+      { id:'ins4', nome:'Elástico 2cm (metro)',     unidade:'m',   estoqueAtual:120, consumoPorUnd:0.80, compraMinima:200, custoUnitario:1.80,  fornecedor:'Aviamentos Norte',   statusEstoque:'ok'      },
+      { id:'ins5', nome:'Etiqueta bordada (un)',    unidade:'un',  estoqueAtual:320, consumoPorUnd:1.00, compraMinima:500, custoUnitario:0.85,  fornecedor:'Bordados Express',   statusEstoque:'ok'      },
+      { id:'ins6', nome:'Embalagem plástica (un)',  unidade:'un',  estoqueAtual:90,  consumoPorUnd:1.00, compraMinima:200, custoUnitario:0.40,  fornecedor:'PackBrasil',         statusEstoque:'baixo'   },
+    ],
+
+    compras: [
+      { id:'c1', insumoId:'ins3', insumo:'Botões (pacote 100un)', qty:20, custoTotal:240,  urgencia:'crítica', motivo:'Estoque crítico — bloqueia produção em andamento', vencimento:'10/04', pago:false },
+      { id:'c2', insumoId:'ins1', insumo:'Tecido Oxford (metro)', qty:100, custoTotal:1850, urgencia:'alta',    motivo:'Estoque baixo — necessário para Lote Abril e Piloto', vencimento:'14/04', pago:false },
+      { id:'c3', insumoId:'ins6', insumo:'Embalagem plástica (un)',qty:200, custoTotal:80,  urgencia:'média',   motivo:'Reposição para finalizar Lote Abril', vencimento:'20/04', pago:false },
+      { id:'c4', insumoId:'ins2', insumo:'Linha de costura (bob)',qty:50,  custoTotal:210,  urgencia:'baixa',   motivo:'Reposição preventiva — estoque ok por ora', vencimento:'30/04', pago:false },
+    ],
+
+    get totalComprasPendentes() {
+      return this.compras.filter(c=>!c.pago).reduce((s,c)=>s+c.custoTotal, 0)
+    },
+    get comprasCriticas() {
+      return this.compras.filter(c=>!c.pago && c.urgencia==='crítica').length
+    },
+    get insumosEmRisco() {
+      return this.insumos.filter(i => i.statusEstoque === 'crítico' || i.statusEstoque === 'baixo').length
+    },
+    get producaoAtiva() {
+      return this.producoes.filter(p => p.status === 'em_producao')
+    },
+
+    // Quanto cada insumo precisa para completar produções ativas/planejadas
+    necessidadeInsumo(insId) {
+      let total = 0
+      this.producoes.filter(p => p.status !== 'concluido').forEach(p => {
+        const uso = p.insumos.find(i => i.id === insId)
+        if (uso) total += uso.qtdUsada
+      })
+      return total
+    },
+    // Unidades que o estoque atual suporta produzir
+    unidadesPossiveis(ins) {
+      if (ins.consumoPorUnd <= 0) return 0
+      return Math.floor(ins.estoqueAtual / ins.consumoPorUnd)
+    },
+    // Inteligência: alerts de produção
+    get prodAlerts() {
+      const alerts = []
+      this.insumos.forEach(ins => {
+        const nec = this.necessidadeInsumo(ins.id)
+        if (nec > ins.estoqueAtual) {
+          const falta = nec - ins.estoqueAtual
+          const custoCompra = Math.ceil(falta / ins.compraMinima) * ins.compraMinima * ins.custoUnitario
+          alerts.push({
+            severity: ins.statusEstoque === 'crítico' ? 'critical' : 'warning',
+            msg: `${ins.nome}: faltam ${falta.toFixed(1)} ${ins.unidade} — investimento necessário R$ ${custoCompra.toFixed(0)}`,
+          })
+        }
+      })
+      return alerts
+    },
+    get totalInvestimentoProducao() {
+      return this.compras.filter(c=>!c.pago).reduce((s,c)=>s+c.custoTotal,0)
+    },
+
+    get criticalCount() {
+      return this.alerts.filter(a => a.severity === 'critical' && !a.acked).length
+    },
+    get filteredAlerts() {
+      return this.alerts.filter(a => {
+        if (a.acked) return false
+        if (this.filterSev !== 'all' && a.severity !== this.filterSev) return false
+        if (this.filterCat !== 'all' && a.category !== this.filterCat) return false
+        return true
+      })
+    },
+    get totalImpact() {
+      return this.filteredAlerts.reduce((s,a) => {
+        const v = parseFloat((a.impact||'').replace('R$ ','').replace('.','').replace(',','.')) || 0
+        return s + v
+      }, 0)
+    },
+    ackAll() { this.alerts.forEach(a => a.acked = true) },
+
+    // ── Dados ──────────────────────────────────────────────────
+    metrics: [
+      { label:'Saldo em Caixa',    value:'R$ 38.420', sub:'Atualizado automaticamente', iconBg:'rgba(34,197,94,.1)', icon:`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>`, labelColor:'#4ade80', subColor:'#555', glow:'metric-green' },
+      { label:'Receita Projetada', value:'R$ 47.890', sub:'R$ 29.140 recebido',         iconBg:'rgba(59,130,246,.1)',icon:`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`, labelColor:'#60a5fa', subColor:'#4ade80', glow:'' },
+      { label:'Despesas Pendentes',value:'R$ 43.710', sub:'R$ 8.200 pago',               iconBg:'rgba(245,158,11,.1)',icon:`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>`, labelColor:'#fbbf24', subColor:'#f87171', glow:'metric-amber' },
+      { label:'Alertas Ativos',    value:'7',         sub:'2 crítico(s)',                 iconBg:'rgba(227,27,35,.1)', icon:`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>`, labelColor:'#ff6b6b', subColor:'#ff6b6b', glow:'metric-red' },
+    ],
+
+    alerts: [
+      { id:'a1', severity:'critical', category:'financeiro',  impact:'R$ 4.200',  title:'Pagamento vence AMANHÃ: Têxtil Sul — R$ 4.200',                           message:'AP-001 vence em 09/04/2026. Saldo atual suporta, mas deve ser priorizado hoje. Risco: multa de 2% + juros de mora.', time:'Há 2h', acked:false },
+      { id:'a2', severity:'critical', category:'financeiro',  impact:'R$ 8.500',  title:'Aluguel VENCIDO há 3 dias — R$ 8.500',                                    message:'AP-003 (Aluguel Galpão) venceu em 05/04. Cada dia adicional gera multa de R$ 255 (3%) + juros. Acionar Imobiliária Central.', time:'Há 3d', acked:false },
+      { id:'a3', severity:'warning',  category:'financeiro',  impact:'R$ 24.680', title:'Concentração de R$ 24.680 em saídas no dia 10/04',                        message:'Folha (R$ 22.000) + Energia (R$ 2.680) no mesmo dia. Saldo projetado cai para R$ 16.490. Antecipe o recebimento do Belo Sabor (R$ 4.750) que também vence em 10/04.', time:'Há 2h', acked:false },
+      { id:'a4', severity:'warning',  category:'financeiro',  impact:'R$ 4.200',  title:'Recebimento vencido: Escola Jardim Flor — R$ 4.200',                      message:'Parcela 2/3 venceu em 08/04 sem confirmação de pagamento. Cobrar hoje — esse valor cobre exatamente o Têxtil Sul que vence amanhã.', time:'Há 2h', acked:false },
+      { id:'a5', severity:'warning',  category:'operacional', impact:'R$ 8.900',  title:'Pedido travado 11 dias: Hotel Imperial — fase Corte',                     message:'SHP-2026-4390 sem atualização há 216h. Equipe C responsável. Cada dia adicional gera custo de oportunidade de ~R$ 636. Verificar imediatamente.', time:'Há 2h', acked:false },
+      { id:'a6', severity:'info',     category:'financeiro',  impact:'R$ 380',    title:'Energia elétrica 16% acima da média histórica',                           message:'R$ 2.680 vs média R$ 2.300. Anomalia identificada pela engine. Investigar: equipamento ligado fora do horário, compressor ineficiente ou vazamento.', time:'Há 2h', acked:false },
+      { id:'a7', severity:'warning',  category:'logistica',   impact:'R$ 12.600', title:'Exceção de entrega: Escola Jardim Flor — endereço não localizado há 3d',  message:'FL20260401004 em exceção há 3 dias em Campinas. SLA de 5 dias já excedido. Contatar cliente e Fontes Log com urgência. Pedido de R$ 12.600 em risco.', time:'Há 3d', acked:false },
+    ],
+
+    payables: [
+      { id:'ap-003', desc:'Aluguel Galpão — Abril/2026',      supplier:'Imobiliária Central', amount:'R$ 8.500',  due:'05/04', urgency:'Vencido 3d',  urgencyCls:'badge badge-red'   },
+      { id:'ap-001', desc:'Tecido Oxford 30m',                 supplier:'Têxtil Sul Ltda',    amount:'R$ 4.200',  due:'09/04', urgency:'Vence amanhã', urgencyCls:'badge badge-red'   },
+      { id:'ap-002', desc:'Folha de Pagamento — Abril/2026',   supplier:'Interno',            amount:'R$ 22.000', due:'10/04', urgency:'Em 2 dias',    urgencyCls:'badge badge-red'   },
+      { id:'ap-006', desc:'Energia Elétrica — Março/2026',     supplier:'CEMIG',              amount:'R$ 2.680',  due:'10/04', urgency:'Em 2 dias',    urgencyCls:'badge badge-amber' },
+      { id:'ap-004', desc:'Frete Fontes Log — Lote Março',     supplier:'Fontes Log',         amount:'R$ 1.850',  due:'12/04', urgency:'Em 4 dias',    urgencyCls:'badge badge-amber' },
+      { id:'ap-005', desc:'Botões e Aviamentos',               supplier:'Aviamentos Norte',   amount:'R$ 980',    due:'15/04', urgency:'Em 7 dias',    urgencyCls:'badge badge-amber' },
+      { id:'ap-007', desc:'Marketing Digital — Agência Pixel', supplier:'Agência Pixel',      amount:'R$ 3.500',  due:'20/04', urgency:'Em 12 dias',   urgencyCls:'badge badge-green' },
+    ],
+
+    receivables: [
+      { id:'ar-003', customer:'Escola Municipal Jardim Flor', desc:'Parcela 2/3 — venceu hoje', amount:'R$ 4.200', status:'Vencido',    statusCls:'badge badge-red'   },
+      { id:'ar-001', customer:'Restaurante Belo Sabor',       desc:'Boleto 10/04',              amount:'R$ 4.750', status:'Aguardando', statusCls:'badge badge-amber' },
+      { id:'ar-002', customer:'Hotel Imperial',               desc:'Boleto 50% restante 15/04', amount:'R$ 4.450', status:'Aguardando', statusCls:'badge badge-amber' },
+      { id:'ar-004', customer:'Maria Santos',                 desc:'Cartão parcela 1 — 20/04',  amount:'R$ 385',   status:'Aguardando', statusCls:'badge badge-blue'  },
+    ],
+
+    orders: [
+      { id:'o1', ref:'SHP-2026-4421', customer:'João Ferreira',          value:'R$ 1.890',  status:'Produção', paid:true,  stuck:false, date:'06/04', aging:3,  impact:1890  },
+      { id:'o2', ref:'SHP-2026-4422', customer:'Restaurante Belo Sabor', value:'R$ 4.750',  status:'Enviado',  paid:true,  stuck:false, date:'05/04', aging:4,  impact:4750  },
+      { id:'o3', ref:'SHP-2026-4423', customer:'Maria Santos',           value:'R$ 385',    status:'Pendente', paid:false, stuck:false, date:'08/04', aging:1,  impact:385   },
+      { id:'o4', ref:'SHP-2026-4410', customer:'Escola Jardim Flor',     value:'R$ 12.600', status:'Produção', paid:true,  stuck:true,  date:'01/04', aging:8,  impact:12600 },
+      { id:'o5', ref:'SHP-2026-4390', customer:'Hotel Imperial',         value:'R$ 8.900',  status:'Produção', paid:false, stuck:true,  date:'29/03', aging:11, impact:8900  },
+    ],
+
+    kanbanStages: [
+      { key:'queue',      label:'Fila',      color:'#555'     },
+      { key:'cutting',    label:'Corte',     color:'#60a5fa'  },
+      { key:'production', label:'Produção',  color:'#a78bfa'  },
+      { key:'packing',    label:'Embalagem', color:'#fb923c'  },
+      { key:'ready',      label:'Pronto',    color:'#4ade80'  },
+      { key:'shipped',    label:'Enviado',   color:'#2dd4bf'  },
+    ],
+    kanbanOps: [
+      { id:'k1', stageKey:'production', ref:'SHP-2026-4421', customer:'João Ferreira',      team:'Equipe B', value:'R$ 1.890',  stuck:false, hoursStuck:0   },
+      { id:'k2', stageKey:'packing',    ref:'SHP-2026-4410', customer:'Escola Jardim Flor', team:'Equipe A', value:'R$ 12.600', stuck:true,  hoursStuck:150 },
+      { id:'k3', stageKey:'cutting',    ref:'SHP-2026-4390', customer:'Hotel Imperial',     team:'Equipe C', value:'R$ 8.900',  stuck:true,  hoursStuck:216 },
+    ],
+    kanbanItems(key) { return this.kanbanOps.filter(o => o.stageKey === key) },
+
+    opTab: 'kanban',   // 'kanban' | 'sla' | 'pedidos'
+    logTab: 'envios',  // 'envios' | 'rastreamento'
+
+    stageMetrics: [
+      { key:'queue',      label:'Fila',      avg:2,    sla:4,  late:false, color:'#666',    unit:'h' },
+      { key:'cutting',    label:'Corte',     avg:24,   sla:16, late:true,  color:'#60a5fa', unit:'h' },
+      { key:'production', label:'Produção',  avg:36,   sla:24, late:true,  color:'#a78bfa', unit:'h' },
+      { key:'packing',    label:'Embalagem', avg:8,    sla:12, late:false, color:'#fb923c', unit:'h' },
+      { key:'ready',      label:'Pronto',    avg:4,    sla:8,  late:false, color:'#4ade80', unit:'h' },
+      { key:'shipped',    label:'Enviado',   avg:null, sla:48, late:false, color:'#2dd4bf', unit:'h' },
+    ],
+
+    shipments: [
+      { id:'s1', code:'FL20260405001', order:'SHP-2026-4422', customer:'Restaurante Belo Sabor', dest:'Belo Horizonte, MG', value:'R$ 4.750',  status:'Saiu p/ entrega', statusCls:'badge badge-amber', days:3, sla:5, exception:false, late:false },
+      { id:'s2', code:'FL20260401004', order:'SHP-2026-4410', customer:'Escola Jardim Flor',     dest:'Campinas, SP',       value:'R$ 12.600', status:'Exceção',          statusCls:'badge badge-red',   days:7, sla:5, exception:true,  late:true,  exceptionNote:'Endereço não localizado há 3 dias' },
+    ],
+
+    logEvt1: [
+      { label:'Objeto postado',    loc:'São Paulo, SP',  ts:'06/04 08:00', dotColor:'#3b82f6' },
+      { label:'Em trânsito',       loc:'Belo Horizonte', ts:'07/04 14:00', dotColor:'#3b82f6' },
+      { label:'Saiu para entrega', loc:'Belo Horizonte', ts:'08/04 07:30', dotColor:'#fbbf24' },
+    ],
+    logEvt2: [
+      { label:'Objeto postado',     loc:'São Paulo, SP', ts:'03/04 10:00', dotColor:'#3b82f6', note:'' },
+      { label:'Em trânsito',        loc:'Campinas, SP',  ts:'04/04 16:00', dotColor:'#3b82f6', note:'' },
+      { label:'Exceção de entrega', loc:'Campinas, SP',  ts:'05/04 09:00', dotColor:'#E31B23', note:'Endereço não localizado — aguardando contato' },
+    ],
+
+    insights: [
+      { id:'i1', borderColor:'border-color:rgba(227,27,35,.25)', iconBg:'background:rgba(227,27,35,.1)', iconHtml:iconAlertTri('#ff6b6b','15'), title:'R$ 4.200 em recebimentos vencidos — cobrar hoje', detail:'Escola Municipal Jardim Flor está com parcela vencida. Esse valor cobre o pagamento do Têxtil Sul que vence amanhã. A cada dia, aumenta o risco de inadimplência definitiva.', value:'R$ 4.200', badge:'badge badge-red',   badgeLabel:'Urgente',  cta:'Ver contas a receber', ctaPage:'financeiro' },
+      { id:'i2', borderColor:'border-color:rgba(245,158,11,.2)', iconBg:'background:rgba(245,158,11,.1)', iconHtml:iconAlertTri('#fbbf24','15'), title:'Saldo projetado cai para R$ 13.750 em 15/04',    detail:'Entre 10 e 15/04 há R$ 26.680 em saídas concentradas. O saldo mínimo projetado é R$ 13.750. Antecipe um recebimento ou negocie prazo com fornecedor.', value:'R$ 13.750', badge:'badge badge-amber', badgeLabel:'Alta',     cta:'Ver fluxo de caixa', ctaPage:'financeiro' },
+      { id:'i3', borderColor:'border-color:rgba(227,27,35,.25)', iconBg:'background:rgba(227,27,35,.1)', iconHtml:iconAlertTri('#ff6b6b','15'), title:'Concentração de R$ 24.680 em pagamentos no dia 10/04', detail:'Folha (R$ 22.000) + Energia (R$ 2.680) vencem no mesmo dia. Recebimento do Belo Sabor (R$ 4.750) ameniza mas não cobre. Monitorar de perto.', value:'R$ 24.680', badge:'badge badge-red',   badgeLabel:'Urgente',  cta:'Ver financeiro', ctaPage:'financeiro' },
+      { id:'i4', borderColor:'border-color:rgba(245,158,11,.2)', iconBg:'background:rgba(245,158,11,.1)', iconHtml:iconFactory('#fbbf24'),       title:'2 pedidos travados — R$ 21.500 em risco operacional', detail:'SHP-2026-4410 e SHP-2026-4390 sem atualização há mais de 48h. Pedidos parados geram risco de cancelamento e impacto no recebimento.', value:'R$ 21.500', badge:'badge badge-amber', badgeLabel:'Alta',     cta:'Ver operação', ctaPage:'operacao' },
+      { id:'i5', borderColor:'border-color:rgba(59,130,246,.2)',  iconBg:'background:rgba(59,130,246,.1)',iconHtml:iconInfo('#60a5fa','15'),      title:'Margem bruta de 38,5% — abaixo do target de 40%', detail:'Margem 1,5pp abaixo do benchmark. Revisar precificação dos uniformes corporativos e custo de matéria-prima pode recuperar nos próximos contratos.', value:'38,5%', badge:'badge badge-blue',  badgeLabel:'Média',    cta:'', ctaPage:'' },
+      { id:'i6', borderColor:'border-color:rgba(59,130,246,.2)',  iconBg:'background:rgba(59,130,246,.1)',iconHtml:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`, title:'Energia elétrica 16% acima — investigar consumo', detail:'Conta de energia R$ 380 acima da média (R$ 2.300 → R$ 2.680). Auditoria de consumo pode revelar equipamentos ineficientes, gerando economia recorrente.', value:'R$ 380', badge:'badge badge-blue',  badgeLabel:'Média',    cta:'Ver alertas', ctaPage:'alertas' },
+      { id:'i7', borderColor:'border-color:rgba(34,197,94,.15)',  iconBg:'background:rgba(34,197,94,.08)',iconHtml:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`, title:'Ticket médio de R$ 3.990 — foco B2B funcionando', detail:'Ticket médio elevado confirma concentração em clientes corporativos. Manter foco nesse segmento potencializa retorno por operação e reduz custo de aquisição.', value:'R$ 3.990', badge:'badge badge-green', badgeLabel:'Positivo', cta:'', ctaPage:'' },
+      { id:'i8', borderColor:'border-color:rgba(34,197,94,.15)',  iconBg:'background:rgba(34,197,94,.08)',iconHtml:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`, title:'Receita cobre 106% das despesas projetadas do mês', detail:'Receita projetada de R$ 47.890 supera despesas de R$ 44.930. O risco está na velocidade de recebimento — se os boletos atrasarem, o caixa comprime antes dos dias de pagamento.', value:'106%', badge:'badge badge-green', badgeLabel:'Positivo', cta:'', ctaPage:'' },
+    ],
+
+    // ── Charts ──────────────────────────────────────────────────
+    init() {
+      this.$nextTick(() => this.renderCharts())
+    },
+    renderCharts() {
+      const dark = {
+        grid: 'rgba(255,255,255,.05)',
+        text: '#555',
+        tooltip: { bg:'#161616', border:'#2a2a2a', text:'#fff' }
+      }
+      const tooltipPlugin = {
+        backgroundColor: dark.tooltip.bg,
+        borderColor:     dark.tooltip.border,
+        borderWidth: 1,
+        titleColor:  dark.tooltip.text,
+        bodyColor:   '#aaa',
+        padding: 10,
+        cornerRadius: 8,
+      }
+
+      // Gráfico 12 dias
+      const cf12 = document.getElementById('cfChart')
+      if (cf12) {
+        new Chart(cf12, {
+          data: {
+            labels:   ['08/04','09/04','10/04','11/04','12/04','14/04','15/04','20/04','22/04','25/04','28/04','30/04'],
+            datasets: [
+              { type:'bar',  label:'Entradas', data:[4200,0,4750,0,0,0,4450,385,8900,0,5200,0],           backgroundColor:'rgba(34,197,94,.25)',  borderColor:'rgba(34,197,94,.6)',  borderWidth:1, borderRadius:3, maxBarThickness:20 },
+              { type:'bar',  label:'Saídas',   data:[0,4200,26680,0,1850,890,980,3500,0,650,1200,3200],   backgroundColor:'rgba(227,27,35,.2)',   borderColor:'rgba(227,27,35,.5)',  borderWidth:1, borderRadius:3, maxBarThickness:20 },
+              { type:'line', label:'Saldo',    data:[42620,38420,16490,16490,14640,13750,17220,14105,23005,22355,26355,23155], borderColor:'#E31B23', backgroundColor:'rgba(227,27,35,.05)', fill:true, borderWidth:2, pointRadius:3, pointBackgroundColor:'#E31B23', tension:.35 },
+            ]
+          },
+          options: {
+            responsive:true, maintainAspectRatio:false,
+            plugins: { legend:{ labels:{ color:'#555', font:{size:11}, boxWidth:10, boxHeight:10 } }, tooltip: tooltipPlugin },
+            scales: {
+              x: { grid:{color:dark.grid, drawBorder:false}, ticks:{color:dark.text, font:{size:10}} },
+              y: { grid:{color:dark.grid, drawBorder:false}, ticks:{color:dark.text, font:{size:10}, callback:v=>`R$${(v/1000).toFixed(0)}k`} }
+            }
+          }
+        })
+      }
+
+      // Gráfico 30 dias
+      const cf30 = document.getElementById('cfChart30')
+      if (cf30) {
+        new Chart(cf30, {
+          type:'line',
+          data: {
+            labels: ['08/04','10/04','12/04','14/04','15/04','18/04','20/04','22/04','25/04','28/04','30/04'],
+            datasets: [{
+              label:'Saldo projetado',
+              data: [42620,16490,14640,13750,17220,17220,14105,23005,22355,26355,23155],
+              borderColor:'#E31B23', backgroundColor:'rgba(227,27,35,.06)',
+              fill:true, borderWidth:2.5, pointRadius:4, pointBackgroundColor:'#E31B23', tension:.35
+            }]
+          },
+          options: {
+            responsive:true, maintainAspectRatio:false,
+            plugins: { legend:{ labels:{ color:'#555', font:{size:11}, boxWidth:10 } }, tooltip: tooltipPlugin },
+            scales: {
+              x: { grid:{color:dark.grid, drawBorder:false}, ticks:{color:dark.text, font:{size:10}} },
+              y: { grid:{color:dark.grid, drawBorder:false}, ticks:{color:dark.text, font:{size:10}, callback:v=>`R$${(v/1000).toFixed(0)}k`} }
+            }
+          }
+        })
+      }
+    }
+  }
+}
+</script>
+</body>
+</html>

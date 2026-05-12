@@ -81,8 +81,30 @@ export type DashboardRestaurant = {
   growthMessage: string
 }
 
+export type DashboardConnections = {
+  gbp: boolean
+  site: boolean
+  ads: boolean
+  instagram: boolean
+}
+
+export type DashboardTopStats = {
+  gbpImpressions: string
+  gbpDelta: string
+  instagramFollowers: string
+  instagramDelta: string
+  siteVisits: string
+  siteDelta: string
+  seoPosition: string
+  seoDelta: string
+  adsClicks: string
+  adsDelta: string
+}
+
 export type DashboardData = {
   restaurant: DashboardRestaurant
+  connections: DashboardConnections
+  topStats: DashboardTopStats
   overview: {
     headline: string
     kpis: DashboardKpi[]

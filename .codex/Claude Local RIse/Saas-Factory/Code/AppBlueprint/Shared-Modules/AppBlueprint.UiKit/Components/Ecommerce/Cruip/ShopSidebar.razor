@@ -1,0 +1,87 @@
+@* Shop Sidebar - Now using modular, reusable filter components *@
+
+<div>
+    <div class="bg-white dark:bg-gray-800 shadow-xs rounded-xl p-5 min-w-60">
+        <div class="grid md:grid-cols-2 xl:grid-cols-1 gap-6">
+            <!-- Category Filter (Discover) -->
+            <CategoryFilter 
+                Title="Discover"
+                Categories="@categories"
+                SelectedValue="@selectedCategory"
+                OnCategorySelected="@OnCategorySelected" />
+
+            <!-- Price Range Filter -->
+            <PriceRangeFilter 
+                PriceRanges="@priceRanges"
+                SelectedRange="@selectedPriceRange"
+                OnRangeSelected="@OnPriceRangeSelected" />
+
+            <!-- Multi-Select Filter -->
+            <MultiSelectFilter 
+                Title="Multi Select"
+                Options="@multiSelectOptions"
+                SelectedValues="@selectedMultiOptions"
+                OnOptionToggled="@OnMultiSelectToggled" />
+
+            <!-- Rating Filter -->
+            <RatingFilter 
+                SelectedMinRating="@selectedMinRating"
+                OnRatingSelected="@OnRatingSelected" />
+        </div>
+    </div>
+</div>
+
+@code {
+    private string? selectedCategory = "all";
+    private string? selectedPriceRange = "0-20";
+    private List<string> selectedMultiOptions = new();
+    private int? selectedMinRating;
+
+    private List<CategoryFilter.CategoryItem> categories = new()
+    {
+        new() { Label = "View All", Value = "all", Url = "#0" },
+        new() { Label = "Apps / Software", Value = "apps-software", Url = "#0" },
+        new() { Label = "Design / Tech Products", Value = "design-tech", Url = "#0" },
+        new() { Label = "Books & Writing", Value = "books-writing", Url = "#0" },
+        new() { Label = "Education", Value = "education", Url = "#0" },
+        new() { Label = "Drawing / Painting", Value = "drawing-painting", Url = "#0" }
+    };
+
+    private List<PriceRangeFilter.PriceRangeItem> priceRanges = new()
+    {
+        new() { Label = "Less than $20", Value = "0-20", MinValue = 0, MaxValue = 20 },
+        new() { Label = "$20 - $40", Value = "20-40", MinValue = 20, MaxValue = 40 },
+        new() { Label = "$40 - $80", Value = "40-80", MinValue = 40, MaxValue = 80 },
+        new() { Label = "More than $80", Value = "80+", MinValue = 80, MaxValue = null }
+    };
+
+    private List<MultiSelectFilter.MultiSelectOption> multiSelectOptions = new()
+    {
+        new() { Label = "Apps / Software", Value = "apps-software" },
+        new() { Label = "Education", Value = "education" },
+        new() { Label = "Books & Writing", Value = "books-writing" },
+        new() { Label = "Drawing / Painting", Value = "drawing-painting" }
+    };
+
+    private void OnCategorySelected(CategoryFilter.CategoryItem category)
+    {
+        selectedCategory = category.Value;
+        // Add your filtering logic here
+    }
+
+    private void OnPriceRangeSelected(PriceRangeFilter.PriceRangeItem range)
+    {
+        selectedPriceRange = range.Value;
+        // Add your filtering logic here
+    }
+
+    private void OnMultiSelectToggled((MultiSelectFilter.MultiSelectOption Option, bool IsSelected) args)
+    {
+        // Add your filtering logic here
+    }
+
+    private void OnRatingSelected(int rating)
+    {
+        // Add your filtering logic here
+    }
+}

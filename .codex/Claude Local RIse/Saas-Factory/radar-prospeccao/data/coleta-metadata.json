@@ -1,0 +1,49 @@
+{
+  "metadata_coleta": {
+    "timestamp_coleta": "2026-04-06T14:00:00-03:00",
+    "url_origem": "https://www.tcheofertas.com.br/ofertas/gastronomia",
+    "metodo_coleta": "WebFetch HTTP GET — renderização estática",
+    "ferramenta": "Claude WebFetch tool",
+    "total_entradas_encontradas": 24,
+    "total_restaurantes_unicos": 18,
+    "total_validos": 18,
+    "total_removidos": 1,
+    "removidos_motivo": "Zimmer7 (Novo Hamburgo) presente na coleta anterior não aparece na listagem atual de 2026-04-06",
+    "campos_verificados": [
+      "nome",
+      "cidade",
+      "categoria",
+      "link_oferta",
+      "preco_oferta",
+      "ranking_plataforma",
+      "ativo_na_plataforma"
+    ],
+    "campos_nao_verificados": [
+      "gbp.existe",
+      "gbp.nota",
+      "gbp.total_avaliacoes",
+      "gbp.tem_fotos",
+      "gbp.posts_recentes",
+      "gbp.score_gbp",
+      "site.existe",
+      "site.url",
+      "site.mobile_ok",
+      "site.tem_seo",
+      "site.score_site",
+      "instagram.existe",
+      "instagram.handle",
+      "instagram.seguidores",
+      "instagram.engajamento",
+      "instagram.score_instagram",
+      "score_oportunidade",
+      "classificacao"
+    ],
+    "limitacoes_tecnicas": {
+      "tcheofertas_paginas_individuais": "Retornam apenas scripts de tracking — sem dados de contato, site ou redes sociais",
+      "google_search": "Bloqueia scraping programático — retorna JS de infraestrutura, não dados de GBP",
+      "instagram": "Requer autenticação — sem API pública gratuita",
+      "google_maps_gbp": "Sem API pública gratuita para dados de avaliações"
+    },
+    "proxima_validacao_recomendada": "Validação manual dos dados de enriquecimento para os 5 leads com maior score estimado"
+  }
+}

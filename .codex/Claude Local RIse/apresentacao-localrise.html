@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Proposta Estratégica — LocalRise Advisory</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --red: #E31B23;
+  --red-dark: #B8151B;
+  --black: #0A0A0A;
+  --g900: #111;
+  --g850: #161616;
+  --g800: #1A1A1A;
+  --g700: #252525;
+  --g600: #333;
+  --g500: #555;
+  --g400: #888;
+  --g300: #AAA;
+  --g200: #CCC;
+  --white: #FFFFFF;
+  --green: #22C55E;
+  --yellow: #EAB308;
+  --slide-w: 960px;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',system-ui,sans-serif; background:#000; color:var(--white); -webkit-font-smoothing:antialiased; }
+
+/* ═══════ TOOLBAR ═══════ */
+.toolbar {
+  position:sticky; top:0; z-index:100;
+  max-width:var(--slide-w); margin:0 auto;
+  background:rgba(10,10,10,.92); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--g700);
+  padding:10px 24px; display:flex; justify-content:space-between; align-items:center;
+  font-size:12px; color:var(--g400);
+}
+.toolbar-logo { display:flex; align-items:center; gap:8px; }
+.toolbar-logo svg { height:22px; width:auto; }
+.toolbar-logo span { font-weight:700; color:var(--white); font-size:13px; letter-spacing:0.5px; }
+.toolbar button {
+  background:var(--red); color:white; border:none;
+  padding:7px 18px; border-radius:6px; font-weight:700; cursor:pointer;
+  font-family:inherit; font-size:12px; letter-spacing:0.3px;
+  transition:background .2s;
+}
+.toolbar button:hover { background:var(--red-dark); }
+
+/* ═══════ SLIDE ═══════ */
+.slide {
+  max-width:var(--slide-w); margin:0 auto 2px; padding:56px 64px;
+  background:var(--g900); position:relative; overflow:hidden;
+  page-break-after:always; min-height:540px;
+  display:flex; flex-direction:column; justify-content:center;
+}
+.slide::before {
+  content:''; position:absolute; pointer-events:none;
+  width:260px; height:260px; border-radius:50%;
+  border:50px solid var(--red); opacity:0.06;
+}
+.arc-tl::before { top:-100px; left:-100px; }
+.arc-tr::before { top:-100px; right:-100px; left:auto; }
+.arc-br::before { bottom:-100px; right:-100px; top:auto; left:auto; }
+.arc-bl::before { bottom:-100px; left:-100px; top:auto; }
+.sf {
+  position:absolute; bottom:20px; left:64px; right:64px;
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:10px; color:var(--g500); letter-spacing:0.3px;
+}
+.sf svg { height:14px; width:auto; opacity:.4; }
+
+/* ═══════ COVER ═══════ */
+.cover {
+  background:var(--black); text-align:center; min-height:600px;
+  align-items:center; padding:80px 64px;
+}
+.cover::before {
+  content:''; position:absolute; top:-80px; right:-80px;
+  width:360px; height:360px; border-radius:50%;
+  border:70px solid var(--red); opacity:0.08;
+}
+.cover::after {
+  content:''; position:absolute; bottom:-80px; left:-80px;
+  width:280px; height:280px; border-radius:50%;
+  border:55px solid var(--red); opacity:0.06;
+}
+.cover-badge {
+  display:inline-block; padding:5px 20px; border:1px solid var(--g600);
+  border-radius:50px; font-size:10px; font-weight:700;
+  letter-spacing:2px; text-transform:uppercase; color:var(--g400);
+  margin-bottom:36px;
+}
+.cover-logo { margin-bottom:40px; }
+.cover-logo svg { height:48px; width:auto; }
+.cover h1 { font-size:46px; font-weight:900; line-height:1.08; letter-spacing:-1px; margin-bottom:12px; }
+.cover h1 em { font-style:normal; color:var(--red); }
+.cover .sub { font-size:17px; color:var(--g400); font-weight:300; margin-bottom:48px; line-height:1.5; }
+.cover-clients { display:flex; gap:24px; justify-content:center; margin-bottom:40px; }
+.cover-clients .cc {
+  padding:12px 28px; background:var(--g800); border:1px solid var(--g700);
+  border-radius:10px; font-weight:600; font-size:14px; color:var(--g200);
+}
+.cover-meta { display:flex; gap:28px; font-size:11px; color:var(--g500); }
+
+/* ═══════ TYPOGRAPHY ═══════ */
+.st { font-size:10px; font-weight:800; letter-spacing:3px; text-transform:uppercase; color:var(--red); margin-bottom:12px; }
+h2 { font-size:32px; font-weight:900; line-height:1.1; letter-spacing:-0.5px; margin-bottom:6px; }
+h2 em { font-style:normal; color:var(--red); }
+.ssub { font-size:13px; color:var(--g400); font-weight:400; margin-bottom:32px; line-height:1.5; }
+h3 { font-size:15px; font-weight:700; color:var(--g200); margin:24px 0 10px; letter-spacing:0.2px; }
+
+/* ═══════ KPI ═══════ */
+.kpi-row { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:20px 0; }
+.kpi { background:var(--g850); border:1px solid var(--g700); border-radius:10px; padding:20px; text-align:center; }
+.kpi-2 { grid-template-columns:repeat(2,1fr); }
+.kpi .label { font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:var(--g500); font-weight:700; margin-bottom:6px; }
+.kpi .val { font-size:32px; font-weight:900; }
+.kpi .val.red { color:var(--red); }
+.kpi .val.green { color:var(--green); }
+.kpi .val.white { color:var(--white); }
+.kpi .note { font-size:11px; color:var(--g500); margin-top:4px; }
+
+/* ═══════ BARS ═══════ */
+.bar { margin:10px 0; }
+.bar-top { display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; }
+.bar-top .name { color:var(--g300); font-weight:600; }
+.bar-top .pct { color:var(--red); font-weight:800; font-size:13px; }
+.bar-track { height:7px; background:var(--g700); border-radius:4px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:4px; background:var(--red); }
+.bar-fill.g { background:var(--green); }
+
+/* ═══════ TABLE ═══════ */
+table { width:100%; border-collapse:collapse; font-size:12px; margin:12px 0; }
+th { padding:9px 12px; text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:0.8px; font-weight:700; color:var(--g500); border-bottom:2px solid var(--red); }
+td { padding:9px 12px; border-bottom:1px solid var(--g700); color:var(--g300); }
+th:not(:first-child), td:not(:first-child) { text-align:center; }
+.tag { display:inline-block; padding:2px 10px; border-radius:8px; font-size:10px; font-weight:700; }
+.tr { background:rgba(227,27,35,.1); color:var(--red); }
+.tg { background:rgba(34,197,94,.1); color:var(--green); }
+.ty { background:rgba(234,179,8,.1); color:var(--yellow); }
+
+/* ═══════ TWO COL ═══════ */
+.two { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.card { background:var(--g850); border:1px solid var(--g700); border-radius:10px; padding:20px; }
+.card h4 { font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--red); font-weight:700; margin-bottom:8px; }
+.card p { font-size:12px; color:var(--g400); line-height:1.5; }
+.card .headline { font-size:16px; font-weight:800; color:var(--white); margin-bottom:6px; }
+
+/* ═══════ CALLOUT ═══════ */
+.callout { padding:16px 20px; border-radius:8px; margin:16px 0; font-size:12px; line-height:1.5; border-left:3px solid; }
+.callout-r { background:rgba(227,27,35,.06); border-color:var(--red); color:var(--g300); }
+.callout-g { background:rgba(34,197,94,.06); border-color:var(--green); color:var(--g300); }
+.callout b { color:var(--white); display:block; margin-bottom:3px; font-size:13px; }
+
+/* ═══════ TIMELINE ═══════ */
+.tl { margin:16px 0; }
+.tl-item { display:flex; gap:14px; }
+.tl-gutter { width:32px; display:flex; flex-direction:column; align-items:center; flex-shrink:0; }
+.tl-dot { width:10px; height:10px; border-radius:50%; background:var(--red); flex-shrink:0; margin-top:4px; }
+.tl-line { width:1px; flex:1; background:var(--g700); }
+.tl-item:last-child .tl-line { display:none; }
+.tl-body { padding-bottom:20px; }
+.tl-phase { font-size:10px; color:var(--red); font-weight:800; text-transform:uppercase; letter-spacing:1.5px; }
+.tl-title { font-size:14px; font-weight:700; color:var(--white); margin:3px 0 6px; }
+.tl-list { list-style:none; font-size:12px; color:var(--g400); }
+.tl-list li { padding:2px 0 2px 14px; position:relative; }
+.tl-list li::before { content:"▸"; position:absolute; left:0; color:var(--red); font-size:11px; }
+
+/* ═══════ ROI ═══════ */
+.roi {
+  display:grid; grid-template-columns:1fr 48px 1fr; align-items:center;
+  background:var(--g850); border:1px solid var(--g700); border-radius:10px;
+  overflow:hidden; margin:20px 0;
+}
+.roi .col { padding:20px; text-align:center; }
+.roi .col .label { font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--g500); font-weight:700; }
+.roi .col .v { font-size:26px; font-weight:900; margin-top:4px; }
+.roi .arr { text-align:center; font-size:24px; color:var(--red); }
+
+/* ═══════ CTA ═══════ */
+.cta { background:var(--red); border-radius:10px; padding:24px 28px; text-align:center; margin:20px 0; }
+.cta h3 { color:white; font-size:18px; font-weight:800; margin:0 0 6px; letter-spacing:0; }
+.cta p { color:rgba(255,255,255,.8); font-size:13px; margin:0; }
+
+/* ═══════ CHECKLIST ═══════ */
+.inc { list-style:none; font-size:12px; color:var(--g300); }
+.inc li { padding:6px 0 6px 20px; position:relative; border-bottom:1px solid var(--g700); }
+.inc li::before { content:"✓"; position:absolute; left:0; color:var(--green); font-weight:800; font-size:11px; }
+
+/* ═══════ INVESTMENT SLIDE ═══════ */
+.pkg { background:var(--g850); border:1px solid var(--g700); border-radius:14px; padding:28px 24px; position:relative; }
+.pkg.featured { border-color:var(--red); }
+.pkg.featured::before {
+  content:'RECOMENDADO'; position:absolute; top:-10px; left:50%; transform:translateX(-50%);
+  background:var(--red); color:white; font-size:9px; font-weight:800;
+  letter-spacing:1.5px; padding:3px 14px; border-radius:20px;
+}
+.pkg-title { font-size:18px; font-weight:800; color:var(--white); margin-bottom:4px; }
+.pkg-sub { font-size:11px; color:var(--g500); margin-bottom:16px; }
+.pkg-inc { list-style:none; font-size:12px; color:var(--g300); margin-bottom:20px; }
+.pkg-inc li { padding:5px 0 5px 18px; position:relative; }
+.pkg-inc li::before { content:"✓"; position:absolute; left:0; color:var(--green); font-weight:800; font-size:11px; }
+.pkg-prices { border-top:1px solid var(--g700); padding-top:16px; }
+.pkg-price-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; }
+.pkg-price-row .scope { font-size:12px; color:var(--g400); }
+.pkg-price-row .price { font-size:22px; font-weight:900; color:var(--white); }
+.pkg-price-row .price.highlight { color:var(--red); font-size:26px; }
+.pkg-divider { display:flex; align-items:center; gap:8px; margin:6px 0; }
+.pkg-divider span { font-size:10px; color:var(--g500); text-transform:uppercase; letter-spacing:1px; font-weight:700; }
+.pkg-divider::before, .pkg-divider::after { content:''; flex:1; height:1px; background:var(--g700); }
+.pkg-footnote {
+  text-align:center; padding:14px 20px; margin-top:20px;
+  background:var(--g850); border:1px solid var(--g700); border-radius:8px;
+  font-size:11px; color:var(--g400); line-height:1.5;
+}
+.pkg-footnote b { color:var(--white); }
+
+/* ═══════ PRINT ═══════ */
+@media print {
+  body { background:#000 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .toolbar { display:none; }
+  .slide { margin:0; box-shadow:none; page-break-inside:avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ SVG LOGO TEMPLATE ═══════ -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="lr-logo" viewBox="0 0 200 60">
+    <!-- L icon with arc -->
+    <rect x="2" y="8" width="12" height="44" rx="2" fill="#E31B23"/>
+    <rect x="2" y="40" width="28" height="12" rx="2" fill="#E31B23"/>
+    <path d="M20 8 A24 24 0 0 1 44 32" stroke="#FFFFFF" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <!-- Text -->
+    <text x="54" y="38" font-family="Inter,system-ui,sans-serif" font-size="28" font-weight="800" fill="#FFFFFF">Local<tspan fill="#E31B23">Rise</tspan></text>
+  </symbol>
+  <symbol id="lr-icon" viewBox="0 0 50 56">
+    <rect x="2" y="4" width="14" height="48" rx="2" fill="#E31B23"/>
+    <rect x="2" y="40" width="32" height="14" rx="2" fill="#E31B23"/>
+    <path d="M22 4 A28 28 0 0 1 50 32" stroke="#FFFFFF" stroke-width="7" fill="none" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="toolbar-logo">
+    <svg><use href="#lr-logo"/></svg>
+  </div>
+  <button onclick="window.print()">⬇ Exportar PDF</button>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- S1: COVER -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide cover">
+  <div class="cover-badge">Documento Confidencial</div>
+  <div class="cover-logo">
+    <svg><use href="#lr-logo"/></svg>
+  </div>
+  <h1>Diagnóstico de<br><em>Aceleração Digital</em></h1>
+  <div class="sub">Análise estratégica de presença digital e oportunidades<br>de crescimento para suas churrascarias</div>
+  <div class="cover-clients">
+    <div class="cc">🔥 Terra do Churrasco</div>
+    <div class="cc">🔥 Estância Churrascaria</div>
+  </div>
+  <div class="cover-meta">
+    <span>Porto Alegre, RS</span>
+    <span>Abril 2026</span>
+    <span>Confidencial</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- S2: SUMÁRIO EXECUTIVO -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide arc-tr">
+  <div class="st">Sumário Executivo</div>
+  <h2>Seus restaurantes perdem<br><em>faturamento digital</em> constantemente</h2>
+  <div class="ssub">Clientes que buscam "churrascaria Porto Alegre" no Google não encontram seus restaurantes — ou encontram e não confiam.</div>
+
+  <div class="kpi-row kpi-2">
+    <div class="kpi">
+      <div class="label">Perda estimada combinada</div>
+      <div class="val red">R$ 13–35K</div>
+      <div class="note">faturamento capturado por concorrentes</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Custo acumulado da inação</div>
+      <div class="val red">R$ 156–420K</div>
+      <div class="note">projeção anual de receita não capturada</div>
+    </div>
+  </div>
+
+  <h3>Nota Digital Atual</h3>
+  <div class="bar">
+    <div class="bar-top"><span class="name">Terra do Churrasco</span><span class="pct">50/100</span></div>
+    <div class="bar-track"><div class="bar-fill" style="width:50%"></div></div>
+  </div>
+  <div class="bar">
+    <div class="bar-top"><span class="name">Estância Churrascaria</span><span class="pct">16/100</span></div>
+    <div class="bar-track"><div class="bar-fill" style="width:16%"></div></div>
+  </div>
+  <div class="bar" style="margin-top:8px">
+    <div class="bar-top"><span class="name">Benchmark Top 3 (Barranco, Komka)</span><span class="pct" style="color:var(--green)">85/100</span></div>
+    <div class="bar-track"><div class="bar-fill g" style="width:85%"></div></div>
+  </div>
+
+  <div class="sf"><svg><use href="#lr-icon"/></svg><span>Confidencial — p. 2</span></div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- S3: FOTOGRAFIA ATUAL -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide arc-bl">
+  <div class="st">Fotografia Atual</div>
+  <h2>Dois restaurantes, <em>dois diagnósticos</em></h2>
+  <div class="ssub">O Terra tem ativos valiosos sem infraestrutura digital. A Estância precisa de construção completa.</div>
+
+  <div class="two">
+    <div class="card">
+      <h4>Terra do Churrasco</h4>
+      <div class="headline">"Tem marca. Não tem máquina."</div>
+      <div class="bar" style="margin-top:12px"><div class="bar-top"><span class="name">Marca</span><span class="pct">80%</span></div><div class="bar-track"><div class="bar-fill" style="width:80%"></div></div></div>
+      <div class="bar"><div class="bar-top"><span class="name">GBP</span><span class="pct">50%</span></div><div class="bar-track"><div class="bar-fill" style="width:50%"></div></div></div>
+      <div class="bar"><div class="bar-top"><span class="name">Instagram</span><span class="pct">85%</span></div><div class="bar-track"><div class="bar-fill" style="width:85%"></div></div></div>
+      <div class="bar"><div class="bar-top"><span class="name">Site / SEO</span><span class="pct">0%</span></div><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div></div>
+      <div class="bar"><div class="bar-top"><span class="name">Conversão</span><span class="pct">20%</span></div><div class="bar-track"><div class="bar-fill" style="width:20%"></div></div></div>
+      <div class="bar"><div class="bar-top"><span class="name">Reputação</span><span class="pct">65%</span></div><div class="bar-track"><div class="bar-fill" style="width:65%"></div></div></div>
+      <p style="margin-top:12px;font-size:11px"><b style="color:var(--white)">Nota Geral:</b> <span style="color:var(--red);font-weight:900;font-size:16px">50/100</span></p>
+    </div>
+
+    <div class="card">
+      <h4>Estância Churrascaria</h4>
+      <div class="headline">"Presença digital inexistente."</div>
+      <div class="bar" style="margin-top:12px"><div class="bar-top"><span class="name">Marca</span><span class="pct">30%</span></div><div class="bar-track"><div class="bar-fill" style="width:30%"></div></div></div>
+      <div class="bar"><div class="bar-top"><span class="name">GBP</span><span class="pct">20%</span></div><div class="bar-track"><div class="bar-fill" style="width:20%"></div></div></div>
+      <div class="bar"><div class="bar-top"><span class="name">Instagram</span><span class="pct">15%</span></div><div class="bar-track"><div class="bar-fill" style="width:15%"></div></div></div>
+      <div class="bar"><div class="bar-top"><span class="name">Site / SEO</span><span class="pct">0%</span></div><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div></div>
+      <div class="bar"><div class="bar-top"><span class="name">Conversão</span><span class="pct">10%</span></div><div class="bar-track"><div class="bar-fill" style="width:10%"></div></div></div>
+      <div class="bar"><div class="bar-top"><span class="name">Reputação</span><span class="pct">20%</span></div><div class="bar-track"><div class="bar-fill" style="width:20%"></div></div></div>
+      <p style="margin-top:12px;font-size:11px"><b style="color:var(--white)">Nota Geral:</b> <span style="color:var(--red);font-weight:900;font-size:16px">16/100</span></p>
+    </div>
+  </div>
+
+  <div class="sf"><svg><use href="#lr-icon"/></svg><span>Confidencial — p. 3</span></div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- S4: DIAGNÓSTICO TERRA -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide arc-tr">
+  <div class="st">Diagnóstico — Terra do Churrasco</div>
+  <h2><em>5 pontos críticos</em> identificados</h2>
+  <div class="ssub">Ativos fortes (42K seguidores, 943 reviews ⭐4.6) — sem estrutura digital para capitalizar.</div>
+
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="label">Seguidores IG</div>
+      <div class="val white">42K</div>
+      <div class="note">base excepcional</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Avaliações Google</div>
+      <div class="val white">943</div>
+      <div class="note">⭐ 4.6 — acima da média</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Respostas a reviews</div>
+      <div class="val red">0%</div>
+      <div class="note">reputação sem gestão</div>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:40px">#</th><th style="text-align:left">Ponto crítico</th><th>Impacto</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag tr">1</span></td><td style="text-align:left"><b style="color:var(--white)">Sem site</b> — zero presença orgânica no Google</td><td style="color:var(--red)">Invisibilidade</td></tr>
+      <tr><td><span class="tag tr">2</span></td><td style="text-align:left"><b style="color:var(--white)">Zero respostas</b> a 943 avaliações</td><td style="color:var(--red)">Confiança reduzida</td></tr>
+      <tr><td><span class="tag tr">3</span></td><td style="text-align:left"><b style="color:var(--white)">Descrição GBP ausente</b> — não indexa palavras-chave</td><td style="color:var(--red)">SEO comprometido</td></tr>
+      <tr><td><span class="tag ty">4</span></td><td style="text-align:left"><b style="color:var(--white)">Zero Google Posts</b> — promoções invisíveis</td><td style="color:var(--yellow)">Engajamento perdido</td></tr>
+      <tr><td><span class="tag ty">5</span></td><td style="text-align:left"><b style="color:var(--white)">Instagram sem funil</b> — 42K sem conversão medível</td><td style="color:var(--yellow)">Potencial desperdiçado</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-r">
+    <b>O Terra é uma Ferrari sem combustível.</b>
+    42K seguidores, 943 reviews 4.6★, presença na mídia local, Entrecot como destaque, Espaço Kids, Double Drink — ativos únicos no mercado de POA. Falta a infraestrutura digital para ativar esse potencial.
+  </div>
+
+  <div class="sf"><svg><use href="#lr-icon"/></svg><span>Confidencial — p. 4</span></div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- S5: DIAGNÓSTICO ESTÂNCIA -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide arc-bl">
+  <div class="st">Diagnóstico — Estância Churrascaria</div>
+  <h2><em>6 pontos críticos</em> — ação necessária</h2>
+  <div class="ssub">Presença digital inexistente. Cada dia sem posicionamento fortalece a concorrência.</div>
+
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="label">Google Reviews</div>
+      <div class="val red">21</div>
+      <div class="note">mínimo credível: 50</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Nota Google</div>
+      <div class="val red">3.6</div>
+      <div class="note">abaixo do limite de confiança (4.0)</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Posts Instagram</div>
+      <div class="val red">15</div>
+      <div class="note">perfil clinicamente inativo</div>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:40px">#</th><th style="text-align:left">Ponto crítico</th><th>Impacto</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag tr">1</span></td><td style="text-align:left"><b style="color:var(--white)">GBP não reivindicado</b> — zero controle do perfil</td><td style="color:var(--red)">Vulnerável</td></tr>
+      <tr><td><span class="tag tr">2</span></td><td style="text-align:left"><b style="color:var(--white)">Telefone ausente</b> — impossível ligar</td><td style="color:var(--red)">Zero conversão</td></tr>
+      <tr><td><span class="tag tr">3</span></td><td style="text-align:left"><b style="color:var(--white)">Sem site</b> — zero presença orgânica</td><td style="color:var(--red)">Invisibilidade</td></tr>
+      <tr><td><span class="tag tr">4</span></td><td style="text-align:left"><b style="color:var(--white)">Nota 3.6 / 21 reviews</b> — baixa credibilidade</td><td style="color:var(--red)">Perda de cliques</td></tr>
+      <tr><td><span class="tag tr">5</span></td><td style="text-align:left"><b style="color:var(--white)">Instagram inativo</b> — 15 posts, 8.8K desperdiçados</td><td style="color:var(--red)">Potencial perdido</td></tr>
+      <tr><td><span class="tag ty">6</span></td><td style="text-align:left"><b style="color:var(--white)">Zero fotos profissionais</b></td><td style="color:var(--yellow)">Baixa atratividade</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-r">
+    <b>O único botão funcional no Google é "Como chegar".</b>
+    Não dá para ligar, ver cardápio, reservar ou acessar o site. A construção de presença digital precisa começar do zero.
+  </div>
+
+  <div class="sf"><svg><use href="#lr-icon"/></svg><span>Confidencial — p. 5</span></div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- S6: CONCORRÊNCIA -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide arc-tr">
+  <div class="st">Análise Competitiva</div>
+  <h2>Os 3 primeiros do Maps capturam<br><em>75% dos cliques</em></h2>
+  <div class="ssub">Enquanto seus restaurantes ficam fora do radar, a concorrência consolida posição.</div>
+
+  <table>
+    <thead><tr><th style="text-align:left">Restaurante</th><th>Nota</th><th>Reviews</th><th>Site</th><th>GBP Posts</th><th>Pack Local</th></tr></thead>
+    <tbody>
+      <tr><td style="text-align:left"><b style="color:var(--white)">Barranco</b></td><td>⭐ 4.5</td><td>5.000+</td><td><span class="tag tg">✓</span></td><td><span class="tag tg">✓</span></td><td style="color:var(--green)">🥇 #1</td></tr>
+      <tr><td style="text-align:left"><b style="color:var(--white)">Komka</b></td><td>⭐ 4.7</td><td>3.000+</td><td><span class="tag tg">✓</span></td><td><span class="tag tg">✓</span></td><td style="color:var(--green)">🥈 #2</td></tr>
+      <tr><td style="text-align:left"><b style="color:var(--white)">Giovanaz</b></td><td>⭐ 4.6</td><td>2.000+</td><td><span class="tag tg">✓</span></td><td><span class="tag tg">✓</span></td><td style="color:var(--green)">🥉 #3</td></tr>
+      <tr style="border-top:2px solid var(--g600)"><td style="text-align:left"><b style="color:var(--g300)">Terra do Churrasco</b></td><td>⭐ 4.6</td><td>943</td><td><span class="tag tr">✕</span></td><td><span class="tag tr">✕</span></td><td style="color:var(--g500)">4º–6º</td></tr>
+      <tr><td style="text-align:left"><b style="color:var(--g300)">Estância Churrascaria</b></td><td>⭐ 3.6</td><td>21</td><td><span class="tag tr">✕</span></td><td><span class="tag tr">✕</span></td><td style="color:var(--g500)">Fora</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-g" style="margin-top:16px">
+    <b>O Terra tem nota 4.6 — igual ao Giovanaz (#3).</b>
+    A diferença entre a posição atual e o Top 3 é infraestrutura digital: site otimizado, Google Posts e gestão ativa de reviews. São ações técnicas, não grandes investimentos.
+  </div>
+
+  <div class="sf"><svg><use href="#lr-icon"/></svg><span>Confidencial — p. 6</span></div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- S7: A OPORTUNIDADE -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide arc-bl">
+  <div class="st">A Oportunidade</div>
+  <h2>Potencial de crescimento:<br><em>estrutura digital completa</em></h2>
+  <div class="ssub">Projeção de faturamento adicional com construção estratégica de presença digital.</div>
+
+  <div class="two">
+    <div class="card">
+      <h4>Terra do Churrasco</h4>
+      <table style="margin:0">
+        <tbody>
+          <tr><td style="text-align:left;font-size:11px">Site + GBP otimizado</td><td style="color:var(--green);font-size:11px">+R$ 8–15K</td></tr>
+          <tr><td style="text-align:left;font-size:11px">Gestão de reputação</td><td style="color:var(--green);font-size:11px">+R$ 5–10K</td></tr>
+          <tr><td style="text-align:left;font-size:11px">Instagram estratégico</td><td style="color:var(--green);font-size:11px">+R$ 10–20K</td></tr>
+          <tr style="background:rgba(34,197,94,.06)"><td style="text-align:left"><b style="color:var(--white)">Potencial</b></td><td style="color:var(--green)"><b>+R$ 23–45K</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h4>Estância Churrascaria</h4>
+      <table style="margin:0">
+        <tbody>
+          <tr><td style="text-align:left;font-size:11px">Setup GBP + site</td><td style="color:var(--green);font-size:11px">+R$ 3–8K</td></tr>
+          <tr><td style="text-align:left;font-size:11px">Reativação Instagram</td><td style="color:var(--green);font-size:11px">+R$ 2–5K</td></tr>
+          <tr><td style="text-align:left;font-size:11px">Construção de reputação</td><td style="color:var(--green);font-size:11px">+R$ 2–4K</td></tr>
+          <tr style="background:rgba(34,197,94,.06)"><td style="text-align:left"><b style="color:var(--white)">Potencial</b></td><td style="color:var(--green)"><b>+R$ 7–17K</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="roi" style="margin-top:20px">
+    <div class="col">
+      <div class="label">Cenário atual (sem ação)</div>
+      <div class="v" style="color:var(--red)">-R$ 35K</div>
+    </div>
+    <div class="arr">→</div>
+    <div class="col">
+      <div class="label">Com presença digital estruturada</div>
+      <div class="v" style="color:var(--green)">+R$ 62K</div>
+    </div>
+  </div>
+
+  <div class="sf"><svg><use href="#lr-icon"/></svg><span>Confidencial — p. 7</span></div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- S8: ESTRATÉGIA -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide arc-tr">
+  <div class="st">Estratégia de Execução</div>
+  <h2>4 pilares de <em>crescimento estruturado</em></h2>
+  <div class="ssub">Execução simultânea para ambas as unidades. Abordagem estratégica e progressiva.</div>
+
+  <div class="tl">
+    <div class="tl-item">
+      <div class="tl-gutter"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-body">
+        <div class="tl-phase">Pilar 1</div>
+        <div class="tl-title">⚡ Fundação Digital</div>
+        <ul class="tl-list">
+          <li><b>Reivindicar GBP</b> da Estância + adicionar telefone e WhatsApp</li>
+          <li>Criar sites profissionais com SEO local para ambos</li>
+          <li>Descrições GBP estratégicas com keywords de alto volume</li>
+          <li>Sessão fotográfica profissional (Estância)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-gutter"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-body">
+        <div class="tl-phase">Pilar 2</div>
+        <div class="tl-title">📊 Reputação e Conteúdo</div>
+        <ul class="tl-list">
+          <li>Responder <b>todas as 964 avaliações</b> dos dois restaurantes</li>
+          <li>Iniciar Google Posts com promoções e destaques</li>
+          <li>QR codes de avaliação em todas as mesas</li>
+          <li>Reativação do Instagram da Estância</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-gutter"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-body">
+        <div class="tl-phase">Pilar 3</div>
+        <div class="tl-title">🚀 Tráfego e Conversão</div>
+        <ul class="tl-list">
+          <li>Funil Instagram → Site → WhatsApp/Reserva</li>
+          <li>Google Analytics + remarketing pixels</li>
+          <li>Campanha de tráfego pago local (Google Ads + IG Ads)</li>
+          <li>Parcerias com micro-influenciadores gastro de POA</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-gutter"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-body">
+        <div class="tl-phase">Pilar 4</div>
+        <div class="tl-title">📈 Escala e Posicionamento</div>
+        <ul class="tl-list">
+          <li>Blog SEO: "melhor entrecot POA", "happy hour Jardim do Salso"</li>
+          <li>Tour virtual 360° no Google Maps</li>
+          <li>Consolidação de reputação e autoridade digital</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="sf"><svg><use href="#lr-icon"/></svg><span>Confidencial — p. 8</span></div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- S9: PACOTES -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide arc-bl">
+  <div class="st">Escopo de Serviços</div>
+  <h2>Soluções integradas para <em>duas unidades</em></h2>
+  <div class="ssub">Gestão completa da presença digital: Google, site e redes sociais para ambos os restaurantes.</div>
+
+  <div class="two" style="grid-template-columns:1fr 1fr 1fr;gap:12px">
+    <div class="card" style="border-top:2px solid var(--red)">
+      <h4>Google Business Profile</h4>
+      <ul class="inc">
+        <li>Reivindicação + setup GBP</li>
+        <li>Otimização SEO local</li>
+        <li>Google Posts estratégicos</li>
+        <li>Gestão de reviews</li>
+        <li>Q&A proativos</li>
+        <li>Fotos profissionais</li>
+        <li>Relatório de performance</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:2px solid var(--red)">
+      <h4>Site + SEO</h4>
+      <ul class="inc">
+        <li>Landing page premium</li>
+        <li>Criação de domínio</li>
+        <li>Design mobile-first</li>
+        <li>Schema Markup local</li>
+        <li>WhatsApp + reservas</li>
+        <li>Cardápio digital integrado</li>
+        <li>Google Analytics + pixels</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:2px solid var(--red)">
+      <h4>Instagram Estratégico</h4>
+      <ul class="inc">
+        <li>Branding e identidade visual</li>
+        <li>3 posts/semana</li>
+        <li>Stories estratégicos</li>
+        <li>Reels profissionais</li>
+        <li>Gestão de conteúdo</li>
+        <li>Rebranding (se necessário)</li>
+        <li>Relatório de performance</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sf"><svg><use href="#lr-icon"/></svg><span>Confidencial — p. 9</span></div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- S10: MÉTRICAS DE POSICIONAMENTO -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide arc-tr">
+  <div class="st">Métricas Estratégicas</div>
+  <h2>Indicadores de <em>posicionamento digital</em></h2>
+  <div class="ssub">KPIs mensuráveis com acompanhamento contínuo.</div>
+
+  <table>
+    <thead><tr><th style="text-align:left">KPI</th><th>Situação Atual</th><th>Objetivo Estratégico</th></tr></thead>
+    <tbody>
+      <tr><td style="text-align:left"><b style="color:var(--white)">Reviews Terra</b></td><td>943</td><td style="color:var(--green);font-weight:700">1.500+</td></tr>
+      <tr><td style="text-align:left"><b style="color:var(--white)">Nota Terra</b></td><td>⭐ 4.6</td><td style="color:var(--green);font-weight:700">⭐ 4.7+</td></tr>
+      <tr><td style="text-align:left"><b style="color:var(--white)">Reviews Estância</b></td><td>21</td><td style="color:var(--green);font-weight:700">100+</td></tr>
+      <tr><td style="text-align:left"><b style="color:var(--white)">Nota Estância</b></td><td>⭐ 3.6</td><td style="color:var(--green);font-weight:700">⭐ 4.3+</td></tr>
+      <tr><td style="text-align:left"><b style="color:var(--white)">Tráfego orgânico combinado</b></td><td>0</td><td style="color:var(--green);font-weight:700">2.000+ visitas</td></tr>
+      <tr><td style="text-align:left"><b style="color:var(--white)">Posição Terra no Maps</b></td><td>4º–6º</td><td style="color:var(--green);font-weight:700">Top 3</td></tr>
+      <tr><td style="text-align:left"><b style="color:var(--white)">Posição Estância (Floresta)</b></td><td>Fora</td><td style="color:var(--green);font-weight:700">Top 5</td></tr>
+      <tr><td style="text-align:left"><b style="color:var(--white)">Respostas a reviews</b></td><td>0%</td><td style="color:var(--green);font-weight:700">100%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="kpi-row kpi-2" style="margin-top:16px">
+    <div class="kpi" style="border-color:var(--green)">
+      <div class="label">ROI estimado do investimento</div>
+      <div class="val green">5–10x</div>
+      <div class="note">para cada R$ 1 investido</div>
+    </div>
+    <div class="kpi" style="border-color:var(--red)">
+      <div class="label">Custo acumulado da inação</div>
+      <div class="val red">R$ 420K</div>
+      <div class="note">receita não capturada (projeção anual)</div>
+    </div>
+  </div>
+
+  <div class="sf"><svg><use href="#lr-icon"/></svg><span>Confidencial — p. 10</span></div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- S11: INVESTIMENTO -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide arc-bl" style="padding-top:40px;padding-bottom:40px">
+  <div class="st">Investimento</div>
+  <h2>Investimento <em>LocalRise Advisory</em></h2>
+  <div class="ssub">Escolha o pacote ideal para a construção da presença digital dos seus restaurantes.</div>
+
+  <div class="two" style="gap:20px;align-items:start">
+    <!-- PACOTE COMPLETO -->
+    <div class="pkg featured">
+      <div class="pkg-title">Pacote Completo</div>
+      <div class="pkg-sub">Presença digital integral</div>
+      <ul class="pkg-inc">
+        <li>SEO Local (Google Business Profile)</li>
+        <li>Website profissional (com criação de domínio)</li>
+        <li>Instagram estratégico (3 posts semanais)</li>
+        <li>Branding e identidade visual</li>
+        <li>Rebranding (se necessário)</li>
+        <li>Gestão de conteúdo completa</li>
+      </ul>
+      <div class="pkg-prices">
+        <div class="pkg-price-row">
+          <span class="scope">1 restaurante</span>
+          <span class="price">R$ 11.200</span>
+        </div>
+        <div class="pkg-divider"><span>ou</span></div>
+        <div class="pkg-price-row">
+          <span class="scope">2 restaurantes</span>
+          <span class="price highlight">R$ 17.500</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PACOTE ESSENCIAL -->
+    <div class="pkg">
+      <div class="pkg-title">Pacote Essencial</div>
+      <div class="pkg-sub">Fundação digital estratégica</div>
+      <ul class="pkg-inc">
+        <li>SEO Local (Google Business Profile)</li>
+        <li>Website profissional (com criação de domínio)</li>
+      </ul>
+      <div class="pkg-prices">
+        <div class="pkg-price-row">
+          <span class="scope">1 restaurante</span>
+          <span class="price">R$ 8.500</span>
+        </div>
+        <div class="pkg-divider"><span>ou</span></div>
+        <div class="pkg-price-row">
+          <span class="scope">2 restaurantes</span>
+          <span class="price highlight">R$ 13.300</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pkg-footnote">
+    <b>Todos os pacotes incluem 1 mês de execução completa da LocalRise Advisory.</b><br>
+    Planejamento estratégico, implementação técnica e acompanhamento de performance inclusos.
+  </div>
+
+  <div class="sf"><svg><use href="#lr-icon"/></svg><span>Confidencial — p. 11</span></div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- S12: FECHAMENTO -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide cover" style="min-height:560px">
+  <div class="cover-logo" style="margin-bottom:24px">
+    <svg><use href="#lr-logo"/></svg>
+  </div>
+  <h1 style="font-size:36px;margin-bottom:16px">Pronto para construir sua<br><em>presença digital?</em></h1>
+  <div class="sub" style="font-size:15px;margin-bottom:32px;max-width:560px">A diferença entre invisibilidade e posicionamento<br>estratégico é uma decisão.</div>
+
+  <div class="cta" style="max-width:480px;width:100%">
+    <h3>Próximo passo: reunião estratégica</h3>
+    <p>Alinhamos o plano de execução e definimos os próximos passos.</p>
+  </div>
+
+  <div class="two" style="max-width:480px;width:100%;margin-top:20px;gap:12px">
+    <div class="card" style="text-align:center;padding:14px">
+      <h4>WhatsApp</h4>
+      <p style="color:var(--white);font-weight:700;font-size:14px">(51) 98201-6945</p>
+    </div>
+    <div class="card" style="text-align:center;padding:14px">
+      <h4>Instagram</h4>
+      <p style="color:var(--white);font-weight:700;font-size:14px">@localrise.advisory</p>
+    </div>
+  </div>
+
+  <div style="margin-top:40px;padding:16px 24px;border:1px solid var(--g700);border-radius:10px;text-align:center;max-width:480px;width:100%">
+    <p style="font-size:11px;color:var(--g500);margin-bottom:2px">Inteligência Digital para Negócios Locais</p>
+    <p style="font-size:10px;color:var(--g500)">Abril 2026 · Porto Alegre, RS · Válida por 15 dias</p>
+  </div>
+</div>
+
+</body>
+</html>

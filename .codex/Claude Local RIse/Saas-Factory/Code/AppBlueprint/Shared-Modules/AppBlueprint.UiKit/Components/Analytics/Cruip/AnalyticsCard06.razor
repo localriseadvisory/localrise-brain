@@ -1,0 +1,35 @@
+<div class="flex flex-col col-span-full sm:col-span-6 xl:col-span-4 bg-white dark:bg-gray-800 shadow-xs rounded-xl">
+    <header class="px-5 py-4 border-b border-gray-100 dark:border-gray-700/60">
+        <h2 class="font-semibold text-gray-800 dark:text-gray-100">Top Pages</h2>
+    </header>
+    <div class="grow p-3">
+        <div class="flex flex-col h-full">
+            <!-- Card content -->
+            <div class="grow">
+                <ul class="flex justify-between text-xs uppercase text-gray-400 dark:text-gray-500 font-semibold px-2 space-x-2">
+                    <li>Source</li>
+                    <li>Pageviews</li>
+                </ul>
+
+                <ul class="space-y-1 text-sm text-gray-800 dark:text-gray-100 mt-3 mb-4">
+                    <ProgressListItem Label="cruip.com/" Value="28K" ProgressPercentage="82" Color="green" />
+                    <ProgressListItem Label="preview.cruip.com/open-pro/" Value="12K" ProgressPercentage="70" Color="green" />
+                    <ProgressListItem Label="preview.cruip.com/appy/" Value="9.7K" ProgressPercentage="60" Color="green" />
+                    <ProgressListItem Label="cruip.com/unlimited/" Value="9.2K" ProgressPercentage="44" Color="green" />
+                    <ProgressListItem Label="preview.cruip.com/simple/" Value="7K" ProgressPercentage="40" Color="green" />
+                    <ProgressListItem Label="cruip.com/about-us/" Value="6.4K" ProgressPercentage="30" Color="green" />
+                    <ProgressListItem Label="docs.cruip.com/" Value="5.4K" ProgressPercentage="22" Color="green" />
+                    <ProgressListItem Label="preview.cruip.com/twist/" Value="2.2K" ProgressPercentage="12" Color="green" />
+                </ul>
+            </div>
+            <!-- Card footer -->
+            <div class="text-center pt-4 pb-1 border-t border-gray-100 dark:border-gray-700/60">
+                <a class="text-sm font-medium text-violet-500 hover:text-violet-600 dark:hover:text-violet-400" href="#0">Page Report -&gt;</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+}

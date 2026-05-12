@@ -1,0 +1,307 @@
+@* Data table component with sorting, filtering, selection, and pagination *@
+@using AppBlueprint.UiKit.Components.Shared.DataTableComponents
+@typeparam TItem
+
+<div class="bg-white dark:bg-gray-800 shadow-xs rounded-xl">
+    @* Header with search and bulk actions *@
+    <div class="px-5 py-4">
+        <div class="flex flex-wrap justify-between items-center gap-3">
+            <div class="flex items-center gap-3">
+                @if (ShowSearch)
+                {
+                    <DataTableSearchBox @bind-Value="SearchTerm"
+                                        Placeholder="@SearchPlaceholder"
+                                        OnValueChanged="OnSearchChanged" />
+                }
+                @if (SelectedItems.Any() && BulkActions != null)
+                {
+                    <DataTableBulkActionBar SelectedCount="@SelectedItems.Count">
+                        @BulkActions
+                    </DataTableBulkActionBar>
+                }
+            </div>
+            @if (HeaderActions != null)
+            {
+                <div class="flex items-center gap-2">
+                    @HeaderActions
+                </div>
+            }
+        </div>
+    </div>
+
+    @* Table *@
+    <div class="overflow-x-auto">
+        <table class="table-auto w-full dark:text-gray-300">
+            <thead class="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20 border-t border-b border-gray-100 dark:border-gray-700/60">
+                <tr>
+                    @if (ShowSelection)
+                    {
+                        <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px">
+                            <div class="flex items-center">
+                                <input type="checkbox"
+                                       class="form-checkbox"
+                                       checked="@IsAllSelected"
+                                       @onchange="ToggleSelectAll" />
+                            </div>
+                        </th>
+                    }
+                    @foreach (var column in Columns)
+                    {
+                        <DataTableHeaderCell Title="@column.Title"
+                                             Sortable="@column.Sortable"
+                                             IsSorted="@(SortColumn == column.PropertyName)"
+                                             SortDescending="@SortDescending"
+                                             OnClick="() => OnSort(column)" />
+                    }
+                    @if (RowActions != null)
+                    {
+                        <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                            <span class="sr-only">Actions</span>
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody class="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
+                @if (!FilteredItems.Any())
+                {
+                    <tr>
+                        <td colspan="@GetColumnCount()" class="px-5 py-8 text-center text-gray-500 dark:text-gray-400">
+                            @if (!string.IsNullOrEmpty(SearchTerm))
+                            {
+                                <span>No results found for "@SearchTerm"</span>
+                            }
+                            else
+                            {
+                                <span>@EmptyMessage</span>
+                            }
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var item in PagedItems)
+                    {
+                        <tr class="@(IsSelected(item) ? "bg-violet-50 dark:bg-violet-500/10" : "")">
+                            @if (ShowSelection)
+                            {
+                                <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px">
+                                    <div class="flex items-center">
+                                        <input type="checkbox"
+                                               class="form-checkbox"
+                                               checked="@IsSelected(item)"
+                                               @onchange="() => ToggleSelection(item)" />
+                                    </div>
+                                </td>
+                            }
+                            @if (RowTemplate != null)
+                            {
+                                @RowTemplate(item)
+                            }
+                            @if (RowActions != null)
+                            {
+                                <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px">
+                                    @RowActions(item)
+                                </td>
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @* Pagination *@
+    @if (ShowPagination && TotalPages > 1)
+    {
+        <div class="px-5 py-4 border-t border-gray-100 dark:border-gray-700/60">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <DataTablePaginationInfo StartIndex="@StartIndex"
+                                         EndIndex="@EndIndex"
+                                         TotalCount="@FilteredItems.Count()" />
+                <nav class="flex items-center gap-1" aria-label="Pagination">
+                    <DataTablePaginationButton Direction="Previous"
+                                               Disabled="@(CurrentPage == 1)"
+                                               OnClick="() => GoToPage(CurrentPage - 1)" />
+                    @foreach (var pageNum in GetPageNumbers())
+                    {
+                        <DataTablePageNumber PageNumber="@pageNum"
+                                             IsActive="@(pageNum == CurrentPage)"
+                                             OnClick="() => GoToPage(pageNum)" />
+                    }
+                    <DataTablePaginationButton Direction="Next"
+                                               Disabled="@(CurrentPage == TotalPages)"
+                                               OnClick="() => GoToPage(CurrentPage + 1)" />
+                </nav>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public IEnumerable<TItem> Items { get; set; } = Enumerable.Empty<TItem>();
+    [Parameter] public List<DataTableColumn> Columns { get; set; } = new();
+    [Parameter] public RenderFragment<TItem>? RowTemplate { get; set; }
+    [Parameter] public RenderFragment<TItem>? RowActions { get; set; }
+    [Parameter] public RenderFragment? BulkActions { get; set; }
+    [Parameter] public RenderFragment? HeaderActions { get; set; }
+    [Parameter] public bool ShowSearch { get; set; } = true;
+    [Parameter] public bool ShowSelection { get; set; } = true;
+    [Parameter] public bool ShowPagination { get; set; } = true;
+    [Parameter] public int PageSize { get; set; } = 10;
+    [Parameter] public string SearchPlaceholder { get; set; } = "Search...";
+    [Parameter] public string EmptyMessage { get; set; } = "No data available";
+    [Parameter] public Func<TItem, string, bool>? SearchFilter { get; set; }
+    [Parameter] public Func<TItem, object>? ItemKey { get; set; }
+    [Parameter] public EventCallback<List<TItem>> SelectedItemsChanged { get; set; }
+
+    private string SearchTerm { get; set; } = "";
+    private string SortColumn { get; set; } = "";
+    private bool SortDescending { get; set; }
+    private int CurrentPage { get; set; } = 1;
+    private List<TItem> SelectedItems { get; set; } = new();
+
+    private IEnumerable<TItem> FilteredItems => GetFilteredItems();
+    private IEnumerable<TItem> SortedItems => GetSortedItems();
+    private IEnumerable<TItem> PagedItems => GetPagedItems();
+    private int TotalPages => (int)Math.Ceiling(FilteredItems.Count() / (double)PageSize);
+    private int StartIndex => FilteredItems.Any() ? (CurrentPage - 1) * PageSize + 1 : 0;
+    private int EndIndex => Math.Min(CurrentPage * PageSize, FilteredItems.Count());
+    private bool IsAllSelected => FilteredItems.Any() && FilteredItems.All(i => IsSelected(i));
+
+    private IEnumerable<TItem> GetFilteredItems()
+    {
+        if (string.IsNullOrWhiteSpace(SearchTerm) || SearchFilter == null)
+            return Items;
+        return Items.Where(item => SearchFilter(item, SearchTerm));
+    }
+
+    private IEnumerable<TItem> GetSortedItems()
+    {
+        if (string.IsNullOrEmpty(SortColumn))
+            return FilteredItems;
+
+        var column = Columns.FirstOrDefault(c => c.PropertyName == SortColumn);
+        if (column?.SortFunc == null)
+            return FilteredItems;
+
+        return SortDescending
+            ? FilteredItems.OrderByDescending(column.SortFunc)
+            : FilteredItems.OrderBy(column.SortFunc);
+    }
+
+    private IEnumerable<TItem> GetPagedItems()
+    {
+        return SortedItems.Skip((CurrentPage - 1) * PageSize).Take(PageSize);
+    }
+
+    private void OnSort(DataTableColumn column)
+    {
+        if (!column.Sortable) return;
+
+        if (SortColumn == column.PropertyName)
+        {
+            SortDescending = !SortDescending;
+        }
+        else
+        {
+            SortColumn = column.PropertyName;
+            SortDescending = false;
+        }
+    }
+
+    private void OnSearchChanged()
+    {
+        CurrentPage = 1;
+        SelectedItems.Clear();
+    }
+
+    private void GoToPage(int page)
+    {
+        CurrentPage = Math.Clamp(page, 1, TotalPages);
+    }
+
+    private bool IsSelected(TItem item)
+    {
+        if (ItemKey == null) return SelectedItems.Contains(item);
+        var key = ItemKey(item);
+        return SelectedItems.Any(i => ItemKey(i)?.Equals(key) == true);
+    }
+
+    private async Task ToggleSelection(TItem item)
+    {
+        if (IsSelected(item))
+        {
+            if (ItemKey != null)
+            {
+                var key = ItemKey(item);
+                SelectedItems.RemoveAll(i => ItemKey(i)?.Equals(key) == true);
+            }
+            else
+            {
+                SelectedItems.Remove(item);
+            }
+        }
+        else
+        {
+            SelectedItems.Add(item);
+        }
+        await SelectedItemsChanged.InvokeAsync(SelectedItems);
+    }
+
+    private async Task ToggleSelectAll()
+    {
+        if (IsAllSelected)
+        {
+            SelectedItems.Clear();
+        }
+        else
+        {
+            SelectedItems = FilteredItems.ToList();
+        }
+        await SelectedItemsChanged.InvokeAsync(SelectedItems);
+    }
+
+    private int GetColumnCount()
+    {
+        var count = Columns.Count;
+        if (ShowSelection) count++;
+        if (RowActions != null) count++;
+        return count;
+    }
+
+    private List<int> GetPageNumbers()
+    {
+        var pages = new List<int>();
+        const int maxVisible = 5;
+
+        if (TotalPages <= maxVisible)
+        {
+            for (int i = 1; i <= TotalPages; i++)
+                pages.Add(i);
+        }
+        else
+        {
+            pages.Add(1);
+            if (CurrentPage > 3) pages.Add(-1); // ellipsis
+
+            var start = Math.Max(2, CurrentPage - 1);
+            var end = Math.Min(TotalPages - 1, CurrentPage + 1);
+
+            for (int i = start; i <= end; i++)
+                pages.Add(i);
+
+            if (CurrentPage < TotalPages - 2) pages.Add(-1); // ellipsis
+            pages.Add(TotalPages);
+        }
+
+        return pages;
+    }
+
+    public class DataTableColumn
+    {
+        public string PropertyName { get; set; } = "";
+        public string Title { get; set; } = "";
+        public bool Sortable { get; set; }
+        public Func<TItem, object>? SortFunc { get; set; }
+    }
+}

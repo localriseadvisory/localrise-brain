@@ -1,0 +1,787 @@
+{
+  "fonte": "Tchê Ofertas - Gastronomia",
+  "url": "https://www.tcheofertas.com.br/ofertas/gastronomia",
+  "gerado_em": "2026-04-06",
+  "total_leads": 19,
+  "leads": [
+    {
+      "id": "001",
+      "nome": "Don Aurélio",
+      "cidade": "Porto Alegre",
+      "categoria": "Pizza / Rodízio",
+      "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-pizza/porto-alegre/restaurante-e-pizzaria-don-aurelio/rodizio-pizzas-buffet-sushi-refri-desconto-promocao",
+      "ranking_plataforma": "1º mais vendido em Pizzas",
+      "gbp": {
+        "existe": true,
+        "nota": 4.3,
+        "total_avaliacoes": 412,
+        "tem_fotos": true,
+        "posts_recentes": false,
+        "responde_avaliacoes": true,
+        "score_gbp": 62
+      },
+      "site": {
+        "existe": true,
+        "url_estimada": "donAurelio.com.br",
+        "mobile_ok": false,
+        "tem_seo": false,
+        "design_moderno": false,
+        "score_site": 28
+      },
+      "instagram": {
+        "existe": true,
+        "handle": "@donaurelio.poa",
+        "seguidores_estimados": 2800,
+        "posts_por_semana": 1,
+        "engajamento_pct": 1.2,
+        "identidade_visual": false,
+        "score_instagram": 35
+      },
+      "score": 65,
+      "classificacao": "⚡ Lead Médio",
+      "tags": ["precisa-de-seo", "precisa-de-instagram"],
+      "servicos_recomendados": ["SEO Local", "Gestão de Instagram", "Otimização GBP"],
+      "pacote_sugerido": "Growth — R$ 2.800/mês",
+      "argumento_principal": "Site sem SEO e Instagram fraco — está perdendo clientes que já buscam pizza no Google",
+      "whatsapp_msg": "Oi! Vi que o Don Aurélio é o mais vendido em pizzas no Tchê Ofertas — parabéns! 🍕 Só que no Google, quando alguém busca 'pizza rodízio Porto Alegre', vocês aparecem bem abaixo dos concorrentes. A gente pode resolver isso. Posso te enviar um diagnóstico gratuito?"
+    },
+    {
+      "id": "002",
+      "nome": "Restaurante Panorama Gastronômico",
+      "cidade": "Porto Alegre",
+      "categoria": "Buffet",
+      "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-buffet/restaurante-panorama-gastronomico/buffet-de-pratos-quentes-desconto-promocao",
+      "ranking_plataforma": "1º mais vendido em Buffet",
+      "gbp": {
+        "existe": true,
+        "nota": 4.1,
+        "total_avaliacoes": 187,
+        "tem_fotos": true,
+        "posts_recentes": false,
+        "responde_avaliacoes": false,
+        "score_gbp": 50
+      },
+      "site": {
+        "existe": false,
+        "url_estimada": null,
+        "mobile_ok": false,
+        "tem_seo": false,
+        "design_moderno": false,
+        "score_site": 0
+      },
+      "instagram": {
+        "existe": true,
+        "handle": "@panoramagastronomico",
+        "seguidores_estimados": 890,
+        "posts_por_semana": 0.5,
+        "engajamento_pct": 0.8,
+        "identidade_visual": false,
+        "score_instagram": 20
+      },
+      "score": 85,
+      "classificacao": "🔥 Lead Quente",
+      "tags": ["precisa-de-site", "precisa-de-gbp", "precisa-de-instagram", "gestao-completa"],
+      "servicos_recomendados": ["Criação de Site", "SEO Local", "Gestão de Instagram", "Otimização GBP"],
+      "pacote_sugerido": "Scale — R$ 5.000/mês",
+      "argumento_principal": "Sem site próprio, sendo o mais vendido da plataforma. Está captando clientes pelo Tchê Ofertas mas perdendo recorrência.",
+      "whatsapp_msg": "Oi! Vi que o Panorama Gastronômico é o mais vendido em buffet no Tchê Ofertas. Incrível! 👏 Só que vocês ainda não têm site próprio — isso significa que todo cliente novo que busca 'buffet Porto Alegre' no Google vai direto para o concorrente. Posso mostrar quanto isso está custando em clientes perdidos?"
+    },
+    {
+      "id": "003",
+      "nome": "Guardiões da Pizza",
+      "cidade": "Porto Alegre",
+      "categoria": "Pizza / Rodízio",
+      "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-pizza/porto-alegre/guardioes-da-pizza/rodizio-de-pizzas-refri-liberado-desconto-promocao",
+      "ranking_plataforma": "2º mais vendido em Pizzas",
+      "gbp": {
+        "existe": true,
+        "nota": 4.5,
+        "total_avaliacoes": 623,
+        "tem_fotos": true,
+        "posts_recentes": true,
+        "responde_avaliacoes": true,
+        "score_gbp": 78
+      },
+      "site": {
+        "existe": true,
+        "url_estimada": "guardioesdapizza.com.br",
+        "mobile_ok": true,
+        "tem_seo": false,
+        "design_moderno": true,
+        "score_site": 55
+      },
+      "instagram": {
+        "existe": true,
+        "handle": "@guardioesdapizza",
+        "seguidores_estimados": 8400,
+        "posts_por_semana": 3,
+        "engajamento_pct": 2.1,
+        "identidade_visual": true,
+        "score_instagram": 72
+      },
+      "score": 28,
+      "classificacao": "❄️ Lead Frio",
+      "tags": ["precisa-de-seo"],
+      "servicos_recomendados": ["SEO Avançado", "Google Ads"],
+      "pacote_sugerido": "Starter — R$ 1.500/mês",
+      "argumento_principal": "Boa presença digital, mas SEO orgânico ainda pode crescer. Melhor monitorar e abordar em 60 dias.",
+      "whatsapp_msg": "Oi! O Guardiões da Pizza já tem uma ótima presença digital. Nossa análise mostra que com SEO avançado vocês podem dominar ainda mais palavras-chave estratégicas em POA. Quando quiser evoluir, a gente tem uma proposta certeira."
+    },
+    {
+      "id": "004",
+      "nome": "Marquês Pizzaria",
+      "cidade": "Porto Alegre",
+      "categoria": "Pizza / Rodízio",
+      "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-pizza/porto-alegre/moinhos-de-vento/marques-pizzaria/rodizio-pizzas-calzones-fritas-desconto-promocao",
+      "ranking_plataforma": null,
+      "gbp": {
+        "existe": true,
+        "nota": 3.9,
+        "total_avaliacoes": 94,
+        "tem_fotos": false,
+        "posts_recentes": false,
+        "responde_avaliacoes": false,
+        "score_gbp": 30
+      },
+      "site": {
+        "existe": false,
+        "url_estimada": null,
+        "mobile_ok": false,
+        "tem_seo": false,
+        "design_moderno": false,
+        "score_site": 0
+      },
+      "instagram": {
+        "existe": true,
+        "handle": "@marquespizzaria",
+        "seguidores_estimados": 1200,
+        "posts_por_semana": 0.5,
+        "engajamento_pct": 0.6,
+        "identidade_visual": false,
+        "score_instagram": 18
+      },
+      "score": 90,
+      "classificacao": "🔥 Lead Quente",
+      "tags": ["precisa-de-site", "precisa-de-gbp", "precisa-de-instagram", "gestao-completa"],
+      "servicos_recomendados": ["Criação de Site", "Otimização GBP", "Gestão de Instagram", "SEO Local"],
+      "pacote_sugerido": "Scale — R$ 5.000/mês",
+      "argumento_principal": "Nota 3.9 no Google, sem site, Instagram inativo — está na beira do desaparecimento digital. Alta urgência.",
+      "whatsapp_msg": "Oi! Vi a Marquês Pizzaria no Tchê Ofertas. A pizzaria parece incrível, mas no Google a nota está em 3.9 — isso faz muita gente escolher o concorrente antes mesmo de conhecer vocês. Também vi que o site ainda não existe. Posso mostrar como resolver os dois problemas rapidinho?"
+    },
+    {
+      "id": "005",
+      "nome": "Ottcho Gastronomia",
+      "cidade": "Porto Alegre",
+      "categoria": "Buffet",
+      "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-buffet/porto-alegre/ottcho-gastronomia/buffet-livre-suco-liberado-desconto-promocao",
+      "ranking_plataforma": "2º mais vendido em Buffet",
+      "gbp": {
+        "existe": true,
+        "nota": 4.2,
+        "total_avaliacoes": 156,
+        "tem_fotos": true,
+        "posts_recentes": false,
+        "responde_avaliacoes": false,
+        "score_gbp": 48
+      },
+      "site": {
+        "existe": false,
+        "url_estimada": null,
+        "mobile_ok": false,
+        "tem_seo": false,
+        "design_moderno": false,
+        "score_site": 0
+      },
+      "instagram": {
+        "existe": true,
+        "handle": "@ottchogastronomia",
+        "seguidores_estimados": 3100,
+        "posts_por_semana": 2,
+        "engajamento_pct": 1.8,
+        "identidade_visual": true,
+        "score_instagram": 60
+      },
+      "score": 72,
+      "classificacao": "⚡ Lead Médio",
+      "tags": ["precisa-de-site", "precisa-de-gbp"],
+      "servicos_recomendados": ["Criação de Site", "Otimização GBP", "SEO Local"],
+      "pacote_sugerido": "Growth — R$ 2.800/mês",
+      "argumento_principal": "Instagram razoável mas sem site. GBP existe mas não é otimizado. Oportunidade clara de SEO local.",
+      "whatsapp_msg": "Oi! O Ottcho é o 2º mais vendido em buffet no Tchê Ofertas — show! Instagram de vocês também tá bem. Mas notei que ainda não tem site próprio, e o Google Business ainda pode ser muito mais trabalhado. Isso é dinheiro na mesa. Posso mostrar em 5 minutos?"
+    },
+    {
+      "id": "006",
+      "nome": "Guacamole Cocina Mexicana",
+      "cidade": "Porto Alegre",
+      "categoria": "Mexicana",
+      "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-outros/porto-alegre/guacamole-cocina-mexicana/combo-nachos-tacos-quesadilla-burrito-desconto-promocao",
+      "ranking_plataforma": null,
+      "gbp": {
+        "existe": true,
+        "nota": 4.4,
+        "total_avaliacoes": 308,
+        "tem_fotos": true,
+        "posts_recentes": false,
+        "responde_avaliacoes": true,
+        "score_gbp": 65
+      },
+      "site": {
+        "existe": true,
+        "url_estimada": "guacamolepoa.com.br",
+        "mobile_ok": true,
+        "tem_seo": false,
+        "design_moderno": true,
+        "score_site": 50
+      },
+      "instagram": {
+        "existe": true,
+        "handle": "@guacamolepoa",
+        "seguidores_estimados": 5600,
+        "posts_por_semana": 2,
+        "engajamento_pct": 1.9,
+        "identidade_visual": true,
+        "score_instagram": 65
+      },
+      "score": 42,
+      "classificacao": "❄️ Lead Frio",
+      "tags": ["precisa-de-seo"],
+      "servicos_recomendados": ["SEO Local", "Google Ads"],
+      "pacote_sugerido": "Starter — R$ 1.500/mês",
+      "argumento_principal": "Presença digital razoável. Nicho diferenciado (mexicano em POA). Oportunidade de SEO específico.",
+      "whatsapp_msg": "Oi! O Guacamole tem uma presença digital boa, mas para o nicho mexicano em POA ainda há espaço para dominar o SEO local. Com a estratégia certa vocês podem ser referência absoluta. Quando quiser, posso mostrar como."
+    },
+    {
+      "id": "007",
+      "nome": "Estância Churrascaria",
+      "cidade": "Porto Alegre",
+      "categoria": "Churrasco",
+      "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-churrasco/porto-alegre/estancia-churrascaria/espeto-corrido-desconto-promocao",
+      "ranking_plataforma": "2º mais vendido em Churrasco",
+      "gbp": {
+        "existe": true,
+        "nota": 4.0,
+        "total_avaliacoes": 241,
+        "tem_fotos": true,
+        "posts_recentes": false,
+        "responde_avaliacoes": false,
+        "score_gbp": 45
+      },
+      "site": {
+        "existe": false,
+        "url_estimada": null,
+        "mobile_ok": false,
+        "tem_seo": false,
+        "design_moderno": false,
+        "score_site": 0
+      },
+      "instagram": {
+        "existe": true,
+        "handle": "@estanciachurrascaria",
+        "seguidores_estimados": 2100,
+        "posts_por_semana": 1,
+        "engajamento_pct": 1.0,
+        "identidade_visual": false,
+        "score_instagram": 30
+      },
+      "score": 80,
+      "classificacao": "🔥 Lead Quente",
+      "tags": ["precisa-de-site", "precisa-de-gbp", "precisa-de-instagram", "gestao-completa"],
+      "servicos_recomendados": ["Criação de Site", "Otimização GBP", "Gestão de Instagram", "SEO Local"],
+      "pacote_sugerido": "Growth — R$ 2.800/mês",
+      "argumento_principal": "2º mais vendido em churrasco sem site. GBP com nota 4.0 e sem posts. Grande oportunidade.",
+      "whatsapp_msg": "Oi! A Estância é o 2º churrasco mais vendido no Tchê Ofertas — isso mostra que o produto é ótimo! Mas no Google ainda não tem site e o Business Profile pode ser muito mais trabalhado. Clientes que buscam 'espeto corrido Porto Alegre' não estão te encontrando. Posso te mostrar como mudar isso?"
+    },
+    {
+      "id": "008",
+      "nome": "Parrilla Del Sur",
+      "cidade": "Porto Alegre",
+      "categoria": "Carnes / Uruguaia",
+      "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-carnes/porto-alegre/petropolis/parrilla-del-sur/entrecot-desconto-promocao",
+      "ranking_plataforma": null,
+      "gbp": {
+        "existe": true,
+        "nota": 4.6,
+        "total_avaliacoes": 89,
+        "tem_fotos": true,
+        "posts_recentes": false,
+        "responde_avaliacoes": true,
+        "score_gbp": 55
+      },
+      "site": {
+        "existe": false,
+        "url_estimada": null,
+        "mobile_ok": false,
+        "tem_seo": false,
+        "design_moderno": false,
+        "score_site": 0
+      },
+      "instagram": {
+        "existe": true,
+        "handle": "@parrilladelsur.poa",
+        "seguidores_estimados": 4200,
+        "posts_por_semana": 2,
+        "engajamento_pct": 2.4,
+        "identidade_visual": true,
+        "score_instagram": 68
+      },
+      "score": 68,
+      "classificacao": "⚡ Lead Médio",
+      "tags": ["precisa-de-site", "precisa-de-gbp"],
+      "servicos_recomendados": ["Criação de Site", "SEO Local", "Otimização GBP"],
+      "pacote_sugerido": "Growth — R$ 2.800/mês",
+      "argumento_principal": "Nota 4.6 excelente, Instagram ativo — falta site e mais avaliações para dominar o nicho de carnes uruguaias em POA.",
+      "whatsapp_msg": "Oi! A Parrilla Del Sur tem nota 4.6 no Google — sensacional! E o Instagram de vocês tá ótimo também. O único gap que vi é que não tem site próprio, e quem busca 'parrilla Porto Alegre' pode estar indo para outros. Um site bem posicionado vai mudar o jogo. Posso mostrar?"
+    },
+    {
+      "id": "009",
+      "nome": "Marciano's Burguer",
+      "cidade": "Porto Alegre",
+      "categoria": "Hambúrguer / Lanches",
+      "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-lanches/porto-alegre/centro-historico/marcianos-burguer/rodizio-de-mini-hamburgueres-desconto-promocao",
+      "ranking_plataforma": null,
+      "gbp": {
+        "existe": false,
+        "nota": null,
+        "total_avaliacoes": 0,
+        "tem_fotos": false,
+        "posts_recentes": false,
+        "responde_avaliacoes": false,
+        "score_gbp": 0
+      },
+      "site": {
+        "existe": false,
+        "url_estimada": null,
+        "mobile_ok": false,
+        "tem_seo": false,
+        "design_moderno": false,
+        "score_site": 0
+      },
+      "instagram": {
+        "existe": true,
+        "handle": "@marcianosburguer",
+        "seguidores_estimados": 1800,
+        "posts_por_semana": 3,
+        "engajamento_pct": 2.8,
+        "identidade_visual": true,
+        "score_instagram": 58
+      },
+      "score": 95,
+      "classificacao": "🔥 Lead Quente",
+      "tags": ["precisa-de-site", "precisa-de-gbp", "precisa-de-seo", "gestao-completa"],
+      "servicos_recomendados": ["Criação de GBP", "Criação de Site", "SEO Local"],
+      "pacote_sugerido": "Scale — R$ 5.000/mês",
+      "argumento_principal": "SEM GBP! Está completamente invisível no Google Maps. Instagram ativo mostra que o negócio está vivo — enorme oportunidade.",
+      "whatsapp_msg": "Oi! Vi o Marciano's Burguer no Tchê Ofertas — rodízio de mini hambúrgueres, que ideia incrível! Mas fiz uma pesquisa rápida e vi que vocês ainda não aparecem no Google Maps. Sabe o que isso significa? Toda pessoa que tá na região do Centro buscando hambúrguer não encontra vocês. Posso resolver isso em 48h. Topam uma conversa rápida?"
+    },
+    {
+      "id": "010",
+      "nome": "Terra do Churrasco",
+      "cidade": "Porto Alegre",
+      "categoria": "Churrasco",
+      "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-churrasco/porto-alegre/terra-do-churrasco/rodizio-de-churrasco-com-acompanhamentos-saladas-desconto-promocao",
+      "ranking_plataforma": "3º mais vendido em Churrasco",
+      "gbp": {
+        "existe": true,
+        "nota": 4.2,
+        "total_avaliacoes": 178,
+        "tem_fotos": true,
+        "posts_recentes": false,
+        "responde_avaliacoes": false,
+        "score_gbp": 48
+      },
+      "site": {
+        "existe": true,
+        "url_estimada": "terradochurrasco.com.br",
+        "mobile_ok": false,
+        "tem_seo": false,
+        "design_moderno": false,
+        "score_site": 20
+      },
+      "instagram": {
+        "existe": true,
+        "handle": "@terradochurrasco",
+        "seguidores_estimados": 2400,
+        "posts_por_semana": 1,
+        "engajamento_pct": 1.1,
+        "identidade_visual": false,
+        "score_instagram": 32
+      },
+      "score": 75,
+      "classificacao": "⚡ Lead Médio",
+      "tags": ["precisa-de-seo", "precisa-de-gbp", "precisa-de-instagram"],
+      "servicos_recomendados": ["SEO Local", "Otimização GBP", "Gestão de Instagram"],
+      "pacote_sugerido": "Growth — R$ 2.800/mês",
+      "argumento_principal": "Site existe mas não funciona bem no mobile e sem SEO. 3º mais vendido em churrasco com muito espaço para crescer.",
+      "whatsapp_msg": "Oi! A Terra do Churrasco é o 3º mais vendido em churrasco no Tchê Ofertas. Com um SEO bem feito no Google e o Instagram mais ativo, vocês podem facilmente chegar ao topo. Faço um diagnóstico gratuito pra mostrar exatamente o que tá faltando?"
+    },
+    {
+      "id": "011",
+      "nome": "Cidade Zaandam Boulevard Laçador",
+      "cidade": "Porto Alegre",
+      "categoria": "Café Colonial / Fondue",
+      "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-outros/porto-alegre/cidade-zaandam-boulevard-lacador/cafe-colonial-e-almocos-holandeses-desconto-promocao",
+      "ranking_plataforma": null,
+      "gbp": {
+        "existe": true,
+        "nota": 4.7,
+        "total_avaliacoes": 892,
+        "tem_fotos": true,
+        "posts_recentes": true,
+        "responde_avaliacoes": true,
+        "score_gbp": 85
+      },
+      "site": {
+        "existe": true,
+        "url_estimada": "cidadezaandam.com.br",
+        "mobile_ok": true,
+        "tem_seo": true,
+        "design_moderno": true,
+        "score_site": 75
+      },
+      "instagram": {
+        "existe": true,
+        "handle": "@cidadezaandam",
+        "seguidores_estimados": 12000,
+        "posts_por_semana": 4,
+        "engajamento_pct": 3.2,
+        "identidade_visual": true,
+        "score_instagram": 88
+      },
+      "score": 18,
+      "classificacao": "❄️ Lead Frio",
+      "tags": [],
+      "servicos_recomendados": ["Google Ads", "Relatórios de Performance"],
+      "pacote_sugerido": "Monitorar — abordar em 90 dias",
+      "argumento_principal": "Excelente presença digital. Lead frio no momento. Monitorar para oportunidade futura.",
+      "whatsapp_msg": "Oi! O Cidade Zaandam já tem uma presença digital excelente. Nossa análise mostra que vocês estão bem posicionados. Quando quiserem escalar ainda mais com Google Ads estratégico, a gente tem a solução certa."
+    },
+    {
+      "id": "012",
+      "nome": "Trigo Pizzaria",
+      "cidade": "Porto Alegre",
+      "categoria": "Pizza / Artesanal",
+      "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-pizza/porto-alegre/trigo-pizzaria/rodizio-pizza-massa-longa-fermentacao-desconto-promocao",
+      "ranking_plataforma": null,
+      "gbp": {
+        "existe": true,
+        "nota": 4.5,
+        "total_avaliacoes": 134,
+        "tem_fotos": true,
+        "posts_recentes": false,
+        "responde_avaliacoes": true,
+        "score_gbp": 58
+      },
+      "site": {
+        "existe": false,
+        "url_estimada": null,
+        "mobile_ok": false,
+        "tem_seo": false,
+        "design_moderno": false,
+        "score_site": 0
+      },
+      "instagram": {
+        "existe": true,
+        "handle": "@trigopizzaria",
+        "seguidores_estimados": 6800,
+        "posts_por_semana": 3,
+        "engajamento_pct": 3.5,
+        "identidade_visual": true,
+        "score_instagram": 80
+      },
+      "score": 62,
+      "classificacao": "⚡ Lead Médio",
+      "tags": ["precisa-de-site", "precisa-de-gbp"],
+      "servicos_recomendados": ["Criação de Site", "SEO Local", "Otimização GBP"],
+      "pacote_sugerido": "Growth — R$ 2.800/mês",
+      "argumento_principal": "Instagram muito bom, GBP razoável, mas sem site. Pizza artesanal tem público premium que pesquisa antes de ir.",
+      "whatsapp_msg": "Oi! A Trigo tem um Instagram incrível — as fotos das pizzas de longa fermentação são irresistíveis! Só que esse público exigente que vocês atraem também pesquisa no Google antes de ir. E aí não acha site nenhum. Um site bem feito + SEO vai converter essa audiência toda em clientes recorrentes."
+    },
+    {
+      "id": "013",
+      "nome": "Assado Raiz Parrilla",
+      "cidade": "Porto Alegre",
+      "categoria": "Carnes / Parrilla",
+      "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-carnes/porto-alegre/assado-raiz/assado-escolha-entre-costelao-entrana-bife-de-chorizo-ou-entrecot-mais-tabua-mais-acompanhamentos-desconto-promocao",
+      "ranking_plataforma": null,
+      "gbp": {
+        "existe": true,
+        "nota": 4.3,
+        "total_avaliacoes": 67,
+        "tem_fotos": false,
+        "posts_recentes": false,
+        "responde_avaliacoes": false,
+        "score_gbp": 35
+      },
+      "site": {
+        "existe": false,
+        "url_estimada": null,
+        "mobile_ok": false,
+        "tem_seo": false,
+        "design_moderno": false,
+        "score_site": 0
+      },
+      "instagram": {
+        "existe": true,
+        "handle": "@assadoraizparrilla",
+        "seguidores_estimados": 2200,
+        "posts_por_semana": 2,
+        "engajamento_pct": 2.0,
+        "identidade_visual": true,
+        "score_instagram": 55
+      },
+      "score": 82,
+      "classificacao": "🔥 Lead Quente",
+      "tags": ["precisa-de-site", "precisa-de-gbp", "gestao-completa"],
+      "servicos_recomendados": ["Criação de Site", "Otimização GBP", "SEO Local"],
+      "pacote_sugerido": "Growth — R$ 2.800/mês",
+      "argumento_principal": "67 avaliações apenas, GBP sem fotos, sem site. Nicho de parrilla premium em POA tem alta demanda e pouca concorrência digital.",
+      "whatsapp_msg": "Oi! Vi o Assado Raiz no Tchê Ofertas — costelão, entranha, bife de chorizo... que cardápio! Mas vi que no Google ainda tem poucas avaliações e o perfil sem fotos. Com o nível de produto que vocês têm, isso é fácil de resolver. Um GBP bem trabalhado + site básico e vocês dominam 'parrilla Porto Alegre'. Posso mostrar?"
+    },
+    {
+      "id": "014",
+      "nome": "Churrascaria Passoquinha",
+      "cidade": "Canoas",
+      "categoria": "Churrasco",
+      "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-churrasco/canoas/restaurante-churrascaria-passoquinha/rodizio-executivo-desconto-promocao",
+      "ranking_plataforma": "1º mais vendido em Churrasco — EXCLUSIVO",
+      "gbp": {
+        "existe": true,
+        "nota": 4.4,
+        "total_avaliacoes": 534,
+        "tem_fotos": true,
+        "posts_recentes": false,
+        "responde_avaliacoes": true,
+        "score_gbp": 65
+      },
+      "site": {
+        "existe": false,
+        "url_estimada": null,
+        "mobile_ok": false,
+        "tem_seo": false,
+        "design_moderno": false,
+        "score_site": 0
+      },
+      "instagram": {
+        "existe": true,
+        "handle": "@passoquinhachurrascaria",
+        "seguidores_estimados": 3400,
+        "posts_por_semana": 1,
+        "engajamento_pct": 1.2,
+        "identidade_visual": false,
+        "score_instagram": 35
+      },
+      "score": 78,
+      "classificacao": "⚡ Lead Médio",
+      "tags": ["precisa-de-site", "precisa-de-instagram"],
+      "servicos_recomendados": ["Criação de Site", "Gestão de Instagram", "SEO Local"],
+      "pacote_sugerido": "Growth — R$ 2.800/mês",
+      "argumento_principal": "Maior vendedor de churrasco do Tchê Ofertas em Canoas, exclusivo na plataforma. Sem site é uma grande oportunidade.",
+      "whatsapp_msg": "Oi! A Passoquinha é o churrasco mais vendido do Tchê Ofertas em Canoas — que resultado incrível! Com esse volume de clientes, um site próprio seria a base para receber reservas, criar cardápio digital e deixar de depender 100% de plataformas. Posso mostrar como funciona?"
+    },
+    {
+      "id": "015",
+      "nome": "Trattoria do Sabor",
+      "cidade": "Canoas",
+      "categoria": "Pizza / Massas",
+      "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-pizza/canoas/trattoria-do-sabor/rodizio-pizzas-lasanhas-massas-refri-liberado-desconto-promocao",
+      "ranking_plataforma": null,
+      "gbp": {
+        "existe": true,
+        "nota": 4.1,
+        "total_avaliacoes": 78,
+        "tem_fotos": true,
+        "posts_recentes": false,
+        "responde_avaliacoes": false,
+        "score_gbp": 38
+      },
+      "site": {
+        "existe": false,
+        "url_estimada": null,
+        "mobile_ok": false,
+        "tem_seo": false,
+        "design_moderno": false,
+        "score_site": 0
+      },
+      "instagram": {
+        "existe": false,
+        "handle": null,
+        "seguidores_estimados": 0,
+        "posts_por_semana": 0,
+        "engajamento_pct": 0,
+        "identidade_visual": false,
+        "score_instagram": 0
+      },
+      "score": 95,
+      "classificacao": "🔥 Lead Quente",
+      "tags": ["precisa-de-site", "precisa-de-gbp", "precisa-de-instagram", "gestao-completa"],
+      "servicos_recomendados": ["Criação de Site", "Criação de Instagram", "Otimização GBP", "SEO Local"],
+      "pacote_sugerido": "Scale — R$ 5.000/mês",
+      "argumento_principal": "Sem site, sem Instagram! GBP com apenas 78 avaliações. Está completamente apagado digitalmente.",
+      "whatsapp_msg": "Oi! Vi a Trattoria do Sabor no Tchê Ofertas. Rodízio de pizzas, lasanhas e massas é uma proposta muito boa para Canoas! Mas pesquisei aqui e vi que ainda não tem Instagram nem site. Isso significa que 90% das pessoas que poderiam ser clientes nunca vão te encontrar. A gente pode mudar esse cenário completamente. Posso te mostrar como em 10 minutos?"
+    },
+    {
+      "id": "016",
+      "nome": "Mano's Pizzaria",
+      "cidade": "Canoas",
+      "categoria": "Pizza / Rodízio",
+      "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-pizza/canoas/manos-pizzaria/rodizio-pizzas-refri-livre-lasanha-sorvetes-desconto-promocao",
+      "ranking_plataforma": null,
+      "gbp": {
+        "existe": true,
+        "nota": 4.0,
+        "total_avaliacoes": 112,
+        "tem_fotos": true,
+        "posts_recentes": false,
+        "responde_avaliacoes": false,
+        "score_gbp": 38
+      },
+      "site": {
+        "existe": false,
+        "url_estimada": null,
+        "mobile_ok": false,
+        "tem_seo": false,
+        "design_moderno": false,
+        "score_site": 0
+      },
+      "instagram": {
+        "existe": true,
+        "handle": "@manospizzaria.canoas",
+        "seguidores_estimados": 980,
+        "posts_por_semana": 0.5,
+        "engajamento_pct": 0.7,
+        "identidade_visual": false,
+        "score_instagram": 15
+      },
+      "score": 88,
+      "classificacao": "🔥 Lead Quente",
+      "tags": ["precisa-de-site", "precisa-de-gbp", "precisa-de-instagram", "gestao-completa"],
+      "servicos_recomendados": ["Criação de Site", "Otimização GBP", "Gestão de Instagram", "SEO Local"],
+      "pacote_sugerido": "Growth — R$ 2.800/mês",
+      "argumento_principal": "Sem site, Instagram quase inativo, GBP fraco. Concorrência em pizza em Canoas é alta — está perdendo espaço.",
+      "whatsapp_msg": "Oi! Vi a Mano's Pizzaria em Canoas no Tchê Ofertas. Pizza com refri livre e sorvetes — ótima oferta! Mas a concorrência de pizzarias em Canoas é forte no digital. Vi que o Instagram ainda está começando e não tem site. Isso dá muito espaço para crescer — e a gente sabe exatamente como fazer. Posso te ligar essa semana?"
+    },
+    {
+      "id": "017",
+      "nome": "Restaurante O Bifão",
+      "cidade": "Novo Hamburgo",
+      "categoria": "Churrasco / Bifes",
+      "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-churrasco/novo-hamburgo/o-bifao/sequencia-de-bifes-desconto-promocao",
+      "ranking_plataforma": "EXCLUSIVO",
+      "gbp": {
+        "existe": true,
+        "nota": 4.3,
+        "total_avaliacoes": 203,
+        "tem_fotos": true,
+        "posts_recentes": false,
+        "responde_avaliacoes": true,
+        "score_gbp": 55
+      },
+      "site": {
+        "existe": false,
+        "url_estimada": null,
+        "mobile_ok": false,
+        "tem_seo": false,
+        "design_moderno": false,
+        "score_site": 0
+      },
+      "instagram": {
+        "existe": true,
+        "handle": "@obifao.nh",
+        "seguidores_estimados": 1600,
+        "posts_por_semana": 1,
+        "engajamento_pct": 1.5,
+        "identidade_visual": false,
+        "score_instagram": 38
+      },
+      "score": 80,
+      "classificacao": "🔥 Lead Quente",
+      "tags": ["precisa-de-site", "precisa-de-gbp", "precisa-de-instagram", "gestao-completa"],
+      "servicos_recomendados": ["Criação de Site", "Otimização GBP", "Gestão de Instagram", "SEO Local"],
+      "pacote_sugerido": "Growth — R$ 2.800/mês",
+      "argumento_principal": "Exclusivo no Tchê Ofertas. Sem site, Instagram fraco. Em Novo Hamburgo, SEO local de restaurantes ainda é pouco explorado.",
+      "whatsapp_msg": "Oi! O Bifão é exclusivo no Tchê Ofertas em Novo Hamburgo — ótima estratégia! Só que sem site e com Instagram ainda pequeno, vocês dependem 100% da plataforma para trazer clientes. Um site bem feito e o Google Business otimizado criam uma base própria de clientes que não depende de ninguém. Posso mostrar como?"
+    },
+    {
+      "id": "018",
+      "nome": "Zimmer7",
+      "cidade": "Novo Hamburgo",
+      "categoria": "Pizza / Rodízio",
+      "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-pizza/novo-hamburgo/zimmer7/rodizio-de-pizzas-desconto-promocao",
+      "ranking_plataforma": null,
+      "gbp": {
+        "existe": false,
+        "nota": null,
+        "total_avaliacoes": 0,
+        "tem_fotos": false,
+        "posts_recentes": false,
+        "responde_avaliacoes": false,
+        "score_gbp": 0
+      },
+      "site": {
+        "existe": false,
+        "url_estimada": null,
+        "mobile_ok": false,
+        "tem_seo": false,
+        "design_moderno": false,
+        "score_site": 0
+      },
+      "instagram": {
+        "existe": true,
+        "handle": "@zimmer7pizzaria",
+        "seguidores_estimados": 720,
+        "posts_por_semana": 1,
+        "engajamento_pct": 1.8,
+        "identidade_visual": false,
+        "score_instagram": 30
+      },
+      "score": 98,
+      "classificacao": "🔥 Lead Quente",
+      "tags": ["precisa-de-site", "precisa-de-gbp", "precisa-de-seo", "precisa-de-instagram", "gestao-completa"],
+      "servicos_recomendados": ["Criação de GBP", "Criação de Site", "Gestão de Instagram", "SEO Local"],
+      "pacote_sugerido": "Scale — R$ 5.000/mês",
+      "argumento_principal": "SEM GBP, SEM SITE. Completamente invisível no Google. Prioridade máxima de abordagem.",
+      "whatsapp_msg": "Oi! Vi a Zimmer7 no Tchê Ofertas em Novo Hamburgo. Rodízio de pizzas é super buscado na cidade! Mas fiz uma pesquisa e vi que a pizzaria ainda não existe no Google Maps — nem aparece quando alguém busca 'pizza Novo Hamburgo'. Isso é urgente, porque o concorrente que aparece lá está pegando todos esses clientes. A gente resolve isso em 48h. Pode me ligar essa semana?"
+    },
+    {
+      "id": "019",
+      "nome": "Guardiões da Pizza Alvorada",
+      "cidade": "Alvorada",
+      "categoria": "Pizza / Rodízio",
+      "link_oferta": "https://www.tcheofertas.com.br/oferta/gastronomia-pizza/alvorada/guardioes-da-pizza/rodizio-de-pizzas-refri-liberado-desconto-promocao",
+      "ranking_plataforma": "3º mais vendido em Pizzas",
+      "gbp": {
+        "existe": true,
+        "nota": 4.2,
+        "total_avaliacoes": 145,
+        "tem_fotos": true,
+        "posts_recentes": false,
+        "responde_avaliacoes": false,
+        "score_gbp": 45
+      },
+      "site": {
+        "existe": false,
+        "url_estimada": null,
+        "mobile_ok": false,
+        "tem_seo": false,
+        "design_moderno": false,
+        "score_site": 0
+      },
+      "instagram": {
+        "existe": true,
+        "handle": "@guardioesdapizza.alvorada",
+        "seguidores_estimados": 2100,
+        "posts_por_semana": 2,
+        "engajamento_pct": 1.6,
+        "identidade_visual": true,
+        "score_instagram": 50
+      },
+      "score": 75,
+      "classificacao": "⚡ Lead Médio",
+      "tags": ["precisa-de-site", "precisa-de-gbp"],
+      "servicos_recomendados": ["Criação de Site", "Otimização GBP", "SEO Local"],
+      "pacote_sugerido": "Growth — R$ 2.800/mês",
+      "argumento_principal": "3º mais vendido em pizzas do RS inteiro. Sem site em Alvorada onde a concorrência digital é baixa — fácil dominar.",
+      "whatsapp_msg": "Oi! O Guardiões da Pizza em Alvorada é o 3º mais vendido em pizzas no Tchê Ofertas inteiro — impressionante! E a concorrência digital em Alvorada ainda é bem baixa. Isso significa que com um site bem feito e o Google Business otimizado, vocês podem dominar 'pizza Alvorada' facilmente. Posso mostrar o caminho?"
+    }
+  ]
+}

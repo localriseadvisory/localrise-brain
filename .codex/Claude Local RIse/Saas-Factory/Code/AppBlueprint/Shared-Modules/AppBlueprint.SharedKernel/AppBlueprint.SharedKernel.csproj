@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Basic Project Properties -->
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>12.0</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>c5bbe413-4aa6-4190-944c-bf90912749a1</UserSecretsId>
+
+    <!-- NuGet Package Configuration -->
+    <Version>$(GITVERSION_SemVer)</Version>
+    <PackageId>SaaS-Factory.AppBlueprint.SharedKernel</PackageId>
+    <Authors>Casper Rubæk</Authors>
+    <Description>Shared kernel library with base entities, value objects, and common domain primitives following DDD principles</Description>
+    <PackageTags>shared-kernel ddd domain-driven-design base-entities value-objects</PackageTags>
+    <PackageProjectUrl>https://github.com/saas-factory-labs/Saas-Factory/blob/main/Code/AppBlueprint/Shared-Modules/AppBlueprint.SharedKernel/README.md</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/saas-factory-labs/Saas-Factory</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>sharedkernel-icon.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\assets\icons\sharedkernel-icon.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.FeatureManagement" />
+    <PackageReference Include="AutoBogus" />
+    <PackageReference Include="Bogus" />
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
+    <PackageReference Include="MongoDB.Driver.Core" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="Stripe.net" />
+    
+    <!-- MSBuild (explicit override for vulnerable transitive dependencies) -->
+    <PackageReference Include="Microsoft.Build.Tasks.Core"/>
+    <PackageReference Include="Microsoft.Build.Utilities.Core"/>
+  </ItemGroup>
+
+</Project>

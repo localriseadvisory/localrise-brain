@@ -1,0 +1,529 @@
+{
+  "name": "LocalRise — Sistema Automação Operacional + Financeiro",
+  "nodes": [
+
+    {
+      "id": "trigger-shopify-webhook",
+      "name": "Webhook: Shopify Order",
+      "type": "n8n-nodes-base.webhook",
+      "position": [200, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook/shopify/orders",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "webhookId": "shopify-order-created"
+    },
+
+    {
+      "id": "parse-shopify-order",
+      "name": "Parse: Extrair dados do pedido Shopify",
+      "type": "n8n-nodes-base.set",
+      "position": [420, 300],
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            { "name": "shopify_order_id", "value": "={{ $json.id }}" },
+            { "name": "customer_name",    "value": "={{ $json.billing_address.first_name }} {{ $json.billing_address.last_name }}" },
+            { "name": "customer_email",   "value": "={{ $json.email }}" },
+            { "name": "payment_status",   "value": "={{ $json.financial_status }}" },
+            { "name": "fulfillment_status","value": "={{ $json.fulfillment_status || 'pending' }}" },
+            { "name": "payment_method",   "value": "={{ $json.payment_gateway }}" }
+          ],
+          "number": [
+            { "name": "total_amount",     "value": "={{ parseFloat($json.total_price) }}" }
+          ],
+          "object": [
+            { "name": "line_items",       "value": "={{ $json.line_items.map(i => ({ sku: i.sku, name: i.name, qty: i.quantity, price: parseFloat(i.price) })) }}" }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "insert-order-db",
+      "name": "DB: Inserir pedido",
+      "type": "n8n-nodes-base.postgres",
+      "position": [640, 300],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO orders (shopify_order_id, customer_name, customer_email, total_amount, payment_status, payment_method, line_items, status, shopify_created_at) VALUES ('{{ $json.shopify_order_id }}', '{{ $json.customer_name }}', '{{ $json.customer_email }}', {{ $json.total_amount }}, '{{ $json.payment_status }}', '{{ $json.payment_method }}', '{{ JSON.stringify($json.line_items) }}'::jsonb, 'pending', NOW()) ON CONFLICT (shopify_order_id) DO UPDATE SET payment_status = EXCLUDED.payment_status, updated_at = NOW() RETURNING id, shopify_order_id",
+        "additionalFields": {}
+      }
+    },
+
+    {
+      "id": "classify-income",
+      "name": "IF: Pagamento confirmado?",
+      "type": "n8n-nodes-base.if",
+      "position": [860, 300],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $('parse-shopify-order').item.json.payment_status }}",
+              "operation": "equal",
+              "value2": "paid"
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "insert-income-received",
+      "name": "DB: Registrar receita (recebida)",
+      "type": "n8n-nodes-base.postgres",
+      "position": [1080, 200],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO income (order_id, description, amount, category, status, expected_date, received_date, payment_method) VALUES ((SELECT id FROM orders WHERE shopify_order_id = '{{ $('parse-shopify-order').item.json.shopify_order_id }}'), 'Venda Shopify #{{ $('parse-shopify-order').item.json.shopify_order_id }}', {{ $('parse-shopify-order').item.json.total_amount }}, 'vendas_shopify', 'received', CURRENT_DATE, CURRENT_DATE, '{{ $('parse-shopify-order').item.json.payment_method }}')"
+      }
+    },
+
+    {
+      "id": "insert-income-projected",
+      "name": "DB: Registrar receita (projetada)",
+      "type": "n8n-nodes-base.postgres",
+      "position": [1080, 400],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO income (order_id, description, amount, category, status, expected_date, payment_method) VALUES ((SELECT id FROM orders WHERE shopify_order_id = '{{ $('parse-shopify-order').item.json.shopify_order_id }}'), 'Venda Shopify #{{ $('parse-shopify-order').item.json.shopify_order_id }} (pendente)', {{ $('parse-shopify-order').item.json.total_amount }}, 'vendas_shopify', 'projected', CURRENT_DATE + 3, '{{ $('parse-shopify-order').item.json.payment_method }}')"
+      }
+    },
+
+    {
+      "id": "create-ops-record",
+      "name": "DB: Criar registro operacional",
+      "type": "n8n-nodes-base.postgres",
+      "position": [1080, 300],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO operations (order_id, stage, priority) VALUES ((SELECT id FROM orders WHERE shopify_order_id = '{{ $('parse-shopify-order').item.json.shopify_order_id }}'), 'queue', 5)"
+      }
+    },
+
+    {
+      "id": "recalc-cashflow-shopify",
+      "name": "HTTP: Recalcular fluxo de caixa",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1300, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3001/api/internal/recalculate-cashflow",
+        "headers": { "Content-Type": "application/json" },
+        "body": { "triggered_by": "shopify_order", "order_id": "={{ $('parse-shopify-order').item.json.shopify_order_id }}" }
+      }
+    },
+
+    {
+      "id": "respond-shopify-webhook",
+      "name": "Resposta: 200 OK para Shopify",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [1520, 300],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{ \"status\": \"received\", \"order\": \"{{ $('parse-shopify-order').item.json.shopify_order_id }}\" }"
+      }
+    },
+
+    {
+      "id": "trigger-erp-sync",
+      "name": "Cron: Sync ERP (a cada 1h)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [200, 700],
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "hours", "hoursInterval": 1 }]
+        }
+      }
+    },
+
+    {
+      "id": "fetch-erp-payables",
+      "name": "HTTP: Buscar contas a pagar (ERP)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [420, 700],
+      "parameters": {
+        "method": "GET",
+        "url": "{{ $env.ERP_API_URL }}/api/v1/accounts-payable",
+        "headers": {
+          "Authorization": "Bearer {{ $env.ERP_API_TOKEN }}",
+          "Content-Type": "application/json"
+        },
+        "queryParameters": {
+          "due_date_from": "={{ $today.toISODate() }}",
+          "due_date_to": "={{ $today.plus({ days: 30 }).toISODate() }}",
+          "status": "open"
+        }
+      }
+    },
+
+    {
+      "id": "fetch-erp-receivables",
+      "name": "HTTP: Buscar contas a receber (ERP)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [420, 850],
+      "parameters": {
+        "method": "GET",
+        "url": "{{ $env.ERP_API_URL }}/api/v1/accounts-receivable",
+        "headers": {
+          "Authorization": "Bearer {{ $env.ERP_API_TOKEN }}"
+        },
+        "queryParameters": {
+          "due_date_from": "={{ $today.toISODate() }}",
+          "due_date_to": "={{ $today.plus({ days: 30 }).toISODate() }}",
+          "status": "open"
+        }
+      }
+    },
+
+    {
+      "id": "upsert-payables",
+      "name": "DB: Upsert contas a pagar",
+      "type": "n8n-nodes-base.postgres",
+      "position": [640, 700],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO accounts_payable (erp_id, description, supplier_name, amount, due_date, status, category) VALUES ('{{ $json.erp_id }}', '{{ $json.description }}', '{{ $json.supplier_name }}', {{ $json.amount }}, '{{ $json.due_date }}', '{{ $json.status }}', '{{ $json.category }}') ON CONFLICT (erp_id) DO UPDATE SET amount = EXCLUDED.amount, due_date = EXCLUDED.due_date, status = EXCLUDED.status, updated_at = NOW()"
+      }
+    },
+
+    {
+      "id": "upsert-receivables",
+      "name": "DB: Upsert contas a receber",
+      "type": "n8n-nodes-base.postgres",
+      "position": [640, 850],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO accounts_receivable (erp_id, description, customer_name, amount, due_date, status) VALUES ('{{ $json.erp_id }}', '{{ $json.description }}', '{{ $json.customer_name }}', {{ $json.amount }}, '{{ $json.due_date }}', '{{ $json.status }}') ON CONFLICT (erp_id) DO UPDATE SET amount = EXCLUDED.amount, due_date = EXCLUDED.due_date, status = EXCLUDED.status, updated_at = NOW()"
+      }
+    },
+
+    {
+      "id": "trigger-cashflow-daily",
+      "name": "Cron: Projeção de caixa diária (6h)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [200, 1100],
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "cronExpression", "expression": "0 6 * * *" }]
+        }
+      }
+    },
+
+    {
+      "id": "calc-cashflow",
+      "name": "HTTP: Calcular projeção 30 dias",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [420, 1100],
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3001/api/internal/recalculate-cashflow",
+        "headers": { "Content-Type": "application/json" },
+        "body": { "triggered_by": "daily_cron", "days_ahead": 30 }
+      }
+    },
+
+    {
+      "id": "get-cashflow-result",
+      "name": "DB: Buscar dias com saldo negativo",
+      "type": "n8n-nodes-base.postgres",
+      "position": [640, 1100],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT projection_date, closing_balance FROM cash_flow_projection WHERE is_negative = true AND projection_date >= CURRENT_DATE ORDER BY projection_date LIMIT 5"
+      }
+    },
+
+    {
+      "id": "check-negative-days",
+      "name": "IF: Há dias com saldo negativo?",
+      "type": "n8n-nodes-base.if",
+      "position": [860, 1100],
+      "parameters": {
+        "conditions": {
+          "number": [
+            { "value1": "={{ $items().length }}", "operation": "larger", "value2": 0 }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "create-balance-alert",
+      "name": "DB: Criar alerta saldo insuficiente",
+      "type": "n8n-nodes-base.postgres",
+      "position": [1080, 1000],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO alerts (type, severity, title, message, metadata) VALUES ('insufficient_balance', 'critical', 'Saldo projetado negativo em {{ $json.projection_date }}', 'Em {{ $json.projection_date }} o saldo projetado será de R$ {{ Number($json.closing_balance).toFixed(2) }}. Revise pagamentos e recebimentos.', '{\"projection_date\": \"{{ $json.projection_date }}\", \"closing_balance\": {{ $json.closing_balance }}}'::jsonb) ON CONFLICT DO NOTHING"
+      }
+    },
+
+    {
+      "id": "send-whatsapp-alert",
+      "name": "HTTP: Enviar alerta WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1300, 1000],
+      "parameters": {
+        "method": "POST",
+        "url": "{{ $env.WHATSAPP_API_URL }}/send",
+        "headers": { "Content-Type": "application/json" },
+        "body": {
+          "phone": "{{ $env.ALERT_PHONE }}",
+          "message": "🚨 *ALERTA FINANCEIRO*\n\nSaldo projetado negativo em *{{ $json.projection_date }}*\nValor: R$ {{ Number($json.closing_balance).toFixed(2) }}\n\nAcesse o painel para detalhes."
+        }
+      }
+    },
+
+    {
+      "id": "trigger-logistics-webhook",
+      "name": "Webhook: Fontes Log Status",
+      "type": "n8n-nodes-base.webhook",
+      "position": [200, 1400],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook/logistics/fontes-log",
+        "responseMode": "responseNode"
+      }
+    },
+
+    {
+      "id": "parse-logistics-event",
+      "name": "Parse: Evento logístico",
+      "type": "n8n-nodes-base.set",
+      "position": [420, 1400],
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            { "name": "tracking_code", "value": "={{ $json.tracking_code }}" },
+            { "name": "status",        "value": "={{ $json.status }}" },
+            { "name": "carrier",       "value": "fontes_log" },
+            { "name": "location",      "value": "={{ $json.location || '' }}" },
+            { "name": "note",          "value": "={{ $json.note || '' }}" },
+            { "name": "order_id",      "value": "={{ $json.order_id || '' }}" }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "insert-logistics-event",
+      "name": "DB: Inserir evento logístico",
+      "type": "n8n-nodes-base.postgres",
+      "position": [640, 1400],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO logistics_events (order_id, tracking_code, carrier, status, location, event_timestamp, raw_payload) VALUES ((SELECT id FROM orders WHERE shopify_order_id = '{{ $json.order_id }}' LIMIT 1), '{{ $json.tracking_code }}', '{{ $json.carrier }}', '{{ $json.status }}', '{{ $json.location }}', NOW(), '{{ JSON.stringify($input.item.json) }}'::jsonb)"
+      }
+    },
+
+    {
+      "id": "update-order-status-logistics",
+      "name": "DB: Atualizar status do pedido",
+      "type": "n8n-nodes-base.postgres",
+      "position": [860, 1400],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE orders SET status = CASE WHEN '{{ $json.status }}' = 'delivered' THEN 'delivered' WHEN '{{ $json.status }}' = 'shipped' THEN 'shipped' ELSE status END, updated_at = NOW() WHERE shopify_order_id = '{{ $json.order_id }}'"
+      }
+    },
+
+    {
+      "id": "check-logistics-exception",
+      "name": "IF: Status é exceção?",
+      "type": "n8n-nodes-base.if",
+      "position": [1080, 1400],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $('parse-logistics-event').item.json.status }}",
+              "operation": "equal",
+              "value2": "exception"
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "create-logistics-alert",
+      "name": "DB: Criar alerta exceção logística",
+      "type": "n8n-nodes-base.postgres",
+      "position": [1300, 1300],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO alerts (type, severity, title, message, reference_table, metadata) VALUES ('logistics_exception', 'warning', 'Exceção de entrega: {{ $('parse-logistics-event').item.json.tracking_code }}', 'Pedido {{ $('parse-logistics-event').item.json.order_id }} em exceção em {{ $('parse-logistics-event').item.json.location }}. Nota: {{ $('parse-logistics-event').item.json.note }}', 'logistics_events', '{\"tracking_code\": \"{{ $('parse-logistics-event').item.json.tracking_code }}\"}'::jsonb)"
+      }
+    },
+
+    {
+      "id": "trigger-alert-engine",
+      "name": "Cron: Motor de alertas (30min)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [200, 1700],
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "minutes", "minutesInterval": 30 }]
+        }
+      }
+    },
+
+    {
+      "id": "run-alert-engine",
+      "name": "HTTP: Executar motor de alertas",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [420, 1700],
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3001/api/internal/run-alert-engine",
+        "headers": { "Content-Type": "application/json" }
+      }
+    },
+
+    {
+      "id": "check-alerts-generated",
+      "name": "IF: Alertas críticos gerados?",
+      "type": "n8n-nodes-base.if",
+      "position": [640, 1700],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.critical_count }}",
+              "operation": "larger",
+              "value2": 0
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "send-critical-notifications",
+      "name": "HTTP: Enviar notificações críticas",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [860, 1600],
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3001/api/internal/send-notifications",
+        "headers": { "Content-Type": "application/json" },
+        "body": {
+          "channels": ["whatsapp", "email"],
+          "severity": "critical",
+          "alerts": "={{ $json.critical_alerts }}"
+        }
+      }
+    },
+
+    {
+      "id": "trigger-stuck-orders",
+      "name": "Cron: Verificar pedidos travados (6h)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [200, 1950],
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "cronExpression", "expression": "0 */6 * * *" }]
+        }
+      }
+    },
+
+    {
+      "id": "query-stuck-orders",
+      "name": "DB: Buscar pedidos travados",
+      "type": "n8n-nodes-base.postgres",
+      "position": [420, 1950],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT o.shopify_order_id, o.customer_name, o.total_amount, op.stage, EXTRACT(EPOCH FROM (NOW() - op.updated_at))/3600 AS hours_stuck FROM operations op JOIN orders o ON o.id = op.order_id WHERE op.stage NOT IN ('shipped','delivered','cancelled') AND op.updated_at < NOW() - INTERVAL '48 hours'"
+      }
+    },
+
+    {
+      "id": "create-stuck-order-alerts",
+      "name": "DB: Criar alertas pedidos travados",
+      "type": "n8n-nodes-base.postgres",
+      "position": [640, 1950],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO alerts (type, severity, title, message, metadata) VALUES ('order_stuck', 'warning', 'Pedido travado: {{ $json.shopify_order_id }} ({{ Math.round($json.hours_stuck) }}h)', 'Pedido {{ $json.shopify_order_id }} de {{ $json.customer_name }} está na fase \"{{ $json.stage }}\" há {{ Math.round($json.hours_stuck) }} horas sem atualização. Valor: R$ {{ $json.total_amount }}.', '{\"shopify_order_id\": \"{{ $json.shopify_order_id }}\", \"hours_stuck\": {{ $json.hours_stuck }}}'::jsonb) ON CONFLICT DO NOTHING"
+      }
+    },
+
+    {
+      "id": "error-handler-global",
+      "name": "Error Handler: Log + Notificar",
+      "type": "n8n-nodes-base.set",
+      "position": [1800, 1100],
+      "parameters": {
+        "values": {
+          "string": [
+            { "name": "error_message", "value": "={{ $json.message }}" },
+            { "name": "error_node",    "value": "={{ $runIndex }}" },
+            { "name": "workflow",      "value": "LocalRise Automação" },
+            { "name": "timestamp",     "value": "={{ new Date().toISOString() }}" }
+          ]
+        }
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+
+  "connections": {
+    "trigger-shopify-webhook":       { "main": [[{ "node": "parse-shopify-order",    "type": "main", "index": 0 }]] },
+    "parse-shopify-order":           { "main": [[{ "node": "insert-order-db",          "type": "main", "index": 0 }]] },
+    "insert-order-db":               { "main": [[{ "node": "classify-income",          "type": "main", "index": 0 }],
+                                                [{ "node": "create-ops-record",         "type": "main", "index": 0 }]] },
+    "classify-income":               { "main": [[{ "node": "insert-income-received",   "type": "main", "index": 0 }],
+                                                [{ "node": "insert-income-projected",  "type": "main", "index": 0 }]] },
+    "insert-income-received":        { "main": [[{ "node": "recalc-cashflow-shopify",  "type": "main", "index": 0 }]] },
+    "insert-income-projected":       { "main": [[{ "node": "recalc-cashflow-shopify",  "type": "main", "index": 0 }]] },
+    "recalc-cashflow-shopify":       { "main": [[{ "node": "respond-shopify-webhook",  "type": "main", "index": 0 }]] },
+
+    "trigger-erp-sync":              { "main": [[{ "node": "fetch-erp-payables",       "type": "main", "index": 0 }],
+                                                [{ "node": "fetch-erp-receivables",     "type": "main", "index": 0 }]] },
+    "fetch-erp-payables":            { "main": [[{ "node": "upsert-payables",          "type": "main", "index": 0 }]] },
+    "fetch-erp-receivables":         { "main": [[{ "node": "upsert-receivables",       "type": "main", "index": 0 }]] },
+
+    "trigger-cashflow-daily":        { "main": [[{ "node": "calc-cashflow",            "type": "main", "index": 0 }]] },
+    "calc-cashflow":                 { "main": [[{ "node": "get-cashflow-result",      "type": "main", "index": 0 }]] },
+    "get-cashflow-result":           { "main": [[{ "node": "check-negative-days",      "type": "main", "index": 0 }]] },
+    "check-negative-days":           { "main": [[{ "node": "create-balance-alert",     "type": "main", "index": 0 }],
+                                                []] },
+    "create-balance-alert":          { "main": [[{ "node": "send-whatsapp-alert",      "type": "main", "index": 0 }]] },
+
+    "trigger-logistics-webhook":     { "main": [[{ "node": "parse-logistics-event",   "type": "main", "index": 0 }]] },
+    "parse-logistics-event":         { "main": [[{ "node": "insert-logistics-event",  "type": "main", "index": 0 }]] },
+    "insert-logistics-event":        { "main": [[{ "node": "update-order-status-logistics", "type": "main", "index": 0 }]] },
+    "update-order-status-logistics": { "main": [[{ "node": "check-logistics-exception","type": "main", "index": 0 }]] },
+    "check-logistics-exception":     { "main": [[{ "node": "create-logistics-alert",  "type": "main", "index": 0 }], []] },
+
+    "trigger-alert-engine":          { "main": [[{ "node": "run-alert-engine",        "type": "main", "index": 0 }]] },
+    "run-alert-engine":              { "main": [[{ "node": "check-alerts-generated",  "type": "main", "index": 0 }]] },
+    "check-alerts-generated":        { "main": [[{ "node": "send-critical-notifications","type": "main", "index": 0 }], []] },
+
+    "trigger-stuck-orders":          { "main": [[{ "node": "query-stuck-orders",      "type": "main", "index": 0 }]] },
+    "query-stuck-orders":            { "main": [[{ "node": "create-stuck-order-alerts","type": "main", "index": 0 }]] }
+  },
+
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "error-handler-global"
+  },
+
+  "staticData": null,
+  "pinData": {},
+  "versionId": "localrise-v1.0.0",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

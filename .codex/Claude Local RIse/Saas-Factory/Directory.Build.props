@@ -1,0 +1,22 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- Enable latest language version -->
+    <LangVersion>latest</LangVersion>
+    <!-- Do not treat warnings as errors -->
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
+    <!-- Ensure code style does not block builds -->
+    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+    <!-- Enable/disable Roslyn analyzers -->
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <!-- Set warning level (default is 4, max is 5) -->
+    <WarningLevel>4</WarningLevel>
+    <!-- Define which warnings to suppress -->
+    <NoWarn>CS8618,CA1062,CA2007</NoWarn>
+    <!-- Add specific warnings you want to ignore -->
+  </PropertyGroup>
+</Project>

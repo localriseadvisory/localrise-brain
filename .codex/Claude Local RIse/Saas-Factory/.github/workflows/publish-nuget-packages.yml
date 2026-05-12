@@ -1,0 +1,108 @@
+name: "📦 Nuget:  Publish NuGet Packages to NuGet.org"
+
+permissions:
+  contents: read
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Only trigger on version tags (e.g., v1.0.0, v1.2.3-beta)
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  publish-packages:
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    strategy:
+      matrix:
+        package-name:
+          # Core shared kernel and contracts
+          - "AppBlueprint.SharedKernel"
+          - "AppBlueprint.Contracts"
+
+          # Domain and Application layers
+          - "AppBlueprint.Domain"
+          - "AppBlueprint.Application"
+
+          # Infrastructure layer
+          - "AppBlueprint.Infrastructure"
+
+          # Presentation layers
+          - "AppBlueprint.Presentation.ApiModule"
+          - "AppBlueprint.UiKit"
+
+          # API client SDK
+          - "AppBlueprint.Api.Client.Sdk"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
+        with:
+          fetch-depth: 0  # Full history needed for GitVersion
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309  # v5.1.0
+        with:
+          dotnet-version: '10.0.x'  # .NET 10 as specified in global.json
+          global-json-file: global.json
+
+      - name: Install GitVersion
+        run: |
+          dotnet --version
+          dotnet tool install --global GitVersion.Tool --version 6.1.0
+
+      - name: Determine Version
+        id: gitversion
+        run: |
+          # Debug: Show git status and config
+          echo "=== Git Debug Info ==="
+          git status
+          git log --oneline -5
+          git describe --tags --all || echo "No tags found"
+          ls -la
+          pwd
+          echo "=== GitVersion Config ==="
+          cat GitVersion.yml || echo "No GitVersion.yml found"
+          echo "=== Running GitVersion ==="
+          export PATH="$PATH:/root/.dotnet/tools"
+          dotnet-gitversion
+          RAW_VERSION=$(dotnet-gitversion /output json 2>&1 || echo '{}')
+          echo "Raw GitVersion Output: $RAW_VERSION"
+          VERSION=$(echo "$RAW_VERSION" | jq -r '.SemVer // empty' 2>/dev/null || echo "0.1.0")
+          if [[ -z "$VERSION" || "$VERSION" == "null" ]]; then
+            echo "GitVersion failed, using fallback version: 0.1.0"
+            VERSION="0.1.0"
+          fi
+          echo "Final VERSION: $VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Clean build directories
+        run: rm -rf obj bin
+        working-directory: Code/AppBlueprint/Shared-Modules/${{ matrix.package-name }}
+
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: Code/AppBlueprint/Shared-Modules/${{ matrix.package-name }}
+
+      - name: Build the project
+        run: dotnet build --configuration Release --no-restore
+        working-directory: Code/AppBlueprint/Shared-Modules/${{ matrix.package-name }}
+
+      - name: Pack NuGet package with versioning
+        run: dotnet pack --configuration Release --no-build --output ./bin/Release --p:Version=${{ env.VERSION }}
+        working-directory: Code/AppBlueprint/Shared-Modules/${{ matrix.package-name }}
+
+      - name: Push to NuGet.org
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          echo "Pushing ${{ matrix.package-name }} version ${{ env.VERSION }} to NuGet.org..."
+          dotnet nuget push ./bin/Release/*.nupkg \
+            --api-key "$NUGET_API_KEY" \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate
+        working-directory: Code/AppBlueprint/Shared-Modules/${{ matrix.package-name }}
+
+      - name: Summary
+        run: |
+          echo "✅ Successfully published ${{ matrix.package-name }} v${{ env.VERSION }} to NuGet.org"

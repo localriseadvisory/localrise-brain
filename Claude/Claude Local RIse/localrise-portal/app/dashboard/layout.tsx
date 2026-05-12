@@ -11,17 +11,14 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (!user) redirect('/login')
 
   const isAdmin = user.user_metadata?.role === 'admin'
-  let clientName = 'Don Aurelio Prime Grill'
 
-  if (!isAdmin) {
-    const { data } = await supabase
-      .from('profiles')
-      .select('clients(name)')
-      .eq('id', user.id)
-      .single()
-    const client = data?.clients as { name?: string } | null
-    clientName = client?.name || 'Don Aurelio Prime Grill'
-  }
+  const { data: profileData } = await supabase
+    .from('profiles')
+    .select('clients(name)')
+    .eq('id', user.id)
+    .single()
+  const client = profileData?.clients as { name?: string } | null
+  const clientName = client?.name || 'LocalRise'
 
   return (
     <div className="min-h-screen" style={{ background: 'radial-gradient(circle at top, rgba(227,27,35,0.08), transparent 28%), #09090b' }}>
@@ -48,7 +45,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
               <div>
                 <div className="text-sm font-black tracking-tight text-white">LocalRise</div>
                 <div className="text-[11px] font-semibold uppercase tracking-[0.18em]" style={{ color: '#E31B23' }}>
-                  Growth OS Demo
+                  Growth OS
                 </div>
               </div>
             </div>
@@ -59,7 +56,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
               <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-zinc-500">Conta ativa</div>
               <div className="mt-2 text-sm font-bold text-white">{clientName}</div>
               <div className="mt-2 text-xs leading-5 text-zinc-400">
-                Demo SaaS para restaurantes com aquisicao, CRM, automacoes, reputacao e eventos.
+                Métricas de crescimento e performance do seu negócio.
               </div>
             </div>
           </div>
@@ -76,11 +73,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
           <div className="border-b border-white/6 bg-black/20 px-4 py-4 backdrop-blur xl:hidden">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">LocalRise Demo</div>
+                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">LocalRise</div>
                 <div className="text-sm font-bold text-white">{clientName}</div>
               </div>
               <div className="rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-xs font-semibold text-red-300">
-                Dashboard SaaS
+                Dashboard
               </div>
             </div>
           </div>

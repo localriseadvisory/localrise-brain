@@ -1,0 +1,596 @@
+@page "/onboarding"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@layout AuthLayout
+@attribute [Authorize]
+@using AppBlueprint.Web.Models.Auth
+@using AppBlueprint.Infrastructure.Authorization
+@using AppBlueprint.Application.Services
+@using AppBlueprint.SharedKernel
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Http
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IAuthenticationTokenService AuthenticationTokenService
+@inject ISignupService SignupService
+@inject IHttpContextAccessor HttpContextAccessor
+@inject ILogger<Onboarding> Logger
+
+<main class="bg-white dark:bg-gray-900">
+    <div class="relative flex">
+
+        <!-- Content -->
+        <div class="w-full md:w-1/2">
+            <div class="min-h-[100dvh] h-full flex flex-col after:flex-1">
+
+                <div class="flex-1">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+                        <!-- Logo -->
+                        <a class="block" href="/">
+                            <svg width="32" height="32" viewBox="0 0 32 32">
+                                <defs>
+                                    <linearGradient x1="28.538%" y1="20.229%" x2="100%" y2="108.156%" id="logo-a">
+                                        <stop stop-color="#A5B4FC" stop-opacity="0" offset="0%" />
+                                        <stop stop-color="#A5B4FC" offset="100%" />
+                                    </linearGradient>
+                                    <linearGradient x1="88.638%" y1="29.267%" x2="22.42%" y2="100%" id="logo-b">
+                                        <stop stop-color="#38BDF8" stop-opacity="0" offset="0%" />
+                                        <stop stop-color="#38BDF8" offset="100%" />
+                                    </linearGradient>
+                                </defs>
+                                <rect fill="#6366F1" width="32" height="32" rx="16" />
+                                <path d="M18.277.16C26.035 1.267 32 7.938 32 16c0 8.837-7.163 16-16 16a15.937 15.937 0 01-10.426-3.863L18.277.161z" fill="#4F46E5" />
+                                <path d="M7.404 2.503l18.339 26.19A15.93 15.93 0 0116 32C7.163 32 0 24.837 0 16 0 10.327 2.952 5.344 7.404 2.503z" fill="url(#logo-a)" />
+                                <path d="M2.223 24.14L29.777 7.86A15.926 15.926 0 0132 16c0 8.837-7.163 16-16 16-5.864 0-10.991-3.154-13.777-7.86z" fill="url(#logo-b)" />
+                            </svg>
+                        </a>
+                        <a href="/auth/signout" class="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-rose-600 dark:hover:text-rose-400">
+                            Sign out
+                        </a>
+                    </div>
+
+                    @if (!isProcessing && string.IsNullOrEmpty(errorMessage))
+                    {
+                        <!-- Progress bar -->
+                        <div class="px-4 pt-12 pb-8">
+                            <div class="max-w-md mx-auto w-full">
+                                <div class="relative">
+                                    <div class="absolute left-0 top-1/2 -mt-px w-full h-0.5 bg-gray-200 dark:bg-gray-700" aria-hidden="true"></div>
+                                    <ul class="relative flex justify-between w-full">
+                                        <li>
+                                            <span class="flex items-center justify-center w-6 h-6 rounded-full text-xs font-semibold @(CurrentStep >= 1 ? "bg-violet-500 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400")">1</span>
+                                        </li>
+                                        <li>
+                                            <span class="flex items-center justify-center w-6 h-6 rounded-full text-xs font-semibold @(CurrentStep >= 2 ? "bg-violet-500 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400")">2</span>
+                                        </li>
+                                        <li>
+                                            <span class="flex items-center justify-center w-6 h-6 rounded-full text-xs font-semibold @(CurrentStep >= 3 ? "bg-violet-500 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400")">3</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="px-4 py-8">
+                    <div class="max-w-md mx-auto">
+
+                        @if (isProcessing)
+                        {
+                            <!-- Loading State -->
+                            <div class="text-center py-12">
+                                <svg class="animate-spin inline-flex w-12 h-12 text-violet-500 mb-6" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <h1 class="text-3xl text-gray-800 dark:text-gray-100 font-bold mb-2">@loadingMessage</h1>
+                                <p class="text-gray-500 dark:text-gray-400">Please wait...</p>
+                            </div>
+                        }
+                        else if (!string.IsNullOrEmpty(errorMessage))
+                        {
+                            <!-- Error State -->
+                            <div class="text-center py-8">
+                                <svg class="inline-flex w-16 h-16 fill-current mb-6" viewBox="0 0 64 64">
+                                    <circle class="text-rose-100 dark:text-rose-400/30" cx="32" cy="32" r="32" />
+                                    <path class="text-rose-500 dark:text-rose-400" d="M32 20v12" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none" />
+                                    <circle class="text-rose-500 dark:text-rose-400" cx="32" cy="40" r="2" fill="currentColor" />
+                                </svg>
+                                <h1 class="text-3xl text-gray-800 dark:text-gray-100 font-bold mb-4">Setup Failed</h1>
+                                <p class="text-rose-500 dark:text-rose-400 mb-8">@errorMessage</p>
+                                <button @onclick="RetrySetup" class="btn bg-violet-500 hover:bg-violet-600 text-white">
+                                    Try Again
+                                </button>
+                            </div>
+                        }
+                        else if (showAccountTypeSelection)
+                        {
+                            <!-- Step 1: Account Type Selection -->
+                            <h1 class="text-3xl text-gray-800 dark:text-gray-100 font-bold mb-6">Tell us what's your situation</h1>
+                            <InputRadioGroup @bind-Value="selectedAccountType">
+                                <div class="space-y-3 mb-8">
+                                    <label class="relative block cursor-pointer">
+                                        <InputRadio Value="@("personal")" class="peer sr-only" />
+                                        <div class="flex items-center bg-white text-sm font-medium text-gray-800 dark:text-gray-100 p-4 rounded dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 shadow-sm duration-150 ease-in-out">
+                                            <svg class="w-6 h-6 shrink-0 fill-current mr-4" viewBox="0 0 24 24">
+                                                <path class="text-violet-500" d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12z" />
+                                                <path class="text-violet-300" d="M12 14.4c-5.28 0-9.6 2.64-9.6 5.76V21.6h19.2v-1.44c0-3.12-4.32-5.76-9.6-5.76z" />
+                                            </svg>
+                                            <span>Personal Account</span>
+                                        </div>
+                                        <div class="absolute inset-0 border-2 border-transparent peer-checked:border-violet-400 dark:peer-checked:border-violet-500 rounded pointer-events-none" aria-hidden="true"></div>
+                                    </label>
+                                    <label class="relative block cursor-pointer">
+                                        <InputRadio Value="@("business")" class="peer sr-only" />
+                                        <div class="flex items-center bg-white text-sm font-medium text-gray-800 dark:text-gray-100 p-4 rounded dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 shadow-sm duration-150 ease-in-out">
+                                            <svg class="w-6 h-6 shrink-0 fill-current mr-4" viewBox="0 0 24 24">
+                                                <path class="text-violet-500" d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                                <path class="text-violet-300" d="M9 22V12h6v10" />
+                                            </svg>
+                                            <span>Business Account</span>
+                                        </div>
+                                        <div class="absolute inset-0 border-2 border-transparent peer-checked:border-violet-400 dark:peer-checked:border-violet-500 rounded pointer-events-none" aria-hidden="true"></div>
+                                    </label>
+                                </div>
+                            </InputRadioGroup>
+                            <div class="flex items-center justify-between">
+                                <button type="button"
+                                        @onclick="@(() => SelectAccountType(selectedAccountType))"
+                                        disabled="@string.IsNullOrEmpty(selectedAccountType)"
+                                        class="btn bg-violet-500 hover:bg-violet-600 text-white ml-auto disabled:opacity-50 disabled:cursor-not-allowed">
+                                    Next Step -&gt;
+                                </button>
+                            </div>
+                        }
+                        else if (showPersonalForm)
+                        {
+                            <!-- Step 2: Personal Account Form -->
+                            <h1 class="text-3xl text-gray-800 dark:text-gray-100 font-bold mb-6">Set up your personal account</h1>
+                            <EditForm Model="@personalModel" OnValidSubmit="@CreatePersonalAccountAsync" FormName="onboarding-personal">
+                                <DataAnnotationsValidator />
+                                <div class="space-y-4 mb-8">
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300" for="personal-first-name">First Name <span class="text-rose-500">*</span></label>
+                                        <InputText id="personal-first-name" @bind-Value="personalModel.FirstName" class="form-input w-full" placeholder="John" />
+                                        <ValidationMessage For="@(() => personalModel.FirstName)" class="text-rose-500 text-xs mt-0.5" />
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300" for="personal-last-name">Last Name <span class="text-rose-500">*</span></label>
+                                        <InputText id="personal-last-name" @bind-Value="personalModel.LastName" class="form-input w-full" placeholder="Doe" />
+                                        <ValidationMessage For="@(() => personalModel.LastName)" class="text-rose-500 text-xs mt-0.5" />
+                                    </div>
+                                    <div class="flex items-center mt-2">
+                                        <label class="flex items-center cursor-pointer">
+                                            <InputCheckbox @bind-Value="personalModel.AcceptTerms" id="personal-terms" class="form-checkbox mr-2" />
+                                            <span class="text-sm text-gray-600 dark:text-gray-400">
+                                                I accept the <a href="/terms" target="_blank" class="font-medium text-violet-500 hover:text-violet-600 dark:hover:text-violet-400">Terms and Conditions</a>
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <ValidationMessage For="@(() => personalModel.AcceptTerms)" class="text-rose-500 text-xs" />
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <button type="button" @onclick="BackToAccountTypeSelection" class="text-sm underline hover:no-underline text-gray-600 dark:text-gray-400">&lt;- Back</button>
+                                    <button type="submit" class="btn bg-violet-500 hover:bg-violet-600 text-white ml-auto">Create Account -&gt;</button>
+                                </div>
+                            </EditForm>
+                        }
+                        else if (showBusinessForm)
+                        {
+                            <!-- Step 2: Business Account Form -->
+                            <h1 class="text-3xl text-gray-800 dark:text-gray-100 font-bold mb-6">Set up your business account</h1>
+                            <EditForm Model="@businessModel" OnValidSubmit="@CreateBusinessAccountAsync" FormName="onboarding-business">
+                                <DataAnnotationsValidator />
+                                <div class="space-y-4 mb-8">
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300" for="company-name">Company Name <span class="text-rose-500">*</span></label>
+                                        <InputText id="company-name" @bind-Value="businessModel.CompanyName" class="form-input w-full" placeholder="Acme Inc." />
+                                        <ValidationMessage For="@(() => businessModel.CompanyName)" class="text-rose-500 text-xs mt-0.5" />
+                                    </div>
+                                    <div class="flex space-x-4">
+                                        <div class="flex-1">
+                                            <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300" for="business-first-name">First Name <span class="text-rose-500">*</span></label>
+                                            <InputText id="business-first-name" @bind-Value="businessModel.FirstName" class="form-input w-full" placeholder="John" />
+                                            <ValidationMessage For="@(() => businessModel.FirstName)" class="text-rose-500 text-xs mt-0.5" />
+                                        </div>
+                                        <div class="flex-1">
+                                            <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300" for="business-last-name">Last Name <span class="text-rose-500">*</span></label>
+                                            <InputText id="business-last-name" @bind-Value="businessModel.LastName" class="form-input w-full" placeholder="Doe" />
+                                            <ValidationMessage For="@(() => businessModel.LastName)" class="text-rose-500 text-xs mt-0.5" />
+                                        </div>
+                                    </div>
+                                    <div class="relative" @onfocusout="OnCountryDropdownFocusOut">
+                                        <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300" for="business-country">Country <span class="text-rose-500">*</span></label>
+                                        <div class="relative">
+                                            <input id="business-country"
+                                                   type="text"
+                                                   class="form-input w-full pr-10"
+                                                   placeholder="Search country..."
+                                                   autocomplete="off"
+                                                   value="@countrySearchText"
+                                                   @oninput="OnCountrySearchInput"
+                                                   @onfocus="OpenCountryDropdown"
+                                                   @onkeydown="OnCountryKeyDown" />
+                                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                                </svg>
+                                            </div>
+                                            @if (showCountryDropdown && filteredCountries.Count > 0)
+                                            {
+                                                <div class="absolute z-20 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-lg max-h-48 overflow-y-auto">
+                                                    @foreach (var country in filteredCountries)
+                                                    {
+                                                        <button type="button"
+                                                                class="w-full text-left px-4 py-2 text-sm text-gray-800 dark:text-gray-100 hover:bg-violet-50 dark:hover:bg-violet-900/30 hover:text-violet-600 dark:hover:text-violet-400 focus:outline-none"
+                                                                @onclick="@(() => SelectCountry(country))">
+                                                            @country
+                                                        </button>
+                                                    }
+                                                </div>
+                                            }
+                                            else if (showCountryDropdown && !string.IsNullOrEmpty(countrySearchText) && filteredCountries.Count == 0)
+                                            {
+                                                <div class="absolute z-20 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-lg">
+                                                    <div class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">No countries found</div>
+                                                </div>
+                                            }
+                                        </div>
+                                        <ValidationMessage For="@(() => businessModel.Country)" class="text-rose-500 text-xs mt-0.5" />
+                                    </div>
+                                    <div class="flex items-center mt-2">
+                                        <label class="flex items-center cursor-pointer">
+                                            <InputCheckbox @bind-Value="businessModel.AcceptTerms" id="business-terms" class="form-checkbox mr-2" />
+                                            <span class="text-sm text-gray-600 dark:text-gray-400">
+                                                I accept the <a href="/terms" target="_blank" class="font-medium text-violet-500 hover:text-violet-600 dark:hover:text-violet-400">Terms and Conditions</a>
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <ValidationMessage For="@(() => businessModel.AcceptTerms)" class="text-rose-500 text-xs" />
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <button type="button" @onclick="BackToAccountTypeSelection" class="text-sm underline hover:no-underline text-gray-600 dark:text-gray-400">&lt;- Back</button>
+                                    <button type="submit" class="btn bg-violet-500 hover:bg-violet-600 text-white ml-auto">Create Account -&gt;</button>
+                                </div>
+                            </EditForm>
+                        }
+                        else if (isSuccess)
+                        {
+                            <!-- Step 3: Success -->
+                            <div class="text-center">
+                                <svg class="inline-flex w-16 h-16 fill-current mb-6" viewBox="0 0 64 64">
+                                    <circle class="text-emerald-100 dark:text-emerald-400/30" cx="32" cy="32" r="32" />
+                                    <path class="text-emerald-500 dark:text-emerald-400" d="m28.5 41-8-8 3-3 5 5 12-12 3 3z" />
+                                </svg>
+                                <h1 class="text-3xl text-gray-800 dark:text-gray-100 font-bold mb-8">
+                                    Nice to have you, @(selectedAccountType == "personal" ? $"{personalModel.FirstName} {personalModel.LastName}" : businessModel.CompanyName)! 🎉
+                                </h1>
+                                <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-8 text-left">
+                                    <p class="text-sm text-blue-800 dark:text-blue-200 mb-1">
+                                        <strong>Important:</strong> Please sign out and sign in again to activate your account.
+                                    </p>
+                                    <p class="text-sm text-blue-700 dark:text-blue-300">
+                                        This updates your session with the new account information.
+                                    </p>
+                                </div>
+                                <a href="/auth/signout" class="btn bg-violet-500 hover:bg-violet-600 text-white">
+                                    Sign Out &amp; Continue -&gt;
+                                </a>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Image (right panel) -->
+        <div class="hidden md:block absolute top-0 bottom-0 right-0 md:w-1/2" aria-hidden="true">
+            <img class="object-cover object-center w-full h-full" src="_content/AppBlueprint.UiKit/images/onboarding-image.jpg" width="760" height="1024" alt="Onboarding" />
+            <img class="absolute top-1/4 left-0 -translate-x-1/2 ml-8 hidden lg:block" src="_content/AppBlueprint.UiKit/images/auth-decoration.png" width="218" height="224" alt="Authentication decoration" />
+        </div>
+
+    </div>
+</main>
+
+@code {
+    private bool showAccountTypeSelection = true;
+    private bool showPersonalForm;
+    private bool showBusinessForm;
+    private bool isProcessing;
+    private bool isSuccess;
+    private string errorMessage = string.Empty;
+    private string loadingMessage = "Setting up your account...";
+    private string selectedAccountType = string.Empty;
+
+    private int CurrentStep
+    {
+        get
+        {
+            if (isSuccess) return 3;
+            if (showPersonalForm || showBusinessForm) return 2;
+            return 1;
+        }
+    }
+
+    private PersonalSignupModel personalModel = new();
+    private BusinessSignupModel businessModel = new();
+
+    // Country dropdown state
+    private string countrySearchText = string.Empty;
+    private bool showCountryDropdown;
+    private List<string> filteredCountries = new();
+
+    private static readonly List<string> AllCountries =
+    [
+        "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda",
+        "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain",
+        "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan",
+        "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria",
+        "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada",
+        "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros",
+        "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark",
+        "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador",
+        "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji",
+        "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece",
+        "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras",
+        "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel",
+        "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati",
+        "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia",
+        "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi",
+        "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania",
+        "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro",
+        "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands",
+        "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia",
+        "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea",
+        "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania",
+        "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines",
+        "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia",
+        "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands",
+        "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka",
+        "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan",
+        "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago",
+        "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine",
+        "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan",
+        "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
+    ];
+
+    private void OnCountrySearchInput(ChangeEventArgs e)
+    {
+        countrySearchText = e.Value?.ToString() ?? string.Empty;
+        businessModel.Country = string.Empty;
+        FilterCountries();
+        showCountryDropdown = true;
+    }
+
+    private void OpenCountryDropdown()
+    {
+        FilterCountries();
+        showCountryDropdown = true;
+    }
+
+    private void FilterCountries()
+    {
+        if (string.IsNullOrWhiteSpace(countrySearchText))
+        {
+            filteredCountries = AllCountries.Take(20).ToList();
+        }
+        else
+        {
+            filteredCountries = AllCountries
+                .Where(c => c.Contains(countrySearchText, StringComparison.OrdinalIgnoreCase))
+                .Take(20)
+                .ToList();
+        }
+    }
+
+    private void SelectCountry(string country)
+    {
+        businessModel.Country = country;
+        countrySearchText = country;
+        showCountryDropdown = false;
+        StateHasChanged();
+    }
+
+    private void OnCountryKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Escape")
+        {
+            showCountryDropdown = false;
+        }
+    }
+
+    private async Task OnCountryDropdownFocusOut()
+    {
+        await Task.Delay(150);
+        showCountryDropdown = false;
+        StateHasChanged();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Logger.LogInformation("[Onboarding] Page loaded");
+            
+            // Check if user already has a tenant
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            string? tenantIdClaim = user.FindFirst("tenant_id")?.Value;
+            
+            if (!string.IsNullOrEmpty(tenantIdClaim))
+            {
+                Logger.LogInformation("[Onboarding] User already has tenant_id: {TenantId} - redirecting to dashboard", tenantIdClaim);
+                Navigation.NavigateTo("/dashboard", forceLoad: false);
+                return;
+            }
+
+            Logger.LogInformation("[Onboarding] User needs to set up account");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "[Onboarding] Error during initialization");
+            errorMessage = "An unexpected error occurred. Please try again.";
+        }
+    }
+
+    private void SelectAccountType(string accountType)
+    {
+        selectedAccountType = accountType;
+        showAccountTypeSelection = false;
+
+        if (accountType == "personal")
+        {
+            showPersonalForm = true;
+        }
+        else
+        {
+            showBusinessForm = true;
+        }
+
+        StateHasChanged();
+    }
+
+    private void BackToAccountTypeSelection()
+    {
+        showPersonalForm = false;
+        showBusinessForm = false;
+        showAccountTypeSelection = true;
+        selectedAccountType = string.Empty;
+        countrySearchText = string.Empty;
+        showCountryDropdown = false;
+        filteredCountries.Clear();
+    }
+
+    private async Task CreatePersonalAccountAsync()
+    {
+        try
+        {
+            isProcessing = true;
+            loadingMessage = "Creating your personal workspace...";
+            StateHasChanged();
+
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            string logtoUserId = user.FindFirst("sub")?.Value 
+                                ?? user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value 
+                                ?? throw new InvalidOperationException("No user ID found in claims");
+            
+            string email = user.FindFirst("email")?.Value 
+                          ?? user.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value 
+                          ?? throw new InvalidOperationException("No email found in claims");
+
+            Logger.LogInformation("[Onboarding] Creating Personal tenant for {Email}", email);
+
+            string? ipAddress = HttpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+            string? userAgent = HttpContextAccessor.HttpContext?.Request.Headers["User-Agent"].ToString();
+
+            SignupResult result = await SignupService.CreateTenantAndUserAsync(new SignupRequest
+            {
+                TenantId = PrefixedUlid.Generate("tenant"),
+                TenantName = $"{personalModel.FirstName} {personalModel.LastName}",
+                UserId = PrefixedUlid.Generate("user"),
+                FirstName = personalModel.FirstName,
+                LastName = personalModel.LastName,
+                Email = email,
+                ExternalAuthId = logtoUserId,
+                IpAddress = ipAddress,
+                UserAgent = userAgent,
+                TenantType = 0 // Personal (B2C)
+            });
+
+            Logger.LogInformation(
+                "[Onboarding] Personal account created - TenantId: {TenantId}, UserId: {UserId}",
+                result.TenantId, result.UserId);
+
+            // Show success state
+            isProcessing = false;
+            isSuccess = true;
+            showPersonalForm = false;
+            StateHasChanged();
+            
+            Logger.LogInformation("[Onboarding] Personal account setup complete");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "[Onboarding] Failed to create Personal account");
+            errorMessage = ex.Message.Contains("already registered") 
+                ? "This email is already registered. Please contact support if you believe this is an error."
+                : "Failed to create account. Please try again.";
+            isProcessing = false;
+        }
+    }
+
+    private async Task CreateBusinessAccountAsync()
+    {
+        try
+        {
+            isProcessing = true;
+            loadingMessage = "Creating your business account...";
+            StateHasChanged();
+
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            string logtoUserId = user.FindFirst("sub")?.Value 
+                                ?? user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value 
+                                ?? throw new InvalidOperationException("No user ID found in claims");
+            
+            string email = user.FindFirst("email")?.Value 
+                          ?? user.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value 
+                          ?? throw new InvalidOperationException("No email found in claims");
+
+            Logger.LogInformation("[Onboarding] Creating Business tenant for {Email}, Company: {CompanyName}", 
+                email, businessModel.CompanyName);
+
+            string? ipAddress = HttpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+            string? userAgent = HttpContextAccessor.HttpContext?.Request.Headers["User-Agent"].ToString();
+
+            SignupResult result = await SignupService.CreateTenantAndUserAsync(new SignupRequest
+            {
+                TenantId = PrefixedUlid.Generate("tenant"),
+                TenantName = businessModel.CompanyName,
+                UserId = PrefixedUlid.Generate("user"),
+                FirstName = businessModel.FirstName,
+                LastName = businessModel.LastName,
+                Email = email,
+                ExternalAuthId = logtoUserId,
+                IpAddress = ipAddress,
+                UserAgent = userAgent,
+                TenantType = 1 // Organization (B2B)
+            });
+
+            Logger.LogInformation(
+                "[Onboarding] Business account created - Company: {CompanyName}, TenantId: {TenantId}, UserId: {UserId}",
+                businessModel.CompanyName, result.TenantId, result.UserId);
+
+            // Show success state
+            isProcessing = false;
+            isSuccess = true;
+            showBusinessForm = false;
+            StateHasChanged();
+            
+            Logger.LogInformation("[Onboarding] Business account setup complete");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "[Onboarding] Failed to create Business account");
+            errorMessage = ex.Message.Contains("already registered") 
+                ? "This email is already registered. Please contact support if you believe this is an error."
+                : "Failed to create account. Please try again.";
+            isProcessing = false;
+        }
+    }
+
+    private void RetrySetup()
+    {
+        errorMessage = string.Empty;
+        isProcessing = false;
+        BackToAccountTypeSelection();
+    }
+}

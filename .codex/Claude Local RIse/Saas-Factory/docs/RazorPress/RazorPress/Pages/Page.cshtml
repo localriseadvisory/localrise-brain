@@ -1,0 +1,27 @@
+@page "/{*slug}"
+@model RazorPress.Page
+@inject MarkdownPages Markdown
+
+@implements IRenderStatic<RazorPress.Page>
+@functions {
+    public List<Page> GetStaticProps(RenderContext ctx)
+    {
+        var markdown = ctx.Resolve<MarkdownPages>();
+        // Get all visible pages using GetAll which returns all pages in all directories
+        var allPages = markdown.GetAll();
+        return allPages
+            .Where(page => page.Path != "_pages/index.md")
+            .Map(page => new Page { Slug = page.Slug! });
+    }
+}
+
+@await Html.PartialAsync("DocsPage", new Shared.DocsPage {
+   Brand = "ServiceStack Documentation",
+   Slug = Model.Slug,
+   Folder = "",
+   DefaultMenu = new MarkdownMenu {
+       Icon = Markdown.DefaultMenuIcon,
+       Text = "Home",
+       Link = "/",
+   },
+}.Init(this, Markdown))

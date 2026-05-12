@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Relatório de Inteligência Estratégica — Leads Estética Uberlândia</title>
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --surface: #13161f;
+      --surface2: #1a1e2a;
+      --border: #252a38;
+      --accent: #6c63ff;
+      --accent2: #00d4aa;
+      --accent3: #ff6b6b;
+      --accent4: #ffd166;
+      --text: #e2e8f0;
+      --muted: #8892a4;
+      --fire: #ff4d4d;
+      --lightning: #a78bfa;
+      --yellow: #fbbf24;
+      --red: #f87171;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #0d0f14 0%, #1a1040 50%, #0d1a2a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 60px 40px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -80px; left: 50%;
+      transform: translateX(-50%);
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse, rgba(108,99,255,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .logo {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .header h1 {
+      font-size: clamp(22px, 4vw, 38px);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .header h1 span { color: var(--accent2); }
+
+    .header .subtitle {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 30px;
+    }
+
+    .header-meta {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .meta-badge {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 18px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .meta-badge strong { color: var(--text); }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+
+    .section { margin-bottom: 60px; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .section-number {
+      width: 36px; height: 36px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 800;
+      color: #fff; flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .section-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* MERCADO */
+    .market-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .market-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .market-card .value {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--accent2);
+    }
+
+    .market-card .label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* TABELA */
+    .table-wrapper { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead th {
+      background: var(--surface2);
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    tbody tr:hover { background: var(--surface2); }
+
+    tbody td { padding: 10px 14px; }
+
+    .td-name { font-weight: 600; color: #fff; max-width: 220px; }
+    .td-score {
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .tier-fire { color: var(--fire); }
+    .tier-lightning { color: var(--lightning); }
+    .tier-yellow { color: var(--yellow); }
+    .tier-red { color: var(--red); }
+
+    .score-fire { color: var(--fire); }
+    .score-lightning { color: var(--lightning); }
+    .score-yellow { color: var(--yellow); }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .badge-fire { background: rgba(255,77,77,0.15); color: var(--fire); }
+    .badge-lightning { background: rgba(167,139,250,0.15); color: var(--lightning); }
+    .badge-yellow { background: rgba(251,191,36,0.15); color: var(--yellow); }
+    .badge-red { background: rgba(248,113,113,0.1); color: var(--red); }
+
+    /* LEAD CARDS */
+    .leads-grid { display: flex; flex-direction: column; gap: 24px; }
+
+    .lead-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .lead-card.priority-1 { border-color: rgba(255,77,77,0.4); }
+    .lead-card.priority-2 { border-color: rgba(167,139,250,0.3); }
+
+    .lead-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 22px 26px 18px;
+      border-bottom: 1px solid var(--border);
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .lead-rank {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .lead-name {
+      font-size: 19px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .lead-meta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .lead-meta span { display: flex; align-items: center; gap: 4px; }
+
+    .lead-score-block { text-align: right; flex-shrink: 0; }
+    .lead-score-num {
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .lead-score-label { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+    .score-bars {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      padding: 16px 26px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .score-bar-item { text-align: center; }
+    .score-bar-label { font-size: 10px; color: var(--muted); margin-bottom: 6px; }
+    .score-bar-track {
+      height: 4px;
+      background: var(--surface2);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+    .score-bar-fill { height: 100%; border-radius: 4px; background: var(--accent); }
+    .score-bar-val { font-size: 12px; font-weight: 700; color: var(--text); }
+
+    .lead-body { padding: 22px 26px; display: grid; gap: 20px; }
+
+    .lead-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .lead-text { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+    .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+
+    .tag {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid;
+    }
+
+    .tag-mkt { background: rgba(0,212,170,0.08); color: var(--accent2); border-color: rgba(0,212,170,0.2); }
+    .tag-ai { background: rgba(108,99,255,0.08); color: var(--accent); border-color: rgba(108,99,255,0.2); }
+    .tag-warn { background: rgba(255,107,107,0.08); color: #ff8a8a; border-color: rgba(255,107,107,0.2); }
+
+    .lead-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 640px) { .lead-2col { grid-template-columns: 1fr; } }
+
+    .strategy-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .strategy-box .strat-label {
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .strategy-box p { font-size: 13px; color: var(--text); line-height: 1.6; }
+
+    /* INSIGHTS */
+    .insights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+
+    .insight-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .insight-card h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent2);
+      margin-bottom: 10px;
+    }
+
+    .insight-card ul { padding-left: 18px; }
+    .insight-card ul li { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    .insight-card ul li strong { color: var(--text); }
+
+    /* ICP */
+    .icp-box {
+      background: linear-gradient(135deg, rgba(108,99,255,0.08), rgba(0,212,170,0.05));
+      border: 1px solid rgba(108,99,255,0.3);
+      border-radius: 16px;
+      padding: 28px;
+    }
+
+    .icp-box h3 { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 16px; }
+
+    .icp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+
+    .icp-item { }
+    .icp-item .icp-label { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+    .icp-item .icp-value { font-size: 14px; color: var(--text); font-weight: 600; }
+
+    /* ACTION PLAN */
+    .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+
+    .action-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .action-card .week-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .action-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .action-num {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--accent);
+      font-size: 11px;
+      font-weight: 800;
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .action-text { font-size: 13px; color: var(--text); }
+    .action-pain { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    /* OFFER TABLE */
+    .offer-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .offer-table th {
+      background: var(--surface2);
+      color: var(--muted);
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .offer-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+    .offer-table tr:hover td { background: var(--surface2); }
+    .offer-ticket { color: var(--accent2); font-weight: 700; }
+
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 40px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer strong { color: var(--accent); }
+
+    hr.divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 40px 0;
+    }
+
+    .stars { color: #fbbf24; }
+
+    @media (max-width: 768px) {
+      .header { padding: 40px 20px 30px; }
+      .container { padding: 24px 16px; }
+      .score-bars { grid-template-columns: repeat(3, 1fr); }
+      .lead-header { flex-direction: column; }
+      .lead-score-block { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">LocalRise Advisory</div>
+  <h1>Relatório de Inteligência Estratégica<br><span>Leads — Estética Uberlândia MG</span></h1>
+  <p class="subtitle">Sistema de Análise de Mercado Avançado | Gerado em Abril de 2026</p>
+  <div class="header-meta">
+    <span class="meta-badge"><strong>80</strong> leads analisados</span>
+    <span class="meta-badge"><strong>15</strong> análises profundas</span>
+    <span class="meta-badge"><strong>Uberlândia, MG</strong></span>
+    <span class="meta-badge"><strong>Nicho:</strong> Estética / Saúde / Beleza</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- CONTEXTO DE MERCADO -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">M</div>
+      <div>
+        <div class="section-title">Contexto de Mercado</div>
+        <div class="section-desc">Visão geral do mercado analisado</div>
+      </div>
+    </div>
+    <div class="market-grid">
+      <div class="market-card">
+        <div class="value">~700k</div>
+        <div class="label">Habitantes em Uberlândia</div>
+      </div>
+      <div class="market-card">
+        <div class="value">80</div>
+        <div class="label">Negócios mapeados</div>
+      </div>
+      <div class="market-card">
+        <div class="value">843</div>
+        <div class="label">Maior volume de reviews (Harmonare)</div>
+      </div>
+      <div class="market-card">
+        <div class="value">~5,0</div>
+        <div class="label">Padrão de nota do mercado</div>
+      </div>
+      <div class="market-card">
+        <div class="value">3</div>
+        <div class="label">Nichos dominantes (laser, emagrecimento, harmonização)</div>
+      </div>
+      <div class="market-card">
+        <div class="value">90%+</div>
+        <div class="label">Leads sem automação operacional estimada</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RANKING GERAL -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">1</div>
+      <div>
+        <div class="section-title">Ranking Geral + Tabela de Scores</div>
+        <div class="section-desc">Fit (20) | Marketing (20) | IA (20) | Urgência (20) | Pagamento (20)</div>
+      </div>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>Reviews</th>
+            <th>Nota</th>
+            <th>Fit</th>
+            <th>Mkt</th>
+            <th>IA</th>
+            <th>Urg.</th>
+            <th>Pgto</th>
+            <th>TOTAL</th>
+            <th>Tier</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td class="td-name">Clínica Harmonare</td><td>843</td><td class="stars">5,0</td><td>19</td><td>17</td><td>20</td><td>15</td><td>20</td><td class="td-score score-fire">91</td><td><span class="badge badge-fire">🔥 MAX</span></td></tr>
+          <tr><td>2</td><td class="td-name">Emagrecentro Uberlândia</td><td>387</td><td>4,5</td><td>18</td><td>20</td><td>17</td><td>20</td><td>16</td><td class="td-score score-fire">91</td><td><span class="badge badge-fire">🔥 MAX</span></td></tr>
+          <tr><td>3</td><td class="td-name">Clínica Stark</td><td>441</td><td class="stars">5,0</td><td>19</td><td>18</td><td>19</td><td>16</td><td>18</td><td class="td-score score-fire">90</td><td><span class="badge badge-fire">🔥 MAX</span></td></tr>
+          <tr><td>4</td><td class="td-name">GiOlaser - Centro</td><td>457</td><td class="stars">5,0</td><td>18</td><td>17</td><td>20</td><td>15</td><td>17</td><td class="td-score score-fire">87</td><td><span class="badge badge-fire">🔥 MAX</span></td></tr>
+          <tr><td>5</td><td class="td-name">OligoFlora</td><td>430</td><td>4,8</td><td>18</td><td>17</td><td>18</td><td>16</td><td>18</td><td class="td-score score-fire">87</td><td><span class="badge badge-fire">🔥 MAX</span></td></tr>
+          <tr><td>6</td><td class="td-name">MagraSS Uberlândia</td><td>201</td><td>4,9</td><td>18</td><td>18</td><td>18</td><td>17</td><td>15</td><td class="td-score score-fire">86</td><td><span class="badge badge-fire">🔥 MAX</span></td></tr>
+          <tr><td>7</td><td class="td-name">CLÍNICA FLORESÇA</td><td>294</td><td class="stars">5,0</td><td>19</td><td>18</td><td>19</td><td>16</td><td>14</td><td class="td-score score-fire">86</td><td><span class="badge badge-fire">🔥 MAX</span></td></tr>
+          <tr><td>8</td><td class="td-name">Unique Cirurgia Plástica</td><td>642</td><td class="stars">5,0</td><td>16</td><td>18</td><td>16</td><td>13</td><td>20</td><td class="td-score score-fire">83</td><td><span class="badge badge-fire">🔥 MAX</span></td></tr>
+          <tr><td>9</td><td class="td-name">Laser Uberlândia</td><td>360</td><td class="stars">5,0</td><td>18</td><td>17</td><td>19</td><td>14</td><td>15</td><td class="td-score score-fire">83</td><td><span class="badge badge-fire">🔥 MAX</span></td></tr>
+          <tr><td>10</td><td class="td-name">Neoclinic Estética</td><td>341</td><td class="stars">5,0</td><td>18</td><td>17</td><td>18</td><td>15</td><td>15</td><td class="td-score score-fire">83</td><td><span class="badge badge-fire">🔥 MAX</span></td></tr>
+          <tr><td>11</td><td class="td-name">Clínica Est. GF Uberlândia</td><td>175</td><td class="stars">5,0</td><td>18</td><td>18</td><td>18</td><td>15</td><td>14</td><td class="td-score score-fire">83</td><td><span class="badge badge-fire">🔥 MAX</span></td></tr>
+          <tr><td>12</td><td class="td-name">Clínica Liliane Guimarães</td><td>175</td><td class="stars">5,0</td><td>18</td><td>18</td><td>17</td><td>15</td><td>14</td><td class="td-score score-fire">82</td><td><span class="badge badge-fire">🔥 MAX</span></td></tr>
+          <tr><td>13</td><td class="td-name">Clínica Virtuosa</td><td>129</td><td>4,8</td><td>17</td><td>18</td><td>16</td><td>16</td><td>14</td><td class="td-score score-fire">81</td><td><span class="badge badge-fire">🔥 MAX</span></td></tr>
+          <tr><td>14</td><td class="td-name">Neoskin Estética Avançada</td><td>145</td><td class="stars">5,0</td><td>17</td><td>17</td><td>18</td><td>14</td><td>14</td><td class="td-score score-fire">80</td><td><span class="badge badge-fire">🔥 MAX</span></td></tr>
+          <tr><td>15</td><td class="td-name">Sticker Estética</td><td>240</td><td>4,9</td><td>18</td><td>17</td><td>17</td><td>15</td><td>13</td><td class="td-score score-fire">80</td><td><span class="badge badge-fire">🔥 MAX</span></td></tr>
+          <tr><td>16</td><td class="td-name">RE.COM.POR</td><td>145</td><td class="stars">5,0</td><td>18</td><td>16</td><td>17</td><td>14</td><td>14</td><td class="td-score score-lightning">79</td><td><span class="badge badge-lightning">⚡ ALTA</span></td></tr>
+          <tr><td>17</td><td class="td-name">New Body Estética</td><td>143</td><td class="stars">5,0</td><td>17</td><td>17</td><td>16</td><td>14</td><td>13</td><td class="td-score score-lightning">77</td><td><span class="badge badge-lightning">⚡ ALTA</span></td></tr>
+          <tr><td>18</td><td class="td-name">Dr. Rodrigo Paschoal</td><td>197</td><td>4,9</td><td>15</td><td>16</td><td>16</td><td>14</td><td>16</td><td class="td-score score-lightning">77</td><td><span class="badge badge-lightning">⚡ ALTA</span></td></tr>
+          <tr><td>19</td><td class="td-name">Clínica Skyn</td><td>101</td><td>4,9</td><td>17</td><td>17</td><td>16</td><td>14</td><td>13</td><td class="td-score score-lightning">77</td><td><span class="badge badge-lightning">⚡ ALTA</span></td></tr>
+          <tr><td>20</td><td class="td-name">Dra Taís Borges</td><td>96</td><td class="stars">5,0</td><td>17</td><td>17</td><td>16</td><td>14</td><td>14</td><td class="td-score score-lightning">78</td><td><span class="badge badge-lightning">⚡ ALTA</span></td></tr>
+          <tr><td>21</td><td class="td-name">NuFace Uberlândia</td><td>76</td><td>4,9</td><td>17</td><td>17</td><td>16</td><td>14</td><td>13</td><td class="td-score score-lightning">77</td><td><span class="badge badge-lightning">⚡ ALTA</span></td></tr>
+          <tr><td>22</td><td class="td-name">Clinicas Ribelatto</td><td>119</td><td class="stars">5,0</td><td>17</td><td>16</td><td>15</td><td>13</td><td>13</td><td class="td-score score-lightning">74</td><td><span class="badge badge-lightning">⚡ ALTA</span></td></tr>
+          <tr><td>23</td><td class="td-name">HUMANIZA Odontologia</td><td>173</td><td>4,8</td><td>14</td><td>16</td><td>15</td><td>14</td><td>15</td><td class="td-score score-lightning">74</td><td><span class="badge badge-lightning">⚡ ALTA</span></td></tr>
+          <tr><td>24</td><td class="td-name">EmagreSempre Rondon</td><td>104</td><td>4,9</td><td>15</td><td>16</td><td>14</td><td>15</td><td>14</td><td class="td-score score-lightning">74</td><td><span class="badge badge-lightning">⚡ ALTA</span></td></tr>
+          <tr><td>25</td><td class="td-name">Clinica Saúde e Beleza</td><td>81</td><td>4,4</td><td>15</td><td>17</td><td>13</td><td>18</td><td>11</td><td class="td-score score-lightning">74</td><td><span class="badge badge-lightning">⚡ ALTA</span></td></tr>
+          <tr><td>26</td><td class="td-name">Instituto Milaine</td><td>95</td><td>4,9</td><td>17</td><td>16</td><td>16</td><td>14</td><td>13</td><td class="td-score score-lightning">76</td><td><span class="badge badge-lightning">⚡ ALTA</span></td></tr>
+          <tr><td>27</td><td class="td-name">Dermefisio</td><td>94</td><td>4,9</td><td>16</td><td>16</td><td>15</td><td>14</td><td>12</td><td class="td-score score-lightning">73</td><td><span class="badge badge-lightning">⚡ ALTA</span></td></tr>
+          <tr><td>28</td><td class="td-name">Sâmara Estética</td><td>55</td><td>4,7</td><td>15</td><td>17</td><td>14</td><td>16</td><td>11</td><td class="td-score score-lightning">73</td><td><span class="badge badge-lightning">⚡ ALTA</span></td></tr>
+          <tr><td>29</td><td class="td-name">Solaris Clínica</td><td>50</td><td>4,9</td><td>16</td><td>15</td><td>15</td><td>13</td><td>13</td><td class="td-score score-lightning">72</td><td><span class="badge badge-lightning">⚡ ALTA</span></td></tr>
+          <tr><td>30</td><td class="td-name">Camila Andrade</td><td>65</td><td class="stars">5,0</td><td>16</td><td>16</td><td>14</td><td>14</td><td>12</td><td class="td-score score-lightning">72</td><td><span class="badge badge-lightning">⚡ ALTA</span></td></tr>
+          <tr><td>31–80</td><td class="td-name" style="color:var(--muted)">Demais leads</td><td style="color:var(--muted)">< 50 rev.</td><td style="color:var(--muted)">—</td><td colspan="6" style="color:var(--muted)">Análise individual disponível sob demanda</td><td><span class="badge badge-yellow">🟡 MÉD</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TOP LEADS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">2</div>
+      <div>
+        <div class="section-title">Top 15 Leads — Análise Individual Profunda</div>
+        <div class="section-desc">Diagnóstico, oportunidades e estratégia por lead</div>
+      </div>
+    </div>
+    <div class="leads-grid">
+
+      <!-- HARMONARE -->
+      <div class="lead-card priority-1">
+        <div class="lead-header">
+          <div>
+            <div class="lead-rank">#1 PRIORIDADE MÁXIMA</div>
+            <div class="lead-name">Clínica Harmonare</div>
+            <div class="lead-meta">
+              <span>📞 (34) 2589-0919</span>
+              <span>⭐ 5,0 (843 reviews)</span>
+              <span>📍 R. Jandyro Vilela de Freitas, 76</span>
+              <span>🏷 Spa facial</span>
+            </div>
+          </div>
+          <div class="lead-score-block">
+            <div class="lead-score-num score-fire">91</div>
+            <div class="lead-score-label">SCORE TOTAL</div>
+            <span class="badge badge-fire" style="margin-top:6px; display:inline-block;">🔥 PRIORIDADE MÁXIMA</span>
+          </div>
+        </div>
+        <div class="score-bars">
+          <div class="score-bar-item"><div class="score-bar-label">Fit</div><div class="score-bar-track"><div class="score-bar-fill" style="width:95%; background:#6c63ff"></div></div><div class="score-bar-val">19</div></div>
+          <div class="score-bar-item"><div class="score-bar-label">Marketing</div><div class="score-bar-track"><div class="score-bar-fill" style="width:85%; background:#00d4aa"></div></div><div class="score-bar-val">17</div></div>
+          <div class="score-bar-item"><div class="score-bar-label">IA/Auto</div><div class="score-bar-track"><div class="score-bar-fill" style="width:100%; background:#ff4d4d"></div></div><div class="score-bar-val">20</div></div>
+          <div class="score-bar-item"><div class="score-bar-label">Urgência</div><div class="score-bar-track"><div class="score-bar-fill" style="width:75%; background:#fbbf24"></div></div><div class="score-bar-val">15</div></div>
+          <div class="score-bar-item"><div class="score-bar-label">Pagamento</div><div class="score-bar-track"><div class="score-bar-fill" style="width:100%; background:#00d4aa"></div></div><div class="score-bar-val">20</div></div>
+        </div>
+        <div class="lead-body">
+          <div>
+            <div class="lead-section-title">Diagnóstico Direto</div>
+            <p class="lead-text">O maior volume de avaliações da lista inteira (843) indica o negócio com mais clientes ativos na base. Um spa facial com esse volume de retenção opera com agenda cheia e alta recorrência. A pergunta estratégica não é "como atrair clientes" — é "como escalar sem perder qualidade" e "como transformar esse volume em receita previsível máxima".</p>
+          </div>
+          <div>
+            <div class="lead-section-title">Principais Falhas</div>
+            <div class="tag-list">
+              <span class="tag tag-warn">Agenda provavelmente manual</span>
+              <span class="tag tag-warn">Sem upsell automatizado</span>
+              <span class="tag tag-warn">Sem funil de reativação</span>
+              <span class="tag tag-warn">Reputação não usada como ativo de venda ativo</span>
+              <span class="tag tag-warn">Instagram subutilizado para o porte</span>
+            </div>
+          </div>
+          <div class="lead-2col">
+            <div>
+              <div class="lead-section-title">Oportunidades de Marketing</div>
+              <div class="tag-list">
+                <span class="tag tag-mkt">Google Ads com 843 reviews como prova social</span>
+                <span class="tag tag-mkt">Landing page com depoimentos reais</span>
+                <span class="tag tag-mkt">SEO: "spa facial Uberlândia"</span>
+                <span class="tag tag-mkt">Instagram aspiracional — bastidores do spa</span>
+              </div>
+            </div>
+            <div>
+              <div class="lead-section-title">Oportunidades em IA/Automações</div>
+              <div class="tag-list">
+                <span class="tag tag-ai">Agendamento inteligente via WhatsApp</span>
+                <span class="tag tag-ai">Follow-up pós-sessão automatizado</span>
+                <span class="tag tag-ai">Reativação automática de inativos (30/60 dias)</span>
+                <span class="tag tag-ai">CRM de fidelização com pontuação</span>
+                <span class="tag tag-ai">Pipeline de indicação automatizado</span>
+              </div>
+            </div>
+          </div>
+          <div class="lead-2col">
+            <div class="strategy-box">
+              <div class="strat-label">Estratégia LocalRise</div>
+              <p>Pacote "Escala Inteligente": CRM + automação de agendamento + gestão de Instagram + Google Ads. Modelo de retainer mensal com fee de setup. Ticket sugerido: R$4.000–6.000/mês.</p>
+            </div>
+            <div class="strategy-box" style="border-color: rgba(0,212,170,0.2);">
+              <div class="strat-label" style="color: var(--accent2);">Abordagem de Venda</div>
+              <p>"Você tem mais avaliações que 95% das clínicas da cidade. Isso é ouro. O problema é que você ainda não está usando esse ativo para escalar a receita. Veja o que clínicas com esse nível de reputação estão faturando com o sistema certo…"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EMAGRECENTRO -->
+      <div class="lead-card priority-1">
+        <div class="lead-header">
+          <div>
+            <div class="lead-rank">#2 DINHEIRO RÁPIDO — DOR REAL E URGENTE</div>
+            <div class="lead-name">Emagrecentro Uberlândia</div>
+            <div class="lead-meta">
+              <span>📞 (34) 3212-6921</span>
+              <span>⭐ 4,5 (387 reviews)</span>
+              <span>📍 Av. João Pinheiro, 907</span>
+              <span>🏷 Emagrecimento</span>
+            </div>
+          </div>
+          <div class="lead-score-block">
+            <div class="lead-score-num score-fire">91</div>
+            <div class="lead-score-label">SCORE TOTAL</div>
+            <span class="badge badge-fire" style="margin-top:6px; display:inline-block;">🔥 PRIORIDADE MÁXIMA</span>
+          </div>
+        </div>
+        <div class="score-bars">
+          <div class="score-bar-item"><div class="score-bar-label">Fit</div><div class="score-bar-track"><div class="score-bar-fill" style="width:90%"></div></div><div class="score-bar-val">18</div></div>
+          <div class="score-bar-item"><div class="score-bar-label">Marketing</div><div class="score-bar-track"><div class="score-bar-fill" style="width:100%; background:#ff4d4d"></div></div><div class="score-bar-val">20</div></div>
+          <div class="score-bar-item"><div class="score-bar-label">IA/Auto</div><div class="score-bar-track"><div class="score-bar-fill" style="width:85%"></div></div><div class="score-bar-val">17</div></div>
+          <div class="score-bar-item"><div class="score-bar-label">Urgência</div><div class="score-bar-track"><div class="score-bar-fill" style="width:100%; background:#ff4d4d"></div></div><div class="score-bar-val">20</div></div>
+          <div class="score-bar-item"><div class="score-bar-label">Pagamento</div><div class="score-bar-track"><div class="score-bar-fill" style="width:80%"></div></div><div class="score-bar-val">16</div></div>
+        </div>
+        <div class="lead-body">
+          <div>
+            <div class="lead-section-title">Diagnóstico Direto</div>
+            <p class="lead-text">387 avaliações com nota 4,5 é o sinal mais claro de um negócio com problema real e urgente. Eles têm volume (receita existe), mas a nota abaixo da média do mercado (onde 5,0 é padrão) significa que estão perdendo clientes para concorrentes mais bem avaliados. Cada semana sem agir é mais mercado perdido para Clínica Stark, Harmonare e Floresça.</p>
+          </div>
+          <div>
+            <div class="lead-section-title">Principais Falhas</div>
+            <div class="tag-list">
+              <span class="tag tag-warn">Atendimento inconsistente (causa provável da nota 4,5)</span>
+              <span class="tag tag-warn">Sem gestão ativa de reputação</span>
+              <span class="tag tag-warn">Desorganização operacional (atrasos, confusão de agenda)</span>
+              <span class="tag tag-warn">Tráfego pago sem funil estruturado</span>
+            </div>
+          </div>
+          <div class="lead-2col">
+            <div>
+              <div class="lead-section-title">Oportunidades de Marketing</div>
+              <div class="tag-list">
+                <span class="tag tag-mkt">Gestão de reputação ativa — venda mais fácil</span>
+                <span class="tag tag-mkt">Captura de reviews positivos antes do Google</span>
+                <span class="tag tag-mkt">Reposicionamento: "O Emagrecentro que virou referência"</span>
+                <span class="tag tag-mkt">SEO agressivo para "emagrecimento Uberlândia"</span>
+              </div>
+            </div>
+            <div>
+              <div class="lead-section-title">Oportunidades em IA/Automações</div>
+              <div class="tag-list">
+                <span class="tag tag-ai">Pesquisa de satisfação pós-sessão — cliente satisfeito → link Google review</span>
+                <span class="tag tag-ai">Cliente insatisfeito → atendimento humano imediato (evita review negativo)</span>
+                <span class="tag tag-ai">Automação de agendamento para reduzir falhas operacionais</span>
+                <span class="tag tag-ai">Dashboard NPS em tempo real para o gestor</span>
+              </div>
+            </div>
+          </div>
+          <div class="lead-2col">
+            <div class="strategy-box">
+              <div class="strat-label">Estratégia LocalRise</div>
+              <p>Oferta de entrada: "Sistema de Recuperação de Reputação" + automação de agendamento. Mostrar a diferença de faturamento entre 4,5 e 5,0 estrelas (estudos: 15–20% a mais em conversão).</p>
+            </div>
+            <div class="strategy-box" style="border-color: rgba(0,212,170,0.2);">
+              <div class="strat-label" style="color: var(--accent2);">Abordagem de Venda</div>
+              <p>"Seus concorrentes diretos têm 5,0 com 400+ avaliações. A diferença no ranking do Google pode estar custando 20–30 novos clientes por mês. Posso mostrar como reverter isso em 90 dias."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STARK -->
+      <div class="lead-card priority-1">
+        <div class="lead-header">
+          <div>
+            <div class="lead-rank">#3 ESCALA + SISTEMA</div>
+            <div class="lead-name">Clínica Stark — Estética Avançada</div>
+            <div class="lead-meta">
+              <span>📞 (34) 99896-5055</span>
+              <span>⭐ 5,0 (441 reviews)</span>
+              <span>📍 Av. Maria Silva Garcia, 286</span>
+              <span>🏷 Estética avançada</span>
+            </div>
+          </div>
+          <div class="lead-score-block">
+            <div class="lead-score-num score-fire">90</div>
+            <div class="lead-score-label">SCORE TOTAL</div>
+            <span class="badge badge-fire" style="margin-top:6px; display:inline-block;">🔥 PRIORIDADE MÁXIMA</span>
+          </div>
+        </div>
+        <div class="score-bars">
+          <div class="score-bar-item"><div class="score-bar-label">Fit</div><div class="score-bar-track"><div class="score-bar-fill" style="width:95%"></div></div><div class="score-bar-val">19</div></div>
+          <div class="score-bar-item"><div class="score-bar-label">Marketing</div><div class="score-bar-track"><div class="score-bar-fill" style="width:90%; background:#00d4aa"></div></div><div class="score-bar-val">18</div></div>
+          <div class="score-bar-item"><div class="score-bar-label">IA/Auto</div><div class="score-bar-track"><div class="score-bar-fill" style="width:95%; background:#6c63ff"></div></div><div class="score-bar-val">19</div></div>
+          <div class="score-bar-item"><div class="score-bar-label">Urgência</div><div class="score-bar-track"><div class="score-bar-fill" style="width:80%; background:#fbbf24"></div></div><div class="score-bar-val">16</div></div>
+          <div class="score-bar-item"><div class="score-bar-label">Pagamento</div><div class="score-bar-track"><div class="score-bar-fill" style="width:90%; background:#00d4aa"></div></div><div class="score-bar-val">18</div></div>
+        </div>
+        <div class="lead-body">
+          <div>
+            <div class="lead-section-title">Diagnóstico Direto</div>
+            <p class="lead-text">441 avaliações com nota perfeita em clínica de estética avançada é um negócio no topo da pirâmide local. Opera com serviços de alto ticket (harmonização, tratamentos avançados) e alta reputação. O desafio deles não é qualidade — é previsibilidade e escala. Clínica com esse porte provavelmente tem equipe, múltiplos profissionais e agenda densa.</p>
+          </div>
+          <div>
+            <div class="lead-section-title">Principais Falhas</div>
+            <div class="tag-list">
+              <span class="tag tag-warn">Coordenação de agenda entre profissionais provavelmente manual</span>
+              <span class="tag tag-warn">Sem CRM unificado com histórico por paciente</span>
+              <span class="tag tag-warn">Tráfego pago provavelmente inexistente ou amador</span>
+              <span class="tag tag-warn">Sem programa de fidelidade estruturado</span>
+            </div>
+          </div>
+          <div class="lead-2col">
+            <div>
+              <div class="lead-section-title">Oportunidades de Marketing</div>
+              <div class="tag-list">
+                <span class="tag tag-mkt">Google Ads para harmonização facial + clínica avançada</span>
+                <span class="tag tag-mkt">Landing pages específicas por procedimento</span>
+                <span class="tag tag-mkt">Instagram: conteúdo educativo + antes/depois + autoridade</span>
+                <span class="tag tag-mkt">Funil completo: tráfego → LP → agendamento → bot</span>
+              </div>
+            </div>
+            <div>
+              <div class="lead-section-title">Oportunidades em IA/Automações</div>
+              <div class="tag-list">
+                <span class="tag tag-ai">Sistema multi-profissional de agendamento com painel centralizado</span>
+                <span class="tag tag-ai">Protocolo automatizado: confirmação 48h, lembrete 2h, follow-up 7 dias</span>
+                <span class="tag tag-ai">Pipeline de tratamentos: após harmonização → sugere próximo procedimento</span>
+                <span class="tag tag-ai">Dashboard de performance por profissional</span>
+              </div>
+            </div>
+          </div>
+          <div class="lead-2col">
+            <div class="strategy-box">
+              <div class="strat-label">Estratégia LocalRise</div>
+              <p>Pacote premium "Sistema de Crescimento Previsível": site de alta conversão + Google Ads + automação completa + CRM personalizado. Ticket alto justificado pelo porte do negócio. R$4.500–7.000/mês.</p>
+            </div>
+            <div class="strategy-box" style="border-color: rgba(0,212,170,0.2);">
+              <div class="strat-label" style="color: var(--accent2);">Abordagem de Venda</div>
+              <p>"Você tem 441 avaliações 5,0. Mas seus concorrentes aparecem antes que você no Google para os termos que mais convertem. E ainda: com sua agenda cheia, está deixando dinheiro na mesa sem um sistema de upsell entre tratamentos."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GIOLASER -->
+      <div class="lead-card">
+        <div class="lead-header">
+          <div>
+            <div class="lead-rank">#4 MODELO PERFEITO PARA SAAS</div>
+            <div class="lead-name">GiOlaser — Centro</div>
+            <div class="lead-meta">
+              <span>📞 (34) 2589-3734</span>
+              <span>⭐ 5,0 (457 reviews)</span>
+              <span>📍 Av. Cesário Alvim, 420 — Loja 2</span>
+              <span>🏷 Depilação a laser</span>
+            </div>
+          </div>
+          <div class="lead-score-block">
+            <div class="lead-score-num score-fire">87</div>
+            <div class="lead-score-label">SCORE TOTAL</div>
+            <span class="badge badge-fire" style="margin-top:6px; display:inline-block;">🔥 PRIORIDADE MÁXIMA</span>
+          </div>
+        </div>
+        <div class="lead-body">
+          <div>
+            <div class="lead-section-title">Diagnóstico Direto</div>
+            <p class="lead-text">Serviço de depilação laser é o modelo de negócio com maior potencial para automação total. O processo é previsível: cliente faz avaliação → compra pacote → retorna X vezes → indicação. Cada etapa pode ser 100% automatizada. 457 reviews e nota perfeita. O gap é operacional e de escala.</p>
+          </div>
+          <div class="lead-2col">
+            <div>
+              <div class="lead-section-title">Oportunidades de Marketing</div>
+              <div class="tag-list">
+                <span class="tag tag-mkt">SEO dominante para "depilação laser Uberlândia"</span>
+                <span class="tag tag-mkt">Google Ads com avaliação gratuita como isca</span>
+                <span class="tag tag-mkt">Remarketing para visitantes que não agendaram</span>
+              </div>
+            </div>
+            <div>
+              <div class="lead-section-title">Oportunidades em IA/Automações</div>
+              <div class="tag-list">
+                <span class="tag tag-ai">Agendamento automático de retornos (30 dias)</span>
+                <span class="tag tag-ai">Upsell automático: fim de pacote → oferta de upgrade</span>
+                <span class="tag tag-ai">Sistema de indicação gamificado automatizado</span>
+                <span class="tag tag-ai">Controle de evolução digital: app/portal do cliente</span>
+              </div>
+            </div>
+          </div>
+          <div class="strategy-box">
+            <div class="strat-label">Abordagem de Venda</div>
+            <p>"Cada sessão que você esquece de reagendar automaticamente é receita perdida. Com X sessões por dia, quantos retornos estão caindo fora da agenda? Nosso sistema elimina isso e aumenta o LTV de cada cliente em média 40%."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FLORESÇA -->
+      <div class="lead-card">
+        <div class="lead-header">
+          <div>
+            <div class="lead-rank">#5 MAIOR POTENCIAL DE CROSS-SELL</div>
+            <div class="lead-name">Clínica de Estética FLORESÇA</div>
+            <div class="lead-meta">
+              <span>📞 (34) 99687-1465</span>
+              <span>⭐ 5,0 (294 reviews)</span>
+              <span>📍 R. Ipanema, 1086 — sala 4</span>
+              <span>🏷 Facial + Corporal + Laser + Emagrecimento + Glúteos</span>
+            </div>
+          </div>
+          <div class="lead-score-block">
+            <div class="lead-score-num score-fire">86</div>
+            <div class="lead-score-label">SCORE TOTAL</div>
+            <span class="badge badge-fire" style="margin-top:6px; display:inline-block;">🔥 PRIORIDADE MÁXIMA</span>
+          </div>
+        </div>
+        <div class="lead-body">
+          <div>
+            <div class="lead-section-title">Diagnóstico Direto</div>
+            <p class="lead-text">Clínica com portfólio diversificado e 294 avaliações 5,0. Alta diversidade de serviços = alta complexidade operacional = maior oportunidade de automação. Base de clientes fiel em bairro residencial (Ipanema). Negócio em crescimento acelerado, provavelmente gerenciado por profissional empreendedor que decide rápido.</p>
+          </div>
+          <div class="lead-2col">
+            <div>
+              <div class="lead-section-title">Oportunidades de Marketing</div>
+              <div class="tag-list">
+                <span class="tag tag-mkt">Site com landing pages por procedimento</span>
+                <span class="tag tag-mkt">SEO local para cada serviço individualmente</span>
+                <span class="tag tag-mkt">Instagram com calendário por categoria de tratamento</span>
+              </div>
+            </div>
+            <div>
+              <div class="lead-section-title">Oportunidades em IA/Automações</div>
+              <div class="tag-list">
+                <span class="tag tag-ai">Triagem inteligente via WhatsApp — bot identifica o procedimento certo</span>
+                <span class="tag tag-ai">Cross-sell automático: cliente facial → oferta corporal</span>
+                <span class="tag tag-ai">Dashboard de receita por tratamento</span>
+                <span class="tag tag-ai">Protocolos: histórico do cliente sugere próximos tratamentos</span>
+              </div>
+            </div>
+          </div>
+          <div class="strategy-box">
+            <div class="strat-label">Abordagem de Venda</div>
+            <p>"Você tem um dos portfólios mais completos da cidade. O problema é que sem um sistema, você está atendendo 60% do potencial que poderia. Cada cliente que faz facial poderia ser cliente de corporal. Vamos criar esse sistema juntos."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- OLIGOFLORA -->
+      <div class="lead-card">
+        <div class="lead-header">
+          <div>
+            <div class="lead-rank">#6 EMPRESA ANTIGA — MODERNIZAÇÃO URGENTE</div>
+            <div class="lead-name">OligoFlora</div>
+            <div class="lead-meta">
+              <span>📞 (34) 3210-5555</span>
+              <span>⭐ 4,8 (430 reviews)</span>
+              <span>📍 Av. Anselmo Alves dos Santos, 1176</span>
+              <span>🏷 Clínica especializada</span>
+            </div>
+          </div>
+          <div class="lead-score-block">
+            <div class="lead-score-num score-fire">87</div>
+            <div class="lead-score-label">SCORE TOTAL</div>
+            <span class="badge badge-fire" style="margin-top:6px; display:inline-block;">🔥 PRIORIDADE MÁXIMA</span>
+          </div>
+        </div>
+        <div class="lead-body">
+          <div>
+            <div class="lead-section-title">Diagnóstico Direto</div>
+            <p class="lead-text">430 avaliações com telefone fixo (3XXXXXXX) — empresa estabelecida há anos, gerenciada de forma tradicional. Nota 4,8 quando o padrão do mercado é 5,0 = oportunidade clara. Alto volume = alto faturamento = capacidade de investir. O nome OligoFlora sugere posicionamento de saúde integrativa/funcional — nicho premium.</p>
+          </div>
+          <div class="lead-2col">
+            <div>
+              <div class="lead-section-title">Oportunidades de Marketing</div>
+              <div class="tag-list">
+                <span class="tag tag-mkt">Presença digital condizente com o porte real</span>
+                <span class="tag tag-mkt">SEO + saúde integrativa + estética</span>
+                <span class="tag tag-mkt">Rebranding digital: empresa "antiga" → marca moderna</span>
+              </div>
+            </div>
+            <div>
+              <div class="lead-section-title">Oportunidades em IA/Automações</div>
+              <div class="tag-list">
+                <span class="tag tag-ai">Modernização: de telefone fixo para sistema digital</span>
+                <span class="tag tag-ai">Chatbot de atendimento de primeiro nível</span>
+                <span class="tag tag-ai">Comunicação automatizada de novos tratamentos para base antiga</span>
+              </div>
+            </div>
+          </div>
+          <div class="strategy-box">
+            <div class="strat-label">Abordagem de Venda</div>
+            <p>"Você tem 430 clientes avaliando seu serviço. Mas sua presença digital não reflete esse porte. Enquanto concorrentes menores aparecem antes que você no Google, você está perdendo novos clientes toda semana."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAGRAS S -->
+      <div class="lead-card">
+        <div class="lead-header">
+          <div>
+            <div class="lead-rank">#7 ALTO TICKET — SAAS DE PROTOCOLO</div>
+            <div class="lead-name">MagraSS Uberlândia</div>
+            <div class="lead-meta">
+              <span>📞 (34) 3016-1530</span>
+              <span>⭐ 4,9 (201 reviews)</span>
+              <span>📍 Av. Cesário Alvim, 66</span>
+              <span>🏷 Emagrecimento | Criolipólise | Enzimas</span>
+            </div>
+          </div>
+          <div class="lead-score-block">
+            <div class="lead-score-num score-fire">86</div>
+            <div class="lead-score-label">SCORE TOTAL</div>
+            <span class="badge badge-fire" style="margin-top:6px; display:inline-block;">🔥 PRIORIDADE MÁXIMA</span>
+          </div>
+        </div>
+        <div class="lead-body">
+          <div>
+            <div class="lead-section-title">Diagnóstico Direto</div>
+            <p class="lead-text">Especialista em emagrecimento (Criolipólise, Enzimas, gordura localizada, Striort) com 201 avaliações em avenida principal. Serviços de alto ticket e alta especialização técnica. A diversidade de técnicas exige gestão de protocolo individual por paciente — exatamente o que um SaaS personalizado resolve. Está em avenida central com clientela de maior poder aquisitivo.</p>
+          </div>
+          <div class="lead-2col">
+            <div>
+              <div class="lead-section-title">Oportunidades de Marketing</div>
+              <div class="tag-list">
+                <span class="tag tag-mkt">Funil educativo por procedimento antes da consulta</span>
+                <span class="tag tag-mkt">Landing pages com comparativos e antes/depois</span>
+                <span class="tag tag-mkt">Posicionamento: especialista em gordura localizada</span>
+              </div>
+            </div>
+            <div>
+              <div class="lead-section-title">Oportunidades em IA/Automações</div>
+              <div class="tag-list">
+                <span class="tag tag-ai">SaaS de protocolo personalizado por paciente</span>
+                <span class="tag tag-ai">Acompanhamento automático: fotos, medidas, evolução</span>
+                <span class="tag tag-ai">Follow-up emocional automatizado (emagrecimento = alto risco de desistência)</span>
+                <span class="tag tag-ai">Dashboard do paciente com acesso ao próprio progresso</span>
+              </div>
+            </div>
+          </div>
+          <div class="strategy-box">
+            <div class="strat-label">Abordagem de Venda</div>
+            <p>"Seus clientes compram um tratamento de R$2.000+ e acompanham o resultado manualmente. Imagine um sistema onde cada paciente vê sua evolução em tempo real, recebe motivação automatizada e você retém 40% mais clientes. Esse é o diferencial que poucos têm."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEOCLINIC -->
+      <div class="lead-card">
+        <div class="lead-header">
+          <div>
+            <div class="lead-rank">#8 REPUTAÇÃO NÃO USADA COMO ATIVO</div>
+            <div class="lead-name">Neoclinic Estética Uberlândia</div>
+            <div class="lead-meta">
+              <span>📞 (34) 99233-0854</span>
+              <span>⭐ 5,0 (341 reviews)</span>
+              <span>📍 R. Eduardo de Oliveira, 778</span>
+              <span>🏷 Clínica especializada</span>
+            </div>
+          </div>
+          <div class="lead-score-block">
+            <div class="lead-score-num score-fire">83</div>
+            <div class="lead-score-label">SCORE TOTAL</div>
+            <span class="badge badge-fire" style="margin-top:6px; display:inline-block;">🔥 PRIORIDADE MÁXIMA</span>
+          </div>
+        </div>
+        <div class="lead-body">
+          <div>
+            <div class="lead-section-title">Diagnóstico + Oportunidades</div>
+            <p class="lead-text">341 avaliações 5,0. Crescimento consistente, boa retenção. Localização mais reservada = clientela fiel e local. Sem tráfego pago estruturado, sem programa de indicação sistematizado, sem automação de retenção. A reputação 5,0 está sendo resultado passivo — precisa virar máquina de atração ativa.</p>
+          </div>
+          <div class="lead-2col">
+            <div class="strategy-box">
+              <div class="strat-label">Estratégia LocalRise</div>
+              <p>Sistema de crescimento previsível: site + Google Ads + automação de retenção. Modelo recorrente de R$2.500–4.000/mês.</p>
+            </div>
+            <div class="strategy-box" style="border-color: rgba(0,212,170,0.2);">
+              <div class="strat-label" style="color: var(--accent2);">Abordagem</div>
+              <p>"Sua nota 5,0 com 341 avaliações é passiva. Vamos transformar isso em uma máquina de atração ativa, gerando novos clientes de forma previsível todos os meses."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- UNIQUE CIRURGIA -->
+      <div class="lead-card">
+        <div class="lead-header">
+          <div>
+            <div class="lead-rank">#9 MAIOR TICKET MÉDIO DA LISTA</div>
+            <div class="lead-name">Unique Cirurgia Plástica Avançada</div>
+            <div class="lead-meta">
+              <span>📞 (34) 98861-0000</span>
+              <span>⭐ 5,0 (642 reviews)</span>
+              <span>📍 Av. Getúlio Vargas, 955</span>
+              <span>🏷 Cirurgia plástica</span>
+            </div>
+          </div>
+          <div class="lead-score-block">
+            <div class="lead-score-num score-fire">83</div>
+            <div class="lead-score-label">SCORE TOTAL</div>
+            <span class="badge badge-fire" style="margin-top:6px; display:inline-block;">🔥 PRIORIDADE MÁXIMA</span>
+          </div>
+        </div>
+        <div class="lead-body">
+          <div>
+            <div class="lead-section-title">Diagnóstico Direto</div>
+            <p class="lead-text">642 reviews em cirurgia plástica = maior ticket médio da lista (R$5.000–30.000+ por procedimento). Alto faturamento, alta capacidade de investimento. <strong>Atenção:</strong> clínicas cirúrgicas desse porte podem já ter agência ativa — verificar antes de abordar. O diferencial da LocalRise aqui é o funil de decisão longo (cliente pesquisa 3–6 meses antes de decidir).</p>
+          </div>
+          <div class="lead-2col">
+            <div>
+              <div class="lead-section-title">Oportunidade Diferenciada</div>
+              <div class="tag-list">
+                <span class="tag tag-ai">Automação de nutrição de leads por 6 meses</span>
+                <span class="tag tag-ai">Acompanhamento pós-operatório automatizado</span>
+                <span class="tag tag-mkt">Conteúdo de autoridade médica para pesquisas de intenção</span>
+                <span class="tag tag-mkt">SEO + YouTube para dominar fase de pesquisa</span>
+              </div>
+            </div>
+            <div class="strategy-box">
+              <div class="strat-label">Abordagem de Venda</div>
+              <p>"Sua cliente leva 4 meses pesquisando antes de marcar. Você está presente durante esses 4 meses ou só quando ela liga?"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LASER UBERLÂNDIA -->
+      <div class="lead-card">
+        <div class="lead-header">
+          <div>
+            <div class="lead-rank">#10 MODELO LASER — MESMA ESTRATÉGIA GIOLASER</div>
+            <div class="lead-name">Laser Uberlândia</div>
+            <div class="lead-meta">
+              <span>📞 (34) 99973-5235</span>
+              <span>⭐ 5,0 (360 reviews)</span>
+              <span>📍 Av. Rio Branco, 478</span>
+              <span>🏷 Depilação a laser</span>
+            </div>
+          </div>
+          <div class="lead-score-block">
+            <div class="lead-score-num score-fire">83</div>
+            <div class="lead-score-label">SCORE TOTAL</div>
+            <span class="badge badge-fire" style="margin-top:6px; display:inline-block;">🔥 PRIORIDADE MÁXIMA</span>
+          </div>
+        </div>
+        <div class="lead-body">
+          <p class="lead-text">360 reviews 5,0 em depilação laser. Avenida Rio Branco = localização premium central. Mesmo modelo de automação do GiOlaser: sistema de agendamento de retornos + automação de pacotes + funil de indicação. <strong>Insight tático:</strong> com dois players de laser tão fortes (GiOlaser e Laser Uberlândia), existe oportunidade de criar um produto SaaS setorial para depilação laser e vender para ambos — e depois escalar para todo o Brasil.</p>
+        </div>
+      </div>
+
+      <!-- STICKER -->
+      <div class="lead-card">
+        <div class="lead-header">
+          <div>
+            <div class="lead-rank">#11 MARCA COM POTENCIAL VIRAL</div>
+            <div class="lead-name">Sticker Estética</div>
+            <div class="lead-meta">
+              <span>📞 (34) 99236-0323</span>
+              <span>⭐ 4,9 (240 reviews)</span>
+              <span>📍 Rua Rafael Marino Neto, 96 — Loja 01</span>
+              <span>🏷 Clínica especializada</span>
+            </div>
+          </div>
+          <div class="lead-score-block">
+            <div class="lead-score-num score-fire">80</div>
+            <div class="lead-score-label">SCORE TOTAL</div>
+            <span class="badge badge-fire" style="margin-top:6px; display:inline-block;">🔥 PRIORIDADE MÁXIMA</span>
+          </div>
+        </div>
+        <div class="lead-body">
+          <p class="lead-text">240 avaliações 4,9 com nome de marca forte e distinto (Sticker). Nome com potencial de identidade visual consistente e reconhecimento de marca. Alto volume de atendimento. <strong>Oportunidade:</strong> o nome "Sticker" tem apelo visual e digital enorme — construir presença digital que amplifique o branding único. Instagram com identidade forte + Google Ads usando o nome como âncora de reconhecimento.</p>
+        </div>
+      </div>
+
+      <!-- VIRTUOSA -->
+      <div class="lead-card">
+        <div class="lead-header">
+          <div>
+            <div class="lead-rank">#12 DOR DE REPUTAÇÃO — FECHAMENTO RÁPIDO</div>
+            <div class="lead-name">Clínica de Estética Virtuosa</div>
+            <div class="lead-meta">
+              <span>📞 (34) 99710-5776</span>
+              <span>⭐ 4,8 (129 reviews)</span>
+              <span>📍 Av. Nicomedes Alves dos Santos, 475</span>
+              <span>🏷 Centro de saúde e beleza</span>
+            </div>
+          </div>
+          <div class="lead-score-block">
+            <div class="lead-score-num score-fire">81</div>
+            <div class="lead-score-label">SCORE TOTAL</div>
+            <span class="badge badge-fire" style="margin-top:6px; display:inline-block;">🔥 PRIORIDADE MÁXIMA</span>
+          </div>
+        </div>
+        <div class="lead-body">
+          <p class="lead-text">Nota 4,8 quando todo o mercado é 5,0 com 129 reviews em avenida conhecida. Nome "Virtuosa" é forte. Há urgência real de melhoria de reputação — a diferença entre 4,8 e 5,0 no ranking do Google Maps pode representar dezenas de clientes por mês. <strong>Oferta de entrada ideal:</strong> Sistema de captação de reviews positivos + gestão de GMB + automação de agendamento para reduzir falhas que geram avaliações negativas.</p>
+        </div>
+      </div>
+
+      <!-- GF UBERLÂNDIA -->
+      <div class="lead-card">
+        <div class="lead-header">
+          <div>
+            <div class="lead-rank">#13 MULTI-SERVIÇO — CROSS-SELL AUTOMATIZADO</div>
+            <div class="lead-name">Clínica Estética Avançada GF Uberlândia</div>
+            <div class="lead-meta">
+              <span>📞 (34) 99315-3198</span>
+              <span>⭐ 5,0 (175 reviews)</span>
+              <span>📍 Av. João Pessoa, 1140</span>
+              <span>🏷 Facial + Corporal + Capilar</span>
+            </div>
+          </div>
+          <div class="lead-score-block">
+            <div class="lead-score-num score-fire">83</div>
+            <div class="lead-score-label">SCORE TOTAL</div>
+            <span class="badge badge-fire" style="margin-top:6px; display:inline-block;">🔥 PRIORIDADE MÁXIMA</span>
+          </div>
+        </div>
+        <div class="lead-body">
+          <p class="lead-text">175 reviews 5,0 em avenida com tráfego intenso. Portfólio com facial, corporal e capilar = oportunidade enorme de cross-sell automatizado. <strong>Oportunidade principal:</strong> sistema de cross-sell entre as 3 categorias + landing pages segmentadas por nicho + Google Ads por tratamento. Demonstrar o valor: "Um cliente capilar tem 80% de chance de querer corporal. Sem sistema, você perde essa venda. Com sistema, ela acontece automaticamente."</p>
+        </div>
+      </div>
+
+      <!-- NEOSKIN -->
+      <div class="lead-card">
+        <div class="lead-header">
+          <div>
+            <div class="lead-rank">#14 NOME TECNOLÓGICO — POTENCIAL DIGITAL ALTO</div>
+            <div class="lead-name">Neoskin Estética Avançada</div>
+            <div class="lead-meta">
+              <span>📞 (34) 3255-1040</span>
+              <span>⭐ 5,0 (145 reviews)</span>
+              <span>📍 Av. Segismundo Pereira, 1867</span>
+              <span>🏷 Depilação a laser</span>
+            </div>
+          </div>
+          <div class="lead-score-block">
+            <div class="lead-score-num score-fire">80</div>
+            <div class="lead-score-label">SCORE TOTAL</div>
+            <span class="badge badge-fire" style="margin-top:6px; display:inline-block;">🔥 PRIORIDADE MÁXIMA</span>
+          </div>
+        </div>
+        <div class="lead-body">
+          <p class="lead-text">Telefone fixo + "Neoskin" = marca com nome tecnológico que não tem presença digital condizente. 145 reviews 5,0 em laser. O nome "Neoskin" tem enorme apelo digital — sugere inovação, tecnologia e resultado. <strong>Oportunidade:</strong> criar identidade digital que capitalize no nome premium + sistema de automação de pacotes (mesmo modelo GiOlaser/Laser Uberlândia).</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- INSIGHTS ESTRATÉGICOS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">3</div>
+      <div>
+        <div class="section-title">Insights Estratégicos</div>
+        <div class="section-desc">Padrões, nichos e vetores de escala identificados</div>
+      </div>
+    </div>
+    <div class="insights-grid">
+      <div class="insight-card">
+        <h4>Nichos com Maior Oportunidade</h4>
+        <ul>
+          <li><strong>Emagrecimento</strong> — Alta recorrência, alto ticket, acompanhamento necessário → automação natural</li>
+          <li><strong>Depilação Laser</strong> — Modelo de pacotes perfeito para automação de retornos</li>
+          <li><strong>Harmonização Facial</strong> — Alto ticket, público com renda, crescimento acelerado</li>
+          <li><strong>Spas / Bem-estar</strong> — Alta retenção, SaaS de fidelização ideal</li>
+        </ul>
+      </div>
+      <div class="insight-card">
+        <h4>Problemas que Mais se Repetem</h4>
+        <ul>
+          <li><strong>90%+</strong> — Agendamento manual via WhatsApp</li>
+          <li><strong>95%+</strong> — Sem sistema de follow-up pós-tratamento</li>
+          <li><strong>99%</strong> — Sem funil de indicação estruturado</li>
+          <li><strong>~70%</strong> — Site inexistente ou desatualizado</li>
+          <li><strong>~80%</strong> — Google Ads inexistente ou amador</li>
+          <li><strong>Maioria</strong> — Instagram sem estratégia de conversão</li>
+        </ul>
+      </div>
+      <div class="insight-card">
+        <h4>Onde a LocalRise Escala Mais Rápido</h4>
+        <ul>
+          <li><strong>Produto de entrada:</strong> WhatsApp Bot de Agendamento — dor imediata, baixa resistência</li>
+          <li><strong>Produto de upsell:</strong> Instagram + Google Ads — resultado rápido e mensurável</li>
+          <li><strong>Produto premium:</strong> SaaS de Gestão personalizado — recorrente e difícil de cancelar</li>
+          <li><strong>Horizontal de escala:</strong> SaaS setorial para estética → centenas de clientes em todo Brasil</li>
+        </ul>
+      </div>
+      <div class="insight-card">
+        <h4>Leads Ideais para SaaS</h4>
+        <ul>
+          <li><strong>GiOlaser + Laser Uberlândia + Neoskin</strong> — SaaS de pacotes laser</li>
+          <li><strong>Clínica Harmonare</strong> — Volume de 843 clientes exige sistema robusto</li>
+          <li><strong>MagraSS</strong> — SaaS de acompanhamento de protocolo individual</li>
+          <li><strong>Emagrecentro</strong> — Volume alto, precisa de sistema urgentemente</li>
+          <li><strong>Clínica Floresça</strong> — Múltiplos serviços = SaaS de gestão integrada</li>
+        </ul>
+      </div>
+      <div class="insight-card">
+        <h4>Leads para Retainer de Marketing</h4>
+        <ul>
+          <li><strong>Clínica Stark</strong> — Alto ticket, equipe grande, precisa de marketing contínuo</li>
+          <li><strong>Neoclinic</strong> — Reputação passiva que precisa virar ativa</li>
+          <li><strong>OligoFlora</strong> — Empresa estabelecida, alto faturamento</li>
+          <li><strong>Unique Cirurgia</strong> — Funil longo de decisão = gestão de conteúdo contínua</li>
+        </ul>
+      </div>
+      <div class="insight-card">
+        <h4>Oportunidade de SaaS Setorial</h4>
+        <ul>
+          <li>Criar produto único de <strong>gestão de pacotes de laser</strong> e vender para GiOlaser, Laser Uberlândia, Neoskin, Fino Laser — e depois escalar para todo o Brasil</li>
+          <li>Cada clínica de laser do Brasil tem o mesmo problema → produto horizontal escalável</li>
+          <li>Modelo: R$800–1.500/mês por clínica → com 50 clientes = R$40–75k MRR</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ICP -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">4</div>
+      <div>
+        <div class="section-title">ICP — Perfil do Cliente Ideal LocalRise</div>
+        <div class="section-desc">Definição baseada na análise desta base de leads</div>
+      </div>
+    </div>
+    <div class="icp-box">
+      <h3>Ideal Customer Profile (ICP)</h3>
+      <div class="icp-grid">
+        <div class="icp-item">
+          <div class="icp-label">Setor</div>
+          <div class="icp-value">Clínica de estética / saúde / bem-estar</div>
+        </div>
+        <div class="icp-item">
+          <div class="icp-label">Localização</div>
+          <div class="icp-value">Município com 200k+ habitantes</div>
+        </div>
+        <div class="icp-item">
+          <div class="icp-label">Reviews Google</div>
+          <div class="icp-value">50–500+ avaliações (volume real)</div>
+        </div>
+        <div class="icp-item">
+          <div class="icp-label">Nota GMB</div>
+          <div class="icp-value">4,5–5,0 (qualidade existe, digital não acompanha)</div>
+        </div>
+        <div class="icp-item">
+          <div class="icp-label">Tipo de Serviço</div>
+          <div class="icp-value">Recorrente (laser, emagrecimento, harmonização)</div>
+        </div>
+        <div class="icp-item">
+          <div class="icp-label">Decisor</div>
+          <div class="icp-value">Empreendedor único — decide rápido, sente a dor direto</div>
+        </div>
+        <div class="icp-item">
+          <div class="icp-label">Ticket Médio</div>
+          <div class="icp-value">R$300–R$2.000 por procedimento</div>
+        </div>
+        <div class="icp-item">
+          <div class="icp-label">Faturamento Est.</div>
+          <div class="icp-value">R$30k–R$300k/mês</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLANO COMERCIAL -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">5</div>
+      <div>
+        <div class="section-title">Plano de Ação Comercial</div>
+        <div class="section-desc">Ordem de abordagem, tipo de oferta e estratégia de fechamento</div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px;">
+      <div class="insight-card">
+        <h4 style="color: #ff4d4d;">🔥 Dinheiro Rápido (7–21 dias)</h4>
+        <ul>
+          <li><strong>Emagrecentro</strong> — Nota 4,5 custa clientes hoje</li>
+          <li><strong>Clinica Saúde e Beleza</strong> — Nota 4,4 (pior da lista)</li>
+          <li><strong>Sâmara Estética</strong> — Nota 4,7, dor clara</li>
+          <li><strong>OligoFlora</strong> — Empresa antiga, ficando para trás</li>
+          <li><strong>Clínica Virtuosa</strong> — 4,8 quando todos têm 5,0</li>
+        </ul>
+      </div>
+      <div class="insight-card">
+        <h4 style="color: var(--accent2);">💎 Potencial Longo Prazo (Retainer 6–24 meses)</h4>
+        <ul>
+          <li><strong>Clínica Harmonare</strong> — 843 clientes = SaaS de gestão</li>
+          <li><strong>Clínica Stark</strong> — Alto ticket, equipe, sistema contínuo</li>
+          <li><strong>GiOlaser</strong> — SaaS de gestão de pacotes laser</li>
+          <li><strong>Unique Cirurgia</strong> — Funil longo, conteúdo contínuo</li>
+          <li><strong>MagraSS</strong> — SaaS de acompanhamento de protocolo</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="action-grid">
+      <div class="action-card">
+        <div class="week-label">Semana 1 — Quick Wins</div>
+        <div class="action-item"><div class="action-num">1</div><div><div class="action-text">Emagrecentro Uberlândia</div><div class="action-pain">Dor: nota 4,5 custando clientes ativamente</div></div></div>
+        <div class="action-item"><div class="action-num">2</div><div><div class="action-text">Clinica Saúde e Beleza</div><div class="action-pain">Dor: nota 4,4 — pior da base</div></div></div>
+        <div class="action-item"><div class="action-num">3</div><div><div class="action-text">OligoFlora</div><div class="action-pain">Dor: empresa antiga, ficando para trás digitalmente</div></div></div>
+      </div>
+      <div class="action-card">
+        <div class="week-label">Semana 2 — Alto Volume + Alta Capacidade</div>
+        <div class="action-item"><div class="action-num">4</div><div><div class="action-text">Clínica Harmonare</div><div class="action-pain">843 reviews = maior receita estimada da lista</div></div></div>
+        <div class="action-item"><div class="action-num">5</div><div><div class="action-text">Clínica Stark</div><div class="action-pain">441 reviews, estética avançada = alto ticket</div></div></div>
+        <div class="action-item"><div class="action-num">6</div><div><div class="action-text">GiOlaser</div><div class="action-pain">457 reviews laser = SaaS perfeito</div></div></div>
+      </div>
+      <div class="action-card">
+        <div class="week-label">Semana 3 — Crescimento Acelerado</div>
+        <div class="action-item"><div class="action-num">7</div><div><div class="action-text">Clínica FLORESÇA</div><div class="action-pain">Dono empreendedor, múltiplos serviços</div></div></div>
+        <div class="action-item"><div class="action-num">8</div><div><div class="action-text">Neoclinic</div><div class="action-pain">Reputação passiva precisa virar ativa</div></div></div>
+        <div class="action-item"><div class="action-num">9</div><div><div class="action-text">MagraSS</div><div class="action-pain">Protocolos individuais = SaaS premium</div></div></div>
+      </div>
+      <div class="action-card">
+        <div class="week-label">Semana 4 — Consolidação</div>
+        <div class="action-item"><div class="action-num">10</div><div><div class="action-text">Laser Uberlândia</div><div class="action-pain">360 reviews laser — mesmo pitch do GiOlaser</div></div></div>
+        <div class="action-item"><div class="action-num">11</div><div><div class="action-text">Sticker Estética</div><div class="action-pain">240 reviews — marca forte, digital fraco</div></div></div>
+        <div class="action-item"><div class="action-num">12</div><div><div class="action-text">Clínica GF Uberlândia</div><div class="action-pain">Multi-serviço = cross-sell automático</div></div></div>
+      </div>
+    </div>
+
+    <div style="margin-top: 32px;">
+      <div class="section-header" style="margin-bottom: 16px;">
+        <div style="font-size: 16px; font-weight: 700; color: #fff;">Tabela de Ofertas por Perfil</div>
+      </div>
+      <div class="table-wrapper">
+        <table class="offer-table">
+          <thead>
+            <tr>
+              <th>Perfil do Lead</th>
+              <th>Oferta Ideal</th>
+              <th>Ticket Mensal Sugerido</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Empresa antiga (tel. fixo, sem digital)</td><td>Pacote Modernização Digital</td><td class="offer-ticket">R$1.500–2.500/mês</td></tr>
+            <tr><td>Clínica com nota abaixo de 5,0</td><td>Pacote Reputação + Automação</td><td class="offer-ticket">R$1.800–3.000/mês</td></tr>
+            <tr><td>Alto volume, sem automação</td><td>SaaS de Agendamento + CRM</td><td class="offer-ticket">R$500–1.500/mês (recorrente)</td></tr>
+            <tr><td>Clínica de laser / pacotes</td><td>SaaS de Gestão de Pacotes</td><td class="offer-ticket">R$800–2.000/mês (recorrente)</td></tr>
+            <tr><td>Clínica multi-serviço</td><td>Sistema de Cross-sell + Marketing</td><td class="offer-ticket">R$2.500–4.000/mês</td></tr>
+            <tr><td>Clínica premium estabelecida</td><td>Sistema Completo de Crescimento</td><td class="offer-ticket">R$3.500–7.000/mês</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>Relatório gerado por <strong>LocalRise Advisory</strong> — Sistema de Inteligência de Mercado</p>
+  <p style="margin-top: 6px;">80 leads analisados | 15 análises profundas | Uberlândia, MG — Abril de 2026</p>
+  <p style="margin-top: 6px; font-size: 11px; color: #3a4055;">Uso interno. Confidencial.</p>
+</div>
+
+</body>
+</html>

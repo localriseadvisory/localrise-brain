@@ -1,0 +1,40 @@
+@inject ThemeService ThemeService
+
+<ChartCard 
+    Title="Sessions By Device"
+    GridColumnClass="sm:col-span-6 xl:col-span-4"
+    ContentClass="grow flex flex-col justify-center p-5">
+    <AppBlueprint.UiKit.Components.Charts.DoughnutChart
+        CanvasId="analytics-card-08-chart"
+        Labels="@labels"
+        Data="@data"
+        BackgroundColors="@backgroundColors"
+        HoverBackgroundColors="@hoverBackgroundColors"
+        Width="389"
+        Height="260"
+        Cutout="80%" />
+</ChartCard>
+
+@code {
+    private List<string> labels = new() { "Desktop", "Mobile", "Tablet" };
+    private List<double> data = new() { 12, 50, 38 };
+    private List<string> backgroundColors = new();
+    private List<string> hoverBackgroundColors = new();
+
+    protected override void OnInitialized()
+    {
+        backgroundColors = new()
+        {
+            ThemeService.GetRgbColor("primary", "500"),
+            ThemeService.GetRgbColor("accent", "500"),
+            ThemeService.GetRgbColor("primary", "800")
+        };
+        
+        hoverBackgroundColors = new()
+        {
+            ThemeService.GetRgbColor("primary", "600"),
+            ThemeService.GetRgbColor("accent", "600"),
+            ThemeService.GetRgbColor("primary", "900")
+        };
+    }
+}

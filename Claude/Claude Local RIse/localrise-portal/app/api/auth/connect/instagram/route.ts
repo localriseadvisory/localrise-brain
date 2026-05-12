@@ -27,9 +27,10 @@ export async function GET(request: NextRequest) {
 
   const state = Buffer.from(JSON.stringify({ clientId })).toString('base64url')
 
+  // instagram_manage_insights requer aprovação no Meta — solicitamos
+  // separadamente via "Advanced Access" depois da conexão inicial
   const scopes = [
     'instagram_basic',
-    'instagram_manage_insights',
     'pages_show_list',
     'pages_read_engagement',
   ].join(',')

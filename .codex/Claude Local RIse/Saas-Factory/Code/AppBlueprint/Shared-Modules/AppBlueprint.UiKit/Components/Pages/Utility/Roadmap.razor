@@ -1,0 +1,81 @@
+@page "/utility/roadmap"
+@using AppBlueprint.UiKit.Components.Pages.Utility.RoadmapComponents
+
+<!-- Page header -->
+<div class="sm:flex sm:justify-between sm:items-center px-4 sm:px-6 py-8 border-b border-gray-200 dark:border-gray-700/60">
+
+    <!-- Left: Title -->
+    <div class="mb-4 sm:mb-0">
+        <h1 class="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">Roadmap</h1>
+    </div>
+
+    <!-- Right: Actions -->
+    <div class="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
+
+        <!-- Add event button -->
+        <button class="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white">Add Event</button>
+
+    </div>
+
+</div>
+
+<div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-[96rem] mx-auto">
+    <div class="max-w-3xl m-auto">
+
+        <!-- Posts -->
+        <div class="xl:-translate-x-16">
+
+            <!-- Post -->
+            <RoadmapQuarter Quarter="2024 Q1" 
+                           Avatars="@(new List<string> { "_content/AppBlueprint.UiKit/images/user-28-05.jpg", "_content/AppBlueprint.UiKit/images/user-28-08.jpg", "_content/AppBlueprint.UiKit/images/user-28-09.jpg", "_content/AppBlueprint.UiKit/images/user-28-06.jpg" })"
+                           Status="Completed" 
+                           StatusType="completed">
+                <Items>
+                    <RoadmapItem Title="Product V1 - Early Access" Description="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." IsCompleted="true" />
+                    <RoadmapItem Title="Web3 Compatibility" Description="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." IsCompleted="true" />
+                    <RoadmapItem Title="Proof-of-Funds Compliance Key" Description="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." IsCompleted="true" />
+                    <RoadmapItem Title="Activity Feed Integration" Description="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." IsCompleted="true" ShowConnector="false" />
+                </Items>
+            </RoadmapQuarter>
+
+            <!-- Post -->
+            <RoadmapQuarter Quarter="2024 Q2" 
+                           Avatars="@(new List<string> { "_content/AppBlueprint.UiKit/images/user-28-03.jpg", "_content/AppBlueprint.UiKit/images/user-28-05.jpg", "_content/AppBlueprint.UiKit/images/user-28-01.jpg" })"
+                           Status="Working on" 
+                           StatusType="working">
+                <Items>
+                    <RoadmapItem Title="Product V1 - Early Access" Description="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." IsCompleted="true" />
+                    <RoadmapItem Title="Web3 Compatibility" Description="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." IsCompleted="true" />
+                    <RoadmapItem Title="Proof-of-Funds Compliance Key" Description="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." IsCompleted="true" />
+                    <RoadmapItem Title="Activity Feed Integration" Description="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." IsCompleted="false" ShowConnector="false" />
+                </Items>
+            </RoadmapQuarter>
+
+            <!-- Post -->
+            <RoadmapQuarter Quarter="2024 Q3" 
+                           Avatars="@(new List<string> { "_content/AppBlueprint.UiKit/images/user-28-06.jpg", "_content/AppBlueprint.UiKit/images/user-28-05.jpg", "_content/AppBlueprint.UiKit/images/user-28-09.jpg" })"
+                           Status="Planned" 
+                           StatusType="planned">
+                <Items>
+                    <RoadmapItem Title="Product V1 - Early Access" Description="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." IsCompleted="false" />
+                    <RoadmapItem Title="Web3 Compatibility" Description="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." IsCompleted="false" ShowConnector="false" />
+                </Items>
+            </RoadmapQuarter>
+
+            <!-- Post -->
+            <RoadmapQuarter Quarter="2024 Q4" 
+                           Avatars="@(new List<string> { "_content/AppBlueprint.UiKit/images/user-28-06.jpg", "_content/AppBlueprint.UiKit/images/user-28-02.jpg" })"
+                           Status="Planned" 
+                           StatusType="planned">
+                <Items>
+                    <RoadmapItem Title="Product V1 - Early Access" Description="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." IsCompleted="false" />
+                    <RoadmapItem Title="Web3 Compatibility" Description="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." IsCompleted="false" ShowConnector="false" />
+                </Items>
+            </RoadmapQuarter>
+        </div>
+
+    </div>
+</div>
+
+@code {
+}

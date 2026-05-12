@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/digui/.claude/**)",
+      "Read(//c/Users/digui/.claude/skills/**)",
+      "Bash(claude mcp:*)"
+    ]
+  }
+}

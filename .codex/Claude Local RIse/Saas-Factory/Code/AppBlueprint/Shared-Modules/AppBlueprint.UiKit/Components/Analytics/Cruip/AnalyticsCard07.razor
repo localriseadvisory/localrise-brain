@@ -1,0 +1,35 @@
+<div class="flex flex-col col-span-full sm:col-span-6 xl:col-span-4 bg-white dark:bg-gray-800 shadow-xs rounded-xl">
+    <header class="px-5 py-4 border-b border-gray-100 dark:border-gray-700/60">
+        <h2 class="font-semibold text-gray-800 dark:text-gray-100">Top Countries</h2>
+    </header>
+    <div class="grow p-3">
+        <div class="flex flex-col h-full">
+            <!-- Card content -->
+            <div class="grow">
+                <ul class="flex justify-between text-xs uppercase text-gray-400 dark:text-gray-500 font-semibold px-2 space-x-2">
+                    <li>Source</li>
+                    <li>Sessions</li>
+                </ul>
+
+                <ul class="space-y-1 text-sm text-gray-800 dark:text-gray-100 mt-3 mb-4">
+                    <ProgressListItem Label="Ireland" Value="4.2K" ProgressPercentage="82" Color="sky" />
+                    <ProgressListItem Label="United States" Value="3.4K" ProgressPercentage="70" Color="sky" />
+                    <ProgressListItem Label="Germany" Value="1.6k" ProgressPercentage="60" Color="sky" />
+                    <ProgressListItem Label="Italy" Value="1.2k" ProgressPercentage="44" Color="sky" />
+                    <ProgressListItem Label="United Kingdom" Value="912" ProgressPercentage="40" Color="sky" />
+                    <ProgressListItem Label="France" Value="677" ProgressPercentage="30" Color="sky" />
+                    <ProgressListItem Label="India" Value="449" ProgressPercentage="22" Color="sky" />
+                    <ProgressListItem Label="Singapore" Value="269" ProgressPercentage="12" Color="sky" />
+                </ul>
+            </div>
+            <!-- Card footer -->
+            <div class="text-center pt-4 pb-1 border-t border-gray-100 dark:border-gray-700/60">
+                <a class="text-sm font-medium text-violet-500 hover:text-violet-600 dark:hover:text-violet-400" href="#0">Countries Report -&gt;</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+}

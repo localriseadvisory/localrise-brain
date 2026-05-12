@@ -1,0 +1,123 @@
+[
+  {
+    "text": "Getting Started",
+    "link": "/",
+    "children": [
+      {
+        "text": "Quick Start",
+        "link": "/getting-started/quick-start"
+      },      
+      {
+        "text": "Architectural Decision Record",
+        "link": "/architecture/architectural-decision-record"
+      }
+    ]
+  },
+  {
+    "text": "Development",
+    "children": [
+      {
+        "text": "Running GitHub Actions Locally",
+        "link": "/development/run-github-actions-locally"
+      },
+      {
+        "text": "Feature Development Overview",
+        "link": "/development/feature-development-guide"
+      },
+      {
+        "text": "Adding Domain Entities",
+        "link": "/development/01-adding-domain-entities"
+      },
+      {
+        "text": "Adding Repositories",
+        "link": "/development/02-adding-repositories"
+      },
+      {
+        "text": "Creating API Controllers",
+        "link": "/development/03-creating-api-controllers"
+      }
+    ]
+  },
+  {
+    "text": "AppBlueprint Projects",
+    "children": [
+      {
+        "text": "Web Application",
+        "link": "/appblueprint/projects/AppBlueprint.Web_README"
+      },
+      {
+        "text": "API Service",
+        "link": "/appblueprint/projects/AppBlueprint.ApiService_README"
+      },
+      {
+        "text": "App Gateway",
+        "link": "/appblueprint/projects/AppBlueprint.AppGateway_README"
+      },
+      {
+        "text": "App Host",
+        "link": "/appblueprint/projects/AppBlueprint.AppHost_README"
+      },
+      {
+        "text": "Developer CLI",
+        "link": "/appblueprint/projects/AppBlueprint.DeveloperCli_README"
+      },
+      {
+        "text": "Service Defaults",
+        "link": "/appblueprint/projects/AppBlueprint.ServiceDefaults_README"
+      },
+      {
+        "text": "Tests",
+        "link": "/appblueprint/projects/AppBlueprint.Tests_README"
+      },
+      {
+        "text": "Architecture Tests",
+        "link": "/appblueprint/projects/AppBlueprint.ArchitectureTests_README"
+      }
+    ]
+  },
+  {
+    "text": "AppBlueprint Modules",
+    "children": [
+      {
+        "text": "Application",
+        "link": "/appblueprint/modules/AppBlueprint.Baseline.Application_README"
+      },
+      {
+        "text": "Core",
+        "link": "/appblueprint/modules/AppBlueprint.Baseline.Core_README"
+      },
+      {
+        "text": "Infrastructure",
+        "link": "/appblueprint/modules/AppBlueprint.Infrastructure_README"
+      },
+      {
+        "text": "Presentation API Module",
+        "link": "/appblueprint/modules/AppBlueprint.Presentation.ApiModule_README"
+      },
+      {
+        "text": "Shared Kernel",
+        "link": "/appblueprint/modules/AppBlueprint.SharedKernel_README"
+      },
+      {
+        "text": "UI Kit",
+        "link": "/appblueprint/modules/AppBlueprint.UiKit_README"
+      },
+      {
+        "text": "Domain - Integrations",
+        "link": "/appblueprint/modules/AppBlueprint.Baseline.Domain.Integrations_README"
+      },
+      {
+        "text": "Domain - Logging",
+        "link": "/appblueprint/modules/AppBlueprint.Baseline.Domain.Logging_README"
+      },
+      {
+        "text": "Domain - Security",
+        "link": "/appblueprint/modules/AppBlueprint.Baseline.Domain.Security_README"
+      },
+      {
+        "text": "Domain - Subscriptions",
+        "link": "/appblueprint/modules/AppBlueprint.Baseline.Domain.Subscriptions_README"
+      }
+    ]
+  }  
+]

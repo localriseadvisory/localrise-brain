@@ -1,0 +1,117 @@
+
+> localrise-portal@0.1.0 dev
+> next dev --webpack
+
+▲ Next.js 16.2.2 (webpack)
+- Local:         http://localhost:3000
+- Network:       http://172.20.10.2:3000
+- Environments: .env.local
+✓ Ready in 1078ms
+
+○ Compiling / ...
+ GET / 200 in 4.8s (next.js: 4.3s, proxy.ts: 258ms, application-code: 220ms)
+○ Compiling /login ...
+ GET /login 200 in 526ms (next.js: 24ms, proxy.ts: 27ms, application-code: 475ms)
+ GET /login 200 in 280ms (next.js: 19ms, proxy.ts: 36ms, application-code: 226ms)
+○ Compiling /demo-data ...
+ GET /demo-data 200 in 9.0s (next.js: 5.4s, proxy.ts: 638ms, application-code: 3.0s)
+○ Compiling /demo ...
+ GET /demo 200 in 12.4s (next.js: 6.3s, proxy.ts: 1083ms, application-code: 5.0s)
+ GET /demo-data 200 in 4.0s (next.js: 2.1s, proxy.ts: 562ms, application-code: 1269ms)
+ GET /demo 200 in 10.9s (next.js: 2.6s, proxy.ts: 392ms, application-code: 7.9s)
+○ Compiling /demo-data ...
+ GET /demo-data 200 in 7.6s (next.js: 4.4s, proxy.ts: 1569ms, application-code: 1659ms)
+ GET /demo-data 200 in 2.0s (next.js: 50ms, proxy.ts: 1408ms, application-code: 591ms)
+ GET /demo 200 in 4.0s (next.js: 2.1s, proxy.ts: 337ms, application-code: 1505ms)
+ GET /demo 200 in 626ms (next.js: 9ms, proxy.ts: 18ms, application-code: 599ms)
+ GET /demo-data 200 in 2.7s (next.js: 1249ms, proxy.ts: 674ms, application-code: 764ms)
+○ Compiling /demo ...
+ GET /demo 200 in 10.7s (next.js: 5.6s, proxy.ts: 1800ms, application-code: 3.4s)
+○ Compiling /demo/aquisicao ...
+ GET /demo/aquisicao 200 in 6.4s (next.js: 3.4s, proxy.ts: 637ms, application-code: 2.3s)
+ GET /demo/aquisicao 200 in 1975ms (next.js: 12ms, proxy.ts: 21ms, application-code: 1942ms)
+ GET /demo/aquisicao 200 in 1818ms (next.js: 29ms, proxy.ts: 85ms, application-code: 1704ms)
+ GET /demo/aquisicao 200 in 744ms (next.js: 8ms, proxy.ts: 15ms, application-code: 721ms)
+ GET /demo/trafego-pago 200 in 3.0s (next.js: 1545ms, proxy.ts: 20ms, application-code: 1462ms)
+ GET /demo 200 in 557ms (next.js: 57ms, proxy.ts: 27ms, application-code: 472ms)
+ GET /demo/trafego-pago 200 in 985ms (next.js: 13ms, proxy.ts: 27ms, application-code: 945ms)
+ GET /demo/aquisicao 200 in 1181ms (next.js: 170ms, proxy.ts: 118ms, application-code: 894ms)
+ GET /demo/aquisicao 200 in 600ms (next.js: 8ms, proxy.ts: 19ms, application-code: 573ms)
+ GET /demo/trafego-pago 200 in 684ms (next.js: 9ms, proxy.ts: 18ms, application-code: 658ms)
+ GET /demo/crm 200 in 4.3s (next.js: 3.1s, proxy.ts: 17ms, application-code: 1126ms)
+ GET /demo/automacoes 200 in 2.5s (next.js: 1635ms, proxy.ts: 17ms, application-code: 885ms)
+ GET /demo/reputacao 200 in 3.1s (next.js: 2.1s, proxy.ts: 20ms, application-code: 928ms)
+ GET /demo 200 in 886ms (next.js: 169ms, proxy.ts: 75ms, application-code: 642ms)
+ GET /demo/aquisicao 200 in 1497ms (next.js: 91ms, proxy.ts: 32ms, application-code: 1374ms)
+ GET /demo/crm 200 in 3.3s (next.js: 765ms, proxy.ts: 1326ms, application-code: 1169ms)
+ GET /demo/trafego-pago 200 in 1388ms (next.js: 94ms, proxy.ts: 29ms, application-code: 1265ms)
+○ Compiling /demo/sistema-localrise ...
+ GET /demo/sistema-localrise 200 in 9.5s (next.js: 6.9s, proxy.ts: 33ms, application-code: 2.5s)
+○ Compiling /demo/eventos ...
+ GET /demo/eventos 200 in 9.2s (next.js: 6.9s, proxy.ts: 77ms, application-code: 2.3s)
+ GET /demo/sistema-localrise 200 in 9.2s (next.js: 6.9s, proxy.ts: 81ms, application-code: 2.3s)
+ GET /demo/eventos 200 in 8.8s (next.js: 321ms, proxy.ts: 907ms, application-code: 7.6s)
+ GET /demo 200 in 6.7s (next.js: 813ms, proxy.ts: 881ms, application-code: 5.0s)
+ GET /demo/aquisicao 200 in 6.5s (next.js: 1135ms, proxy.ts: 958ms, application-code: 4.4s)
+ GET /demo/trafego-pago 200 in 5.8s (next.js: 1107ms, proxy.ts: 1031ms, application-code: 3.7s)
+ GET /demo/crm 200 in 2.9s (next.js: 355ms, proxy.ts: 126ms, application-code: 2.4s)
+ GET /demo/automacoes 200 in 2.4s (next.js: 185ms, proxy.ts: 44ms, application-code: 2.2s)
+○ Compiling /demo/reputacao ...
+ GET /demo/reputacao 200 in 641ms (next.js: 16ms, proxy.ts: 26ms, application-code: 599ms)
+ GET /demo/reputacao 200 in 19.9s (next.js: 16.7s, proxy.ts: 27ms, application-code: 3.2s)
+ GET /demo/eventos 200 in 1224ms (next.js: 124ms, proxy.ts: 29ms, application-code: 1071ms)
+ GET /demo/automacoes 200 in 2.1s (next.js: 169ms, proxy.ts: 86ms, application-code: 1878ms)
+ GET /demo/automacoes 200 in 4.7s (next.js: 33ms, proxy.ts: 25ms, application-code: 4.7s)
+○ Compiling /demo ...
+ GET /demo 200 in 28.8s (next.js: 25.5s, proxy.ts: 520ms, application-code: 2.8s)
+ GET /demo/reputacao 200 in 4.7s (next.js: 3.2s, proxy.ts: 35ms, application-code: 1466ms)
+ GET /demo/eventos 200 in 1025ms (next.js: 99ms, proxy.ts: 31ms, application-code: 895ms)
+ GET /demo/trafego-pago 200 in 6.5s (next.js: 959ms, proxy.ts: 1112ms, application-code: 4.4s)
+ GET /demo/crm 200 in 11.4s (next.js: 1554ms, proxy.ts: 1457ms, application-code: 8.4s)
+ GET /demo/crm 200 in 1614ms (next.js: 34ms, proxy.ts: 235ms, application-code: 1345ms)
+○ Compiling /demo ...
+ GET /demo/trafego-pago 200 in 4.4s (next.js: 34ms, proxy.ts: 47ms, application-code: 4.3s)
+ GET /demo/trafego-pago 200 in 6.9s (next.js: 402ms, proxy.ts: 1364ms, application-code: 5.2s)
+ GET /demo 200 in 47s (next.js: 38.4s, proxy.ts: 1864ms, application-code: 6.4s)
+ GET /demo/eventos 200 in 3.9s (next.js: 218ms, proxy.ts: 41ms, application-code: 3.6s)
+ GET /demo/trafego-pago 200 in 2.1s (next.js: 43ms, proxy.ts: 212ms, application-code: 1807ms)
+ GET /demo/crm 200 in 1321ms (next.js: 140ms, proxy.ts: 345ms, application-code: 837ms)
+ GET /demo 200 in 3.3s (next.js: 13ms, proxy.ts: 21ms, application-code: 3.2s)
+ GET /demo/aquisicao 200 in 1956ms (next.js: 196ms, proxy.ts: 781ms, application-code: 980ms)
+○ Compiling /demo/sistema-localrise ...
+ GET /demo/trafego-pago 200 in 12.4s (next.js: 1377ms, proxy.ts: 621ms, application-code: 10.4s)
+ GET /demo/crm 200 in 8.6s (next.js: 213ms, proxy.ts: 224ms, application-code: 8.2s)
+○ Compiling /demo/reputacao ...
+ GET /demo/sistema-localrise 200 in 38.1s (next.js: 25.5s, proxy.ts: 352ms, application-code: 12.2s)
+ GET /demo/trafego-pago 200 in 44s (next.js: 37.5s, proxy.ts: 2.5s, application-code: 4.1s)
+ GET /demo/trafego-pago 200 in 5.0s (next.js: 14ms, proxy.ts: 1949ms, application-code: 3.0s)
+ GET /demo 200 in 44s (next.js: 37.5s, proxy.ts: 2.4s, application-code: 4.1s)
+ GET /demo 200 in 44s (next.js: 37.5s, proxy.ts: 2.4s, application-code: 4.1s)
+ GET /demo/automacoes 200 in 47s (next.js: 37.5s, proxy.ts: 2.4s, application-code: 6.8s)
+ GET /demo/reputacao 200 in 47s (next.js: 37.5s, proxy.ts: 2.4s, application-code: 6.8s)
+ GET /demo/sistema-localrise 200 in 2.7s (next.js: 296ms, proxy.ts: 40ms, application-code: 2.4s)
+ GET /demo/trafego-pago 200 in 4.3s (next.js: 920ms, proxy.ts: 226ms, application-code: 3.1s)
+ GET /demo/sistema-localrise 200 in 4.6s (next.js: 667ms, proxy.ts: 225ms, application-code: 3.7s)
+ GET /demo/sistema-localrise 200 in 4.6s (next.js: 783ms, proxy.ts: 225ms, application-code: 3.6s)
+ GET /demo/automacoes 200 in 2.6s (next.js: 134ms, proxy.ts: 50ms, application-code: 2.4s)
+ GET /demo/reputacao 200 in 4.7s (next.js: 270ms, proxy.ts: 70ms, application-code: 4.3s)
+ GET /demo/trafego-pago 200 in 4.4s (next.js: 167ms, proxy.ts: 565ms, application-code: 3.7s)
+ GET /demo/trafego-pago 200 in 2.8s (next.js: 13ms, proxy.ts: 33ms, application-code: 2.7s)
+ GET /demo/trafego-pago 200 in 2.8s (next.js: 140ms, proxy.ts: 33ms, application-code: 2.6s)
+ GET /demo/trafego-pago 200 in 3.1s (next.js: 103ms, proxy.ts: 59ms, application-code: 2.9s)
+ GET /demo/trafego-pago 200 in 1059ms (next.js: 60ms, proxy.ts: 584ms, application-code: 414ms)
+ GET /demo/crm 200 in 5.3s (next.js: 902ms, proxy.ts: 286ms, application-code: 4.1s)
+ GET /demo/aquisicao 200 in 4.5s (next.js: 27ms, proxy.ts: 59ms, application-code: 4.4s)
+ GET /demo/aquisicao 200 in 7.7s (next.js: 851ms, proxy.ts: 322ms, application-code: 6.5s)
+ GET /demo/aquisicao 200 in 8.1s (next.js: 148ms, proxy.ts: 1095ms, application-code: 6.9s)
+ GET /demo/trafego-pago 200 in 1701ms (next.js: 52ms, proxy.ts: 50ms, application-code: 1598ms)
+ GET /demo/crm 200 in 2.6s (next.js: 312ms, proxy.ts: 425ms, application-code: 1833ms)
+ GET /demo/automacoes 200 in 802ms (next.js: 81ms, proxy.ts: 112ms, application-code: 609ms)
+ GET /demo 200 in 8.0s (next.js: 375ms, proxy.ts: 1983ms, application-code: 5.7s)
+ GET /demo/aquisicao 200 in 5.7s (next.js: 459ms, proxy.ts: 389ms, application-code: 4.9s)
+ GET /demo/trafego-pago 200 in 4.7s (next.js: 118ms, proxy.ts: 384ms, application-code: 4.2s)
+ GET /demo/crm 200 in 1867ms (next.js: 36ms, proxy.ts: 50ms, application-code: 1781ms)
+ GET /demo/automacoes 200 in 1387ms (next.js: 25ms, proxy.ts: 29ms, application-code: 1333ms)
+ GET /demo/reputacao 200 in 1088ms (next.js: 37ms, proxy.ts: 38ms, application-code: 1013ms)
+ GET /demo/eventos 200 in 1486ms (next.js: 302ms, proxy.ts: 48ms, application-code: 1136ms)
+ GET /demo/sistema-localrise 200 in 1124ms (next.js: 19ms, proxy.ts: 35ms, application-code: 1069ms)

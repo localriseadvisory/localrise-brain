@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radar de Prospecção — LocalRise Advisory</title>
+<style>
+  :root {
+    --bg: #080810;
+    --surface: #0f0f18;
+    --surface2: #14141f;
+    --border: #1e1e30;
+    --border2: #2a2a3a;
+    --accent: #E31B23;
+    --accent2: #6c63ff;
+    --green: #22C55E;
+    --yellow: #F59E0B;
+    --blue: #3B82F6;
+    --text: #e8e8f0;
+    --muted: #6a6a8a;
+    --muted2: #4a4a6a;
+    --orange: #F97316;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.5; }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #0f0f18 0%, #12121e 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 14px; color: white;
+  }
+  .logo-text { font-size: 16px; font-weight: 700; }
+  .logo-sub { font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .header-badge {
+    font-size: 11px; font-weight: 600; padding: 5px 12px; border-radius: 20px;
+    background: rgba(227,27,35,0.1); color: var(--accent); border: 1px solid rgba(227,27,35,0.2);
+  }
+  .header-timestamp {
+    font-size: 10px; color: var(--muted); padding: 5px 12px; border-radius: 20px;
+    border: 1px solid var(--border2);
+  }
+
+  /* AUDIT BANNER */
+  .audit-banner {
+    background: rgba(249,115,22,0.08);
+    border: 1px solid rgba(249,115,22,0.25);
+    border-radius: 12px;
+    padding: 14px 20px;
+    margin-bottom: 24px;
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .audit-banner-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .audit-banner-content { flex: 1; }
+  .audit-banner-title { font-size: 12px; font-weight: 700; color: var(--orange); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .audit-banner-text { font-size: 12px; color: #d4975a; line-height: 1.6; }
+  .audit-banner-verified { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: var(--green); background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); border-radius: 20px; padding: 2px 10px; }
+  .audit-banner-pending { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: var(--yellow); background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); border-radius: 20px; padding: 2px 10px; }
+
+  /* MAIN */
+  .main { padding: 32px 40px; max-width: 1400px; margin: 0 auto; }
+
+  /* KPI CARDS */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+  .kpi-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 18px 20px;
+  }
+  .kpi-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .kpi-value { font-size: 32px; font-weight: 900; letter-spacing: -0.03em; line-height: 1; margin-bottom: 4px; }
+  .kpi-sub { font-size: 11px; color: var(--muted); }
+
+  /* FILTERS */
+  .filters {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 16px 20px;
+    display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .filter-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-right: 4px; }
+  .filter-group { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-btn {
+    font-size: 12px; padding: 6px 14px; border-radius: 20px; cursor: pointer;
+    border: 1px solid var(--border2); background: transparent; color: var(--muted);
+    transition: all 0.15s; white-space: nowrap;
+  }
+  .filter-btn:hover { color: var(--text); border-color: var(--muted); }
+  .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+  .filter-sep { width: 1px; height: 28px; background: var(--border); flex-shrink: 0; }
+  .search-input {
+    padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border2);
+    background: var(--surface2); color: var(--text); font-size: 12px; outline: none;
+    width: 200px;
+  }
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--muted2); }
+
+  /* TABLE */
+  .table-container { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+  .table-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
+  }
+  .table-title { font-size: 13px; font-weight: 700; }
+  .table-count { font-size: 12px; color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: var(--surface2); border-bottom: 1px solid var(--border); }
+  thead th { text-align: left; padding: 10px 16px; font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; cursor: pointer; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(255,255,255,0.02); }
+  td { padding: 12px 16px; font-size: 13px; vertical-align: middle; }
+
+  .lead-name { font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .lead-city { font-size: 11px; color: var(--muted); }
+
+  .badge {
+    font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px;
+    white-space: nowrap; display: inline-block;
+  }
+  .badge-verified { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
+  .badge-ranking { background: rgba(249,115,22,0.1); color: var(--orange); border: 1px solid rgba(249,115,22,0.2); }
+  .badge-pending { background: rgba(107,114,128,0.1); color: var(--muted); border: 1px solid var(--border2); font-style: italic; }
+
+  .price-tag { font-size: 13px; font-weight: 700; color: var(--green); }
+
+  /* VERIFICAR pill */
+  .pill-verificar {
+    font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px;
+    background: rgba(107,114,128,0.1); color: var(--muted2); border: 1px solid var(--border2);
+    white-space: nowrap;
+  }
+
+  /* EMPTY STATE */
+  .empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-text { font-size: 14px; }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 200; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border2);
+    border-radius: 20px; width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto;
+    transform: translateY(20px); transition: transform 0.2s;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal-header { padding: 24px 28px 0; display: flex; align-items: flex-start; justify-content: space-between; }
+  .modal-body { padding: 20px 28px 28px; }
+  .modal-close { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 20px; line-height: 1; padding: 4px; }
+  .modal-close:hover { color: var(--text); }
+  .modal-section { margin-top: 20px; }
+  .modal-section-title { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+  .modal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .modal-kpi { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
+  .modal-kpi-label { font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+  .modal-kpi-value { font-size: 15px; font-weight: 800; }
+
+  /* ENRICHMENT STATUS BOX */
+  .enrichment-box {
+    background: rgba(249,115,22,0.05);
+    border: 1px solid rgba(249,115,22,0.2);
+    border-radius: 12px; padding: 16px 18px; margin-top: 16px;
+  }
+  .enrichment-box-title { font-size: 11px; font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+  .enrichment-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; padding: 8px 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; }
+  .enrichment-item:last-child { margin-bottom: 0; }
+  .enrichment-channel { font-size: 11px; font-weight: 700; color: var(--text); width: 70px; flex-shrink: 0; }
+  .enrichment-status { font-size: 11px; color: var(--muted); flex: 1; }
+  .enrichment-how { font-size: 10px; color: var(--muted2); margin-top: 2px; font-style: italic; }
+
+  /* CHECKLIST */
+  .checklist-section {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px 28px; margin-top: 24px;
+  }
+  .checklist-title { font-size: 14px; font-weight: 700; margin-bottom: 16px; }
+  .checklist-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px;
+  }
+  .checklist-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .checklist-label { font-size: 12px; font-weight: 600; color: var(--text); }
+  .checklist-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* WHATSAPP TEMPLATE */
+  .whatsapp-box {
+    background: #0a1a0e; border: 1px solid #1a3a1e; border-radius: 12px;
+    padding: 14px 16px; font-size: 13px; line-height: 1.6; color: #a0d4a8;
+    white-space: pre-wrap; position: relative;
+  }
+  .copy-btn {
+    position: absolute; top: 10px; right: 10px;
+    font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 8px;
+    background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3);
+    cursor: pointer;
+  }
+  .copy-btn:hover { background: rgba(34,197,94,0.25); }
+
+  @media (max-width: 900px) {
+    .main { padding: 20px; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .header { padding: 16px 20px; }
+    .checklist-grid { grid-template-columns: 1fr; }
+    .modal-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">LR</div>
+    <div>
+      <div class="logo-text">LocalRise Advisory</div>
+      <div class="logo-sub">Radar de Prospecção</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="header-timestamp" id="headerTimestamp">Carregando...</div>
+    <div class="header-badge">Tchê Ofertas — Gastronomia RS</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- AUDIT BANNER -->
+  <div class="audit-banner">
+    <div class="audit-banner-icon">🔍</div>
+    <div class="audit-banner-content">
+      <div class="audit-banner-title">Status dos Dados — Auditado em 2026-04-06</div>
+      <div class="audit-banner-text">
+        <span class="audit-banner-verified">✓ Listagem verificada</span> &nbsp;Nome, cidade, categoria, preço e ranking coletados diretamente do Tchê Ofertas.<br>
+        <span class="audit-banner-pending">⏳ Aguarda validação manual</span> &nbsp;Dados de GBP (Google Maps), site e Instagram requerem verificação manual — não foram preenchidos automaticamente para evitar informações incorretas.
+      </div>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <span class="filter-label">Cidade</span>
+    <div class="filter-group" id="cityFilters"></div>
+    <div class="filter-sep"></div>
+    <span class="filter-label">Categoria</span>
+    <div class="filter-group" id="catFilters"></div>
+    <div class="filter-sep"></div>
+    <input type="text" class="search-input" placeholder="🔍 Buscar restaurante..." oninput="setSearch(this.value)">
+  </div>
+
+  <!-- Table -->
+  <div class="table-container">
+    <div class="table-header">
+      <div class="table-title">Leads identificados</div>
+      <div class="table-count" id="tableCount"></div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Restaurante</th>
+          <th>Cidade</th>
+          <th>Categoria</th>
+          <th>Preço Oferta</th>
+          <th>Ranking Plataforma</th>
+          <th>GBP</th>
+          <th>Site</th>
+          <th>Instagram</th>
+        </tr>
+      </thead>
+      <tbody id="leadsTable"></tbody>
+    </table>
+    <div class="empty" id="emptyState" style="display:none">
+      <div class="empty-icon">🔍</div>
+      <div class="empty-text">Nenhum lead encontrado com esses filtros</div>
+    </div>
+  </div>
+
+  <!-- Checklist de Confiabilidade -->
+  <div class="checklist-section">
+    <div class="checklist-title">Checklist de Confiabilidade do Dashboard</div>
+    <div class="checklist-grid">
+      <div class="checklist-item">
+        <div class="checklist-icon">✅</div>
+        <div>
+          <div class="checklist-label">Dados de listagem verificados</div>
+          <div class="checklist-desc">Nome, cidade, categoria, preço e ranking coletados via scraping direto do Tchê Ofertas em 2026-04-06</div>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-icon">✅</div>
+        <div>
+          <div class="checklist-label">Base atualizada (18 restaurantes únicos)</div>
+          <div class="checklist-desc">24 entradas encontradas → 18 únicos ativos. Zimmer7 removido por não aparecer na listagem atual.</div>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-icon">✅</div>
+        <div>
+          <div class="checklist-label">Proveniência documentada</div>
+          <div class="checklist-desc">Arquivo coleta-metadata.json registra método, ferramenta, URL e limitações técnicas da coleta</div>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-icon">✅</div>
+        <div>
+          <div class="checklist-label">Sem dados inventados</div>
+          <div class="checklist-desc">GBP, site e Instagram exibidos como "A verificar" — nenhum dado de enriquecimento foi gerado sem fonte real</div>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-icon">⏳</div>
+        <div>
+          <div class="checklist-label">Enriquecimento manual pendente</div>
+          <div class="checklist-desc">GBP, site e Instagram requerem validação manual. Cada card mostra como verificar cada canal.</div>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-icon">⏳</div>
+        <div>
+          <div class="checklist-label">Score de oportunidade pendente</div>
+          <div class="checklist-desc">Score só será calculado após preenchimento dos dados de enriquecimento com fontes reais verificadas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+// ── DADOS ──────────────────────────────────────────────────────
+const DATA_URL = '../data/leads-verified-2026-04-06.json';
+let allLeads = [];
+let metadata = null;
+let filters = { cidade: null, categoria: null, search: '' };
+
+async function loadData() {
+  try {
+    const res = await fetch(DATA_URL);
+    if (!res.ok) throw new Error('fetch failed');
+    const json = await res.json();
+    allLeads = json.restaurantes;
+    metadata = json.metadata;
+  } catch {
+    allLeads = INLINE_LEADS;
+    metadata = INLINE_METADATA;
+  }
+  init();
+}
+
+function init() {
+  // Update header timestamp
+  const ts = metadata ? new Date(metadata.timestamp_coleta) : new Date();
+  document.getElementById('headerTimestamp').textContent =
+    'Coleta: ' + ts.toLocaleDateString('pt-BR') + ' ' + ts.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+
+  buildFilters();
+  renderKPIs();
+  renderTable();
+}
+
+// ── FILTROS ──────────────────────────────────────────────────────
+function buildFilters() {
+  const cities = [...new Set(allLeads.map(l => l.dados_verificados.cidade))].sort();
+  const catContainer = document.getElementById('catFilters');
+  const cityContainer = document.getElementById('cityFilters');
+
+  cities.forEach(city => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.textContent = city;
+    btn.onclick = function() {
+      if (filters.cidade === city) {
+        filters.cidade = null;
+        this.classList.remove('active');
+      } else {
+        document.querySelectorAll('#cityFilters .filter-btn').forEach(b => b.classList.remove('active'));
+        filters.cidade = city;
+        this.classList.add('active');
+      }
+      renderTable();
+    };
+    cityContainer.appendChild(btn);
+  });
+
+  const catMap = {
+    'Pizza': 'Pizza',
+    'Churrasco': 'Churrasco',
+    'Buffet': 'Buffet',
+    'Carnes': 'Carnes',
+    'Outros': 'Outros',
+  };
+  Object.entries(catMap).forEach(([key, label]) => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.textContent = label;
+    btn.onclick = function() {
+      if (filters.categoria === key) {
+        filters.categoria = null;
+        this.classList.remove('active');
+      } else {
+        document.querySelectorAll('#catFilters .filter-btn').forEach(b => b.classList.remove('active'));
+        filters.categoria = key;
+        this.classList.add('active');
+      }
+      renderTable();
+    };
+    catContainer.appendChild(btn);
+  });
+}
+
+function setSearch(val) {
+  filters.search = val.toLowerCase();
+  renderTable();
+}
+
+function matchesCat(cat, filterKey) {
+  if (filterKey === 'Pizza') return cat.toLowerCase().includes('pizza');
+  if (filterKey === 'Churrasco') return cat.toLowerCase().includes('churrasco') || cat.toLowerCase().includes('bife') || cat.toLowerCase().includes('espeto');
+  if (filterKey === 'Buffet') return cat.toLowerCase().includes('buffet');
+  if (filterKey === 'Carnes') return cat.toLowerCase().includes('carne') || cat.toLowerCase().includes('parrilla') || cat.toLowerCase().includes('uruguai');
+  if (filterKey === 'Outros') return !['pizza','churrasco','bife','espeto','buffet','carne','parrilla','uruguai'].some(k => cat.toLowerCase().includes(k));
+  return true;
+}
+
+function filteredLeads() {
+  return allLeads.filter(l => {
+    const d = l.dados_verificados;
+    if (filters.search && !d.nome.toLowerCase().includes(filters.search) && !d.cidade.toLowerCase().includes(filters.search)) return false;
+    if (filters.cidade && d.cidade !== filters.cidade) return false;
+    if (filters.categoria && !matchesCat(d.categoria, filters.categoria)) return false;
+    return true;
+  });
+}
+
+// ── KPIs ──────────────────────────────────────────────────────
+function renderKPIs() {
+  const leads = allLeads;
+  const cities = [...new Set(leads.map(l => l.dados_verificados.cidade))];
+  const withRanking = leads.filter(l => l.dados_verificados.ranking_plataforma).length;
+  const exclusive = leads.filter(l => l.dados_verificados.ranking_plataforma && l.dados_verificados.ranking_plataforma.includes('EXCLUSIVO')).length;
+
+  const cards = [
+    { label: 'Total de Leads', value: leads.length, sub: 'restaurantes ativos na plataforma', color: 'var(--text)' },
+    { label: 'Cidades cobertas', value: cities.length, sub: cities.join(' · '), color: 'var(--blue)' },
+    { label: 'Com ranking próprio', value: withRanking, sub: `${exclusive} exclusivo${exclusive !== 1 ? 's' : ''} na plataforma`, color: 'var(--orange)' },
+    { label: 'Enriquecimento', value: '0 / 18', sub: 'aguardando validação manual', color: 'var(--muted)' },
+  ];
+
+  document.getElementById('kpiGrid').innerHTML = cards.map(c => `
+    <div class="kpi-card">
+      <div class="kpi-label">${c.label}</div>
+      <div class="kpi-value" style="color:${c.color}">${c.value}</div>
+      <div class="kpi-sub">${c.sub}</div>
+    </div>
+  `).join('');
+}
+
+// ── TABLE ──────────────────────────────────────────────────────
+function renderTable() {
+  const leads = filteredLeads();
+  const tbody = document.getElementById('leadsTable');
+  const empty = document.getElementById('emptyState');
+  document.getElementById('tableCount').textContent = `${leads.length} lead${leads.length !== 1 ? 's' : ''}`;
+
+  if (leads.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  tbody.innerHTML = leads.map(l => {
+    const d = l.dados_verificados;
+    const ranking = d.ranking_plataforma
+      ? `<span class="badge badge-ranking">${d.ranking_plataforma.length > 30 ? d.ranking_plataforma.substring(0, 28) + '…' : d.ranking_plataforma}</span>`
+      : `<span style="color:var(--muted2);font-size:11px">—</span>`;
+
+    return `
+      <tr onclick="openModal('${l.id}')">
+        <td>
+          <div class="lead-name">${d.nome}</div>
+          <div class="lead-city">${d.bairro ? d.bairro + ' · ' : ''}${d.cidade}</div>
+        </td>
+        <td style="font-size:12px">${d.cidade}</td>
+        <td style="font-size:12px;color:var(--muted)">${d.categoria}</td>
+        <td><span class="price-tag">${d.preco_oferta}</span></td>
+        <td>${ranking}</td>
+        <td><span class="pill-verificar">A verificar</span></td>
+        <td><span class="pill-verificar">A verificar</span></td>
+        <td><span class="pill-verificar">A verificar</span></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// ── MODAL ──────────────────────────────────────────────────────
+function openModal(id) {
+  const l = allLeads.find(x => x.id === id);
+  if (!l) return;
+  const d = l.dados_verificados;
+  const e = l.dados_enriquecimento;
+
+  const verifiedRow = (label, value, highlight) => `
+    <div class="modal-kpi">
+      <div class="modal-kpi-label">${label}</div>
+      <div class="modal-kpi-value" style="color:${highlight || 'var(--text)'}">${value}</div>
+    </div>
+  `;
+
+  const enrichItem = (channel, hint) => `
+    <div class="enrichment-item">
+      <div class="enrichment-channel">${channel}</div>
+      <div>
+        <div class="enrichment-status">⏳ Aguarda validação manual</div>
+        ${hint ? `<div class="enrichment-how">${hint}</div>` : ''}
+      </div>
+    </div>
+  `;
+
+  const ofertasExtra = d.ofertas_adicionais && d.ofertas_adicionais.length > 0
+    ? `<div style="margin-top:8px;font-size:11px;color:var(--muted)">Outras ofertas: ${d.ofertas_adicionais.join(' | ')}</div>`
+    : '';
+
+  // Generic whatsapp template (without fake data)
+  const wppId = `wpp-${l.id}`;
+  const wppMsg = `Oi! Vi o(a) ${d.nome} no Tchê Ofertas — ${d.ranking_plataforma ? d.ranking_plataforma + '. ' : ''}Sou da LocalRise Advisory, agência especializada em presença digital para restaurantes. Gostaria de te mostrar como podemos aumentar seus clientes recorrentes via Google e Instagram. Posso te enviar um diagnóstico gratuito?`;
+
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-header">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+          <span style="font-size:18px;font-weight:900">${d.nome}</span>
+          <span class="badge badge-verified">✓ Verificado</span>
+        </div>
+        <div style="font-size:12px;color:var(--muted)">${d.cidade}${d.bairro ? ' · ' + d.bairro : ''} · ${d.categoria}</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- Dados verificados -->
+      <div class="modal-section">
+        <div class="modal-section-title">Dados Verificados — Tchê Ofertas</div>
+        <div class="modal-grid">
+          ${verifiedRow('Preço da Oferta', d.preco_oferta, 'var(--green)')}
+          ${verifiedRow('Ranking na Plataforma', d.ranking_plataforma || '—', d.ranking_plataforma ? 'var(--orange)' : 'var(--muted)')}
+          ${verifiedRow('Ativo na Plataforma', d.ativo_plataforma ? '✅ Sim' : '❌ Não', d.ativo_plataforma ? 'var(--green)' : 'var(--accent)')}
+          ${verifiedRow('Coletado em', '2026-04-06', 'var(--muted)')}
+        </div>
+        ${ofertasExtra}
+      </div>
+
+      <!-- Link oferta -->
+      <div style="margin-top:14px">
+        <a href="${d.link_oferta}" target="_blank"
+          style="font-size:12px;color:var(--muted);text-decoration:none;border:1px solid var(--border2);padding:8px 16px;border-radius:20px;display:inline-block;transition:color 0.15s"
+          onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">
+          Ver oferta no Tchê Ofertas →
+        </a>
+      </div>
+
+      <!-- Enriquecimento pendente -->
+      <div class="enrichment-box">
+        <div class="enrichment-box-title">Presença Digital — Aguarda Validação Manual</div>
+        ${enrichItem('Google / GBP', e.gbp && e.gbp.como_verificar ? e.gbp.como_verificar : `Buscar "${d.nome} ${d.cidade}" no Google Maps`)}
+        ${enrichItem('Site próprio', `Buscar "${d.nome}" no Google`)}
+        ${enrichItem('Instagram', `Buscar @${d.nome.toLowerCase().replace(/[^a-z0-9]/g, '')} no Instagram`)}
+      </div>
+
+      <!-- WhatsApp template -->
+      <div class="modal-section">
+        <div class="modal-section-title">Mensagem de Abordagem (Template)</div>
+        <div class="whatsapp-box" id="${wppId}">${wppMsg}<button class="copy-btn" onclick="copyMsg('${wppId}')">Copiar</button></div>
+        <div style="font-size:10px;color:var(--muted2);margin-top:6px;font-style:italic">Personalize com dados reais após validação manual do perfil digital</div>
+      </div>
+
+    </div>
+  `;
+
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal')) {
+    document.getElementById('modal').classList.remove('open');
+  }
+}
+
+function copyMsg(elId) {
+  const el = document.getElementById(elId);
+  const text = el.innerText.replace('Copiar','').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = el.querySelector('.copy-btn');
+    btn.textContent = 'Copiado!';
+    setTimeout(() => btn.textContent = 'Copiar', 2000);
+  });
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── INLINE FALLBACK ──────────────────────────────────────────────
+// Dados verificados — APENAS listagem Tchê Ofertas. Enriquecimento requer validação manual.
+const INLINE_METADATA = {
+  "versao": "2.0",
+  "timestamp_coleta": "2026-04-06T14:00:00-03:00",
+  "url_origem": "https://www.tcheofertas.com.br/ofertas/gastronomia",
+  "total_restaurantes": 18
+};
+
+const INLINE_LEADS = [
+  {"id":"001","dados_verificados":{"nome":"Don Aurélio","cidade":"Porto Alegre","estado":"RS","categoria":"Pizza / Rodízio / Sushi","link_oferta":"https://www.tcheofertas.com.br/oferta/gastronomia-pizza/porto-alegre/restaurante-e-pizzaria-don-aurelio/rodizio-pizzas-buffet-sushi-refri-desconto-promocao","preco_oferta":"R$ 97,90","ranking_plataforma":"1º mais vendido em Pizzas","ativo_plataforma":true,"status":"VERIFICADO"},"dados_enriquecimento":{"gbp":{"existe":null,"nota":null,"total_avaliacoes":null,"score_gbp":null,"status":"REQUER_VERIFICAÇÃO","como_verificar":"Buscar 'Don Aurélio pizzaria Porto Alegre' no Google Maps"},"site":{"existe":null,"url":null,"score_site":null,"status":"REQUER_VERIFICAÇÃO"},"instagram":{"existe":null,"handle":null,"seguidores":null,"status":"REQUER_VERIFICAÇÃO"}},"score_oportunidade":{"valor":null,"verificado":false}},
+  {"id":"002","dados_verificados":{"nome":"Restaurante Panorama Gastronômico","cidade":"Porto Alegre","estado":"RS","categoria":"Buffet","link_oferta":"https://www.tcheofertas.com.br/oferta/gastronomia-buffet/restaurante-panorama-gastronomico/buffet-de-pratos-quentes-desconto-promocao","preco_oferta":"R$ 63,00","ranking_plataforma":"1º mais vendido em Buffet","ativo_plataforma":true,"status":"VERIFICADO"},"dados_enriquecimento":{"gbp":{"existe":null,"nota":null,"total_avaliacoes":null,"score_gbp":null,"status":"REQUER_VERIFICAÇÃO","como_verificar":"Buscar 'Panorama Gastronômico Porto Alegre' no Google Maps"},"site":{"existe":null,"url":null,"score_site":null,"status":"REQUER_VERIFICAÇÃO"},"instagram":{"existe":null,"handle":null,"seguidores":null,"status":"REQUER_VERIFICAÇÃO"}},"score_oportunidade":{"valor":null,"verificado":false}},
+  {"id":"003","dados_verificados":{"nome":"Guardiões da Pizza","cidade":"Porto Alegre","estado":"RS","categoria":"Pizza / Rodízio","link_oferta":"https://www.tcheofertas.com.br/oferta/gastronomia-pizza/porto-alegre/guardioes-da-pizza/rodizio-de-pizzas-refri-liberado-desconto-promocao","preco_oferta":"R$ 85,90","ranking_plataforma":"2º mais vendido em Pizzas","ativo_plataforma":true,"status":"VERIFICADO"},"dados_enriquecimento":{"gbp":{"existe":null,"nota":null,"total_avaliacoes":null,"score_gbp":null,"status":"REQUER_VERIFICAÇÃO"},"site":{"existe":null,"url":null,"score_site":null,"status":"REQUER_VERIFICAÇÃO"},"instagram":{"existe":null,"handle":null,"seguidores":null,"status":"REQUER_VERIFICAÇÃO"}},"score_oportunidade":{"valor":null,"verificado":false}},
+  {"id":"004","dados_verificados":{"nome":"Marquês Pizzaria","cidade":"Porto Alegre","bairro":"Moinhos de Vento","estado":"RS","categoria":"Pizza / Rodízio","link_oferta":"https://www.tcheofertas.com.br/oferta/gastronomia-pizza/porto-alegre/moinhos-de-vento/marques-pizzaria/rodizio-pizzas-calzones-fritas-desconto-promocao","preco_oferta":"R$ 89,90","ranking_plataforma":null,"ativo_plataforma":true,"status":"VERIFICADO"},"dados_enriquecimento":{"gbp":{"existe":null,"nota":null,"total_avaliacoes":null,"score_gbp":null,"status":"REQUER_VERIFICAÇÃO"},"site":{"existe":null,"url":null,"score_site":null,"status":"REQUER_VERIFICAÇÃO"},"instagram":{"existe":null,"handle":null,"seguidores":null,"status":"REQUER_VERIFICAÇÃO"}},"score_oportunidade":{"valor":null,"verificado":false}},
+  {"id":"005","dados_verificados":{"nome":"Ottcho Gastronomia","cidade":"Porto Alegre","estado":"RS","categoria":"Buffet","link_oferta":"https://www.tcheofertas.com.br/oferta/gastronomia-buffet/porto-alegre/ottcho-gastronomia/buffet-livre-suco-liberado-desconto-promocao","preco_oferta":"R$ 53,90","ranking_plataforma":"2º mais vendido em Buffet","ativo_plataforma":true,"status":"VERIFICADO"},"dados_enriquecimento":{"gbp":{"existe":null,"nota":null,"total_avaliacoes":null,"score_gbp":null,"status":"REQUER_VERIFICAÇÃO"},"site":{"existe":null,"url":null,"score_site":null,"status":"REQUER_VERIFICAÇÃO"},"instagram":{"existe":null,"handle":null,"seguidores":null,"status":"REQUER_VERIFICAÇÃO"}},"score_oportunidade":{"valor":null,"verificado":false}},
+  {"id":"006","dados_verificados":{"nome":"Guacamole Cocina Mexicana","cidade":"Porto Alegre","estado":"RS","categoria":"Mexicana","link_oferta":"https://www.tcheofertas.com.br/oferta/gastronomia-outros/porto-alegre/guacamole-cocina-mexicana/combo-nachos-tacos-quesadilla-burrito-desconto-promocao","preco_oferta":"R$ 129,50","ranking_plataforma":null,"ativo_plataforma":true,"status":"VERIFICADO"},"dados_enriquecimento":{"gbp":{"existe":null,"nota":null,"total_avaliacoes":null,"score_gbp":null,"status":"REQUER_VERIFICAÇÃO"},"site":{"existe":null,"url":null,"score_site":null,"status":"REQUER_VERIFICAÇÃO"},"instagram":{"existe":null,"handle":null,"seguidores":null,"status":"REQUER_VERIFICAÇÃO"}},"score_oportunidade":{"valor":null,"verificado":false}},
+  {"id":"007","dados_verificados":{"nome":"Estância Churrascaria","cidade":"Porto Alegre","estado":"RS","categoria":"Churrasco","link_oferta":"https://www.tcheofertas.com.br/oferta/gastronomia-churrasco/porto-alegre/estancia-churrascaria/espeto-corrido-desconto-promocao","preco_oferta":"R$ 59,90","ranking_plataforma":"2º mais vendido em Churrasco","ativo_plataforma":true,"status":"VERIFICADO"},"dados_enriquecimento":{"gbp":{"existe":null,"nota":null,"total_avaliacoes":null,"score_gbp":null,"status":"REQUER_VERIFICAÇÃO"},"site":{"existe":null,"url":null,"score_site":null,"status":"REQUER_VERIFICAÇÃO"},"instagram":{"existe":null,"handle":null,"seguidores":null,"status":"REQUER_VERIFICAÇÃO"}},"score_oportunidade":{"valor":null,"verificado":false}},
+  {"id":"008","dados_verificados":{"nome":"Parrilla Del Sur","cidade":"Porto Alegre","bairro":"Petrópolis","estado":"RS","categoria":"Carnes / Uruguaia","link_oferta":"https://www.tcheofertas.com.br/oferta/gastronomia-carnes/porto-alegre/petropolis/parrilla-del-sur/entrecot-desconto-promocao","preco_oferta":"R$ 53,90","ranking_plataforma":null,"ativo_plataforma":true,"status":"VERIFICADO"},"dados_enriquecimento":{"gbp":{"existe":null,"nota":null,"total_avaliacoes":null,"score_gbp":null,"status":"REQUER_VERIFICAÇÃO"},"site":{"existe":null,"url":null,"score_site":null,"status":"REQUER_VERIFICAÇÃO"},"instagram":{"existe":null,"handle":null,"seguidores":null,"status":"REQUER_VERIFICAÇÃO"}},"score_oportunidade":{"valor":null,"verificado":false}},
+  {"id":"009","dados_verificados":{"nome":"Marciano's Burguer","cidade":"Porto Alegre","bairro":"Centro Histórico","estado":"RS","categoria":"Hambúrguer / Lanches","link_oferta":"https://www.tcheofertas.com.br/oferta/gastronomia-lanches/porto-alegre/centro-historico/marcianos-burguer/rodizio-de-mini-hamburgueres-desconto-promocao","preco_oferta":"R$ 64,90","ranking_plataforma":null,"ativo_plataforma":true,"status":"VERIFICADO"},"dados_enriquecimento":{"gbp":{"existe":null,"nota":null,"total_avaliacoes":null,"score_gbp":null,"status":"REQUER_VERIFICAÇÃO"},"site":{"existe":null,"url":null,"score_site":null,"status":"REQUER_VERIFICAÇÃO"},"instagram":{"existe":null,"handle":null,"seguidores":null,"status":"REQUER_VERIFICAÇÃO"}},"score_oportunidade":{"valor":null,"verificado":false}},
+  {"id":"010","dados_verificados":{"nome":"Terra do Churrasco","cidade":"Porto Alegre","estado":"RS","categoria":"Churrasco","link_oferta":"https://www.tcheofertas.com.br/oferta/gastronomia-churrasco/porto-alegre/terra-do-churrasco/rodizio-de-churrasco-com-acompanhamentos-saladas-desconto-promocao","preco_oferta":"R$ 99,90","ranking_plataforma":"3º mais vendido em Churrasco","ativo_plataforma":true,"status":"VERIFICADO"},"dados_enriquecimento":{"gbp":{"existe":null,"nota":null,"total_avaliacoes":null,"score_gbp":null,"status":"REQUER_VERIFICAÇÃO"},"site":{"existe":null,"url":null,"score_site":null,"status":"REQUER_VERIFICAÇÃO"},"instagram":{"existe":null,"handle":null,"seguidores":null,"status":"REQUER_VERIFICAÇÃO"}},"score_oportunidade":{"valor":null,"verificado":false}},
+  {"id":"011","dados_verificados":{"nome":"Cidade Zaandam Boulevard Laçador","cidade":"Porto Alegre","estado":"RS","categoria":"Café Colonial / Fondue / Culinária Holandesa","link_oferta":"https://www.tcheofertas.com.br/oferta/gastronomia-outros/porto-alegre/cidade-zaandam-boulevard-lacador/cafe-colonial-holances-desconto-promocao","preco_oferta":"R$ 109,00","ranking_plataforma":null,"ofertas_adicionais":["Almoço Holandês — R$ 109,00","Fondue — R$ 139,00","Fogo Nórdico — R$ 139,00"],"ativo_plataforma":true,"status":"VERIFICADO"},"dados_enriquecimento":{"gbp":{"existe":null,"nota":null,"total_avaliacoes":null,"score_gbp":null,"status":"REQUER_VERIFICAÇÃO"},"site":{"existe":null,"url":null,"score_site":null,"status":"REQUER_VERIFICAÇÃO"},"instagram":{"existe":null,"handle":null,"seguidores":null,"status":"REQUER_VERIFICAÇÃO"}},"score_oportunidade":{"valor":null,"verificado":false}},
+  {"id":"012","dados_verificados":{"nome":"Trigo Pizzaria","cidade":"Porto Alegre","estado":"RS","categoria":"Pizza Artesanal / Longa Fermentação","link_oferta":"https://www.tcheofertas.com.br/oferta/gastronomia-pizza/porto-alegre/trigo-pizzaria/rodizio-pizza-massa-longa-fermentacao-desconto-promocao","preco_oferta":"R$ 89,90","ranking_plataforma":null,"ativo_plataforma":true,"status":"VERIFICADO"},"dados_enriquecimento":{"gbp":{"existe":null,"nota":null,"total_avaliacoes":null,"score_gbp":null,"status":"REQUER_VERIFICAÇÃO"},"site":{"existe":null,"url":null,"score_site":null,"status":"REQUER_VERIFICAÇÃO"},"instagram":{"existe":null,"handle":null,"seguidores":null,"status":"REQUER_VERIFICAÇÃO"}},"score_oportunidade":{"valor":null,"verificado":false}},
+  {"id":"013","dados_verificados":{"nome":"Assado Raiz Parrilla","cidade":"Porto Alegre","estado":"RS","categoria":"Carnes / Parrilla","link_oferta":"https://www.tcheofertas.com.br/oferta/gastronomia-carnes/porto-alegre/assado-raiz/assado-escolha-entre-costelao-entrana-bife-de-chorizo-ou-entrecot-mais-tabua-mais-acompanhamentos-desconto-promocao","preco_oferta":"R$ 99,90","ranking_plataforma":null,"ativo_plataforma":true,"status":"VERIFICADO"},"dados_enriquecimento":{"gbp":{"existe":null,"nota":null,"total_avaliacoes":null,"score_gbp":null,"status":"REQUER_VERIFICAÇÃO"},"site":{"existe":null,"url":null,"score_site":null,"status":"REQUER_VERIFICAÇÃO"},"instagram":{"existe":null,"handle":null,"seguidores":null,"status":"REQUER_VERIFICAÇÃO"}},"score_oportunidade":{"valor":null,"verificado":false}},
+  {"id":"014","dados_verificados":{"nome":"Churrascaria Passoquinha","cidade":"Canoas","estado":"RS","categoria":"Churrasco / Rodízio","link_oferta":"https://www.tcheofertas.com.br/oferta/gastronomia-churrasco/canoas/restaurante-churrascaria-passoquinha/rodizio-executivo-desconto-promocao","preco_oferta":"R$ 54,90","ranking_plataforma":"1º mais vendido em Churrasco — EXCLUSIVO","ativo_plataforma":true,"status":"VERIFICADO"},"dados_enriquecimento":{"gbp":{"existe":null,"nota":null,"total_avaliacoes":null,"score_gbp":null,"status":"REQUER_VERIFICAÇÃO","como_verificar":"Buscar 'Passoquinha Churrascaria Canoas' no Google Maps"},"site":{"existe":null,"url":null,"score_site":null,"status":"REQUER_VERIFICAÇÃO"},"instagram":{"existe":null,"handle":null,"seguidores":null,"status":"REQUER_VERIFICAÇÃO"}},"score_oportunidade":{"valor":null,"verificado":false}},
+  {"id":"015","dados_verificados":{"nome":"Trattoria do Sabor","cidade":"Canoas","estado":"RS","categoria":"Pizza / Massas","link_oferta":"https://www.tcheofertas.com.br/oferta/gastronomia-pizza/canoas/trattoria-do-sabor/rodizio-pizzas-lasanhas-massas-refri-liberado-desconto-promocao","preco_oferta":"R$ 64,90","ranking_plataforma":null,"ativo_plataforma":true,"status":"VERIFICADO"},"dados_enriquecimento":{"gbp":{"existe":null,"nota":null,"total_avaliacoes":null,"score_gbp":null,"status":"REQUER_VERIFICAÇÃO"},"site":{"existe":null,"url":null,"score_site":null,"status":"REQUER_VERIFICAÇÃO"},"instagram":{"existe":null,"handle":null,"seguidores":null,"status":"REQUER_VERIFICAÇÃO"}},"score_oportunidade":{"valor":null,"verificado":false}},
+  {"id":"016","dados_verificados":{"nome":"Mano's Pizzaria","cidade":"Canoas","estado":"RS","categoria":"Pizza / Rodízio","link_oferta":"https://www.tcheofertas.com.br/oferta/gastronomia-pizza/canoas/manos-pizzaria/rodizio-pizzas-refri-livre-lasanha-sorvetes-desconto-promocao","preco_oferta":"R$ 65,90","ranking_plataforma":null,"ativo_plataforma":true,"status":"VERIFICADO"},"dados_enriquecimento":{"gbp":{"existe":null,"nota":null,"total_avaliacoes":null,"score_gbp":null,"status":"REQUER_VERIFICAÇÃO"},"site":{"existe":null,"url":null,"score_site":null,"status":"REQUER_VERIFICAÇÃO"},"instagram":{"existe":null,"handle":null,"seguidores":null,"status":"REQUER_VERIFICAÇÃO"}},"score_oportunidade":{"valor":null,"verificado":false}},
+  {"id":"017","dados_verificados":{"nome":"Restaurante O Bifão","cidade":"Novo Hamburgo","estado":"RS","categoria":"Churrasco / Bifes","link_oferta":"https://www.tcheofertas.com.br/oferta/gastronomia-churrasco/novo-hamburgo/o-bifao/rodizio-de-bifes-desconto-promocao","preco_oferta":"R$ 79,90","ranking_plataforma":"EXCLUSIVO","ofertas_adicionais":["Travessa do Bifão — R$ 82,90","Tradicional Bifão (3 pessoas) — R$ 55,80"],"ativo_plataforma":true,"status":"VERIFICADO"},"dados_enriquecimento":{"gbp":{"existe":null,"nota":null,"total_avaliacoes":null,"score_gbp":null,"status":"REQUER_VERIFICAÇÃO"},"site":{"existe":null,"url":null,"score_site":null,"status":"REQUER_VERIFICAÇÃO"},"instagram":{"existe":null,"handle":null,"seguidores":null,"status":"REQUER_VERIFICAÇÃO"}},"score_oportunidade":{"valor":null,"verificado":false}},
+  {"id":"018","dados_verificados":{"nome":"Guardiões da Pizza — Alvorada","cidade":"Alvorada","estado":"RS","categoria":"Pizza / Rodízio","link_oferta":"https://www.tcheofertas.com.br/oferta/gastronomia-pizza/alvorada/guardioes-da-pizza/rodizio-de-pizzas-refri-liberado-desconto-promocao","preco_oferta":"R$ 69,90","ranking_plataforma":"3º mais vendido em Pizzas","ativo_plataforma":true,"status":"VERIFICADO"},"dados_enriquecimento":{"gbp":{"existe":null,"nota":null,"total_avaliacoes":null,"score_gbp":null,"status":"REQUER_VERIFICAÇÃO"},"site":{"existe":null,"url":null,"score_site":null,"status":"REQUER_VERIFICAÇÃO"},"instagram":{"existe":null,"handle":null,"seguidores":null,"status":"REQUER_VERIFICAÇÃO"}},"score_oportunidade":{"valor":null,"verificado":false}}
+];
+
+loadData();
+</script>
+</body>
+</html>

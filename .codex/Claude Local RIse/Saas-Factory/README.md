@@ -1,0 +1,215 @@
+<h1 align="center">  🏗️ SaaS Factory </h1>
+
+<h4> A comprehensive platform framework that combines opinionated architecture, production-ready infrastructure, and developer-friendly tooling to deploy enterprise-grade B2B/B2C SaaS applications in minutes instead of months.
+ </h4>
+
+ <h5 align="center">
+
+<p> Database schema diagram for appblueprintdb </p>
+
+[![Explore database with Azimutt](https://img.shields.io/badge/PostgreSQL-browse_schema-gray?labelColor=4169E1&logo=postgresql&logoColor=fff&style=flat)](https://azimutt.app/create?sql=https://raw.githubusercontent.com/saas-factory-labs/Saas-Factory/refs/heads/main/schema.sql)
+[![Azimutt Database Analysis](https://img.shields.io/badge/Azimutt-database_analysis-gray?labelColor=7C3AED&logo=postgresql&logoColor=fff&style=flat)](docs/azimutt-database-analysis-report.md)
+
+![Database Schema Diagram](docs/images/image.png)
+
+<a href="https://appblueprint-web-production-production.up.railway.app/dashboard"> View live demo site </a>
+
+</h5>
+
+
+## 🔢 Project Status
+
+### CI/CD & Build Status
+
+<!--[![SonarCloud Analysis](https://github.com/saas-factory-labs/Saas-Factory/actions/workflows/sonarcloud-analysis.yaml/badge.svg)](https://github.com/saas-factory-labs/Saas-Factory/actions/workflows/sonarcloud-analysis.yaml?query=branch%3Amain) -->
+[![Azimutt Database Analysis](https://github.com/saas-factory-labs/Saas-Factory/actions/workflows/azimutt-database-analysis.yml/badge.svg)](https://github.com/saas-factory-labs/Saas-Factory/actions/workflows/azimutt-database-analysis.yml?query=branch%3Amain)
+<!-- [![Deploy to Railway](https://github.com/saas-factory-labs/Saas-Factory/actions/workflows/deploy-to-railway.yml/badge.svg)](https://github.com/saas-factory-labs/Saas-Factory/actions/workflows/deploy-to-railway.yml?query=branch%3Amain) -->
+<!-- [![Docker Scout Vulnerability Scan](https://github.com/saas-factory-labs/Saas-Factory/actions/workflows/docker-scout-vulnerability-scan.yml/badge.svg)](https://github.com/saas-factory-labs/Saas-Factory/actions/workflows/docker-scout-vulnerability-scan.yml?query=branch%3Amain) -->
+[![Publish NuGet Packages](https://github.com/saas-factory-labs/Saas-Factory/actions/workflows/publish-nuget-packages.yml/badge.svg)](https://github.com/saas-factory-labs/Saas-Factory/actions/workflows/publish-nuget-packages.yml?query=branch%3Amain)
+
+### GitHub Issues & Project Management
+
+[![GitHub issues with enhancement label](https://img.shields.io/github/issues-raw/saas-factory-labs/Saas-Factory/enhancement?label=enhancements&logo=github&color=%23A2EEEF)](https://github.com/saas-factory-labs/Saas-Factory/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement)
+[![GitHub issues with bug label](https://img.shields.io/github/issues-raw/saas-factory-labs/Saas-Factory/bug?label=bugs&logo=github&color=red)](https://github.com/saas-factory-labs/Saas-Factory/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
+[![GitHub open issues](https://img.shields.io/github/issues-raw/saas-factory-labs/Saas-Factory?label=open%20issues&logo=github)](https://github.com/saas-factory-labs/Saas-Factory/issues?q=is%3Aissue+is%3Aopen)
+
+### Quality & security analysis
+
+<!-- [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=saas-factory-labs_Saas-Factory&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=saas-factory-labs_Saas-Factory) -->
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=saas-factory-labs_Saas-Factory&metric=security_rating)](https://sonarcloud.io/component_measures?id=saas-factory-labs_Saas-Factory&metric=Security)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=saas-factory-labs_Saas-Factory&metric=reliability_rating)](https://sonarcloud.io/component_measures?id=saas-factory-labs_Saas-Factory&metric=Reliability)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=saas-factory-labs_Saas-Factory&metric=sqale_rating)](https://sonarcloud.io/component_measures?id=saas-factory-labs_Saas-Factory&metric=Maintainability)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=saas-factory-labs_Saas-Factory&metric=bugs)](https://sonarcloud.io/summary/new_code?id=saas-factory-labs_Saas-Factory)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=saas-factory-labs_Saas-Factory&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=saas-factory-labs_Saas-Factory)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=saas-factory-labs_Saas-Factory&metric=vulnerabilities)](https://sonarcloud.io/project/issues?id=saas-factory-labs_Saas-Factory&resolved=false&types=VULNERABILITY)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=saas-factory-labs_Saas-Factory&metric=sqale_index)](https://sonarcloud.io/component_measures?id=saas-factory-labs_Saas-Factory&metric=sqale_index)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=saas-factory-labs_Saas-Factory&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=saas-factory-labs_Saas-Factory)
+<!-- [![Quality: SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=saas-factory-labs_Saas-Factory&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=saas-factory-labs_Saas-Factory) -->
+[![Security: CodeQL](https://github.com/saas-factory-labs/Saas-Factory/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/saas-factory-labs/Saas-Factory/actions/workflows/codeql-analysis.yml)
+<!-- [![Security: Snyk](https://github.com/saas-factory-labs/Saas-Factory/actions/workflows/snyk-analysis.yaml/badge.svg)](https://github.com/saas-factory-labs/Saas-Factory/actions/workflows/snyk-analysis.yaml) -->
+ <!-- [![Quality: SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=saas-factory-labs_Saas-Factory&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=saas-factory-labs_Saas-Factory) -->
+
+## 📚 Documentation
+
+<!-- **[📖 View Complete Documentation](https://saas-factory-labs.github.io/Saas-Factory/docs/)** -->
+
+The comprehensive documentation includes:
+
+- 🚀 **Getting Started Guide** - Quick setup and installation
+- 🏗️ **Architecture Overview** - System design and patterns
+- 📝 **Development Workflow** - Building and deploying
+- 🔧 **Configuration Guide** - Environment setup and customization
+- 📦 **Shared Modules** - Reusable components and libraries
+- 🎯 **Use Cases** - User flows and feature guides
+
+---
+
+ ## 🎯 Project Overview
+
+<summary><h4>Vision</h4></summary>
+
+Deploy a fully functional, production-ready SaaS application in under 30 minutes using a single command via the Developer CLI, with all foundational features already in place - ready for you to add your application-specific features.
+
+Inspired by Laravel's approach to developer experience and opinionated best practices, SaaS Factory brings the same philosophy to .NET - purpose-built for multi-tenant B2C and B2B SaaS application.
+
+* Some of the key features inspired by Laravel and other modern frameworks that will be included out of the box: 
+
+- Developer CLI for scaffolding and management
+- Payment integration with Stripe
+- Full text search with PostgreSQL
+- Social authentication with OAuth providers
+- Email verification and password reset flows
+- Team management, user roles and permissions and profiles
+- Multitenancy support out of the box
+- Background job processing with workers and a dashboard for monitoring and managing jobs centrally instead of per application such as Laravel Horizon
+- Feature flag management system for gradual rollouts and A/B testing
+- Comprehensive audit logging and monitoring tools
+- GDPR compliance features like data export and deletion requests
+
+
+<summary><h4>Purpose</h4></summary>
+
+Provide a production-ready platform framework that eliminates months of foundational development work. This isn't just a boilerplate - it's an integrated, battle-tested system with proven security patterns, comprehensive multi-tenancy, enterprise DevOps, and deployment automation that lets you focus on building unique features that differentiate your product.
+
+
+<summary><h4>Objectives</h4></summary>
+
+**Development Experience**
+- Enjoyable and productive development workflow
+- Familiar tech stack (C# wherever possible)
+- Minimal technical debt through standardized implementations
+
+**Infrastructure & Deployment**
+- Consolidated shared infrastructure across all SaaS projects
+- Fast continuous deployment (automatic deployment after passing automated QA)
+- Cloud-agnostic architecture (easily migrate to Digital Ocean, Hetzner, Linode, Render, Railway, etc.)
+
+**Architecture & Quality**
+- Monorepo structure for deployment manager and SaaS application boilerplate
+- Modular, flexible structure with proper tracking of code and database migrations
+- Automated processes for testing, documentation, and deployment
+- Multiple environments: Dev, QA (automated), Staging, and Production
+
+**Operations**
+- Cost-effective infrastructure management
+- Enterprise-grade security implementation
+- Disaster recovery capabilities
+- Comprehensive audit logging
+
+<summary><h4>Challenges & Considerations</h4></summary>
+
+**Technical Challenges**
+- Maintaining consistency across multiple deployed SaaS applications to minimize technical debt
+- Balancing high-level architectural vision with detailed low-level implementation
+
+**Strategic Decisions**
+- **MVP Readiness**: Defining criteria for the first production SaaS Factory deployment
+- **Deployment Manager**: Should this be deferred to version 2.0? How to consolidate and migrate existing deployed applications?
+
+---
+
+### 🛠️  Prerequisites
+
+<details>
+
+<summary>Install prerequisites for development on Windows</summary>
+	
+1.	Open a PowerShell terminal as Administrator and run the following command to install Windows Subsystem for Linux (required for Docker):
+  
+    `wsl --install`
+
+2. Restart your computer if prompted.
+
+3. Install .NET, Git, Docker Desktop, Node.js, Azure CLI, and GitHub CLI using winget (available only on Windows 11):
+
+    ```powershell
+    @(
+        "Microsoft.DotNet.SDK.9",
+        "Git.Git",
+        "Docker.DockerDesktop",
+        "OpenJS.NodeJS",
+        "npm install wrangler --save-dev"
+        "GitHub.cli"    	
+    ) | ForEach-Object { winget install --accept-package-agreements --accept-source-agreements --id $_ }
+    
+    "gh extension install https://github.com/nektos/gh-act"
+    ```
+</details>
+
+# 🗂️ File structure in the git repository
+
+SaaS-Factory is a [monorepo](https://en.wikipedia.org/wiki/Monorepo) containing all application code, infrastructure, tools, libraries, documentation, etc. 
+A monorepo is a powerful way to organize a codebase, used by Google, Facebook, Uber, Microsoft, etc.
+
+> **📋 Repository Organization:** See [REPOSITORY_ORGANIZATION.md](REPOSITORY_ORGANIZATION.md) for details on the recent reorganization and directory structure improvements.
+
+```bash
+├─ .github                            # GitHub workflows, CI/CD, and Copilot instructions
+├─ build-artifacts                    # Build output, logs, and temporary files (gitignored)
+├─ Code                               # Contains the application source code
+│  ├─ AppBlueprint        
+│     ├─ AppBlueprint.AppHost         # .NET Aspire project starting app and all dependencies in Docker
+│     ├─ AppBlueprint.AppGateway      # YARP reverse proxy / API gateway
+│     ├─ AppBlueprint.Web             # Blazor Server app utilizing MudBlazor components
+│     ├─ AppBlueprint.ApiService      # .NET REST API
+│     ├─ AppBlueprint.ServiceDefaults # Shared Aspire service configuration
+│     ├─ AppBlueprint.TodoAppKernel   # Todo feature module
+│     ├─ AppBlueprint.DeveloperCli    # CLI tools for scaffolding and management
+│     ├─ AppBlueprint.Tests           # Tests for all projects
+│     ├─ Shared-Modules               # Clean Architecture shared modules
+│        ├─ AppBlueprint.Domain           # Entities, value objects, aggregates, domain logic
+│        ├─ AppBlueprint.Application      # Use cases, commands, queries, DTOs (CQRS)
+│        ├─ AppBlueprint.Infrastructure   # EF Core, repositories, external service integrations
+│        ├─ AppBlueprint.Presentation.ApiModule  # Minimal API endpoints and versioning
+│        ├─ AppBlueprint.Contracts        # Shared contracts and interfaces
+│        ├─ AppBlueprint.SharedKernel     # Shared kernel code across all projects
+│        ├─ AppBlueprint.UiKit            # Reusable UI components
+│        ├─ AppBlueprint.Api.Client.Sdk   # Kiota-generated API client SDK
+│        ├─ AppBlueprint.Tests            # Shared test utilities and integration tests
+├─ docs                               # Documentation and guides
+│  ├─ guides                          # Testing guides and quick references
+├─ scripts                            # Utility scripts
+│  ├─ powershell                      # PowerShell scripts for Windows development
+```
+## 👥 Maintainers
+
+SaaS Factory is actively developed and maintained by:
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/Trubador">
+        <img src="https://github.com/Trubador.png" width="100px;" alt="Casper Rubæk Mølvadgaard"/><br />
+        <sub><b>Casper Rubæk Mølvadgaard</b></sub>
+      </a><br />
+      Lead Architect & Primary Maintainer
+    </td>
+    <td align="center">
+      <a href="https://github.com/hornvieh3u">
+        <img src="https://github.com/hornvieh3u.png" width="100px;" alt="hornvieh3u"/><br />
+        <sub><b>hornvieh3u</b></sub>
+      </a><br />
+      Contributor
+    </td>
+  </tr>
+</table>

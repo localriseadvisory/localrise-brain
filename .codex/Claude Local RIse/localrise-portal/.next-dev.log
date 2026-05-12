@@ -1,0 +1,16 @@
+
+> localrise-portal@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.2 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://172.20.10.2:3000
+- Environments: .env.local
+✓ Ready in 1236ms
+Creating turbopack project {
+  dir: 'C:\\Users\\digui\\Documents\\localrise-brain\\Claude\\Claude Local RIse\\localrise-portal',
+  testMode: true
+}
+
+○ Compiling /login ...
+[?25h

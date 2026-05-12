@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Levantamento Estratégico — Sistema de Gestão e Automação — LocalRise</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: #f7f6f3;
+    color: #1a1a1a;
+    line-height: 1.75;
+  }
+
+  .page {
+    max-width: 800px;
+    margin: 48px auto;
+    background: #ffffff;
+    border-radius: 4px;
+    box-shadow: 0 2px 24px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+
+  /* ── BARRA DE PROGRESSO ───────────────── */
+  .progress-bar-wrap {
+    position: sticky; top: 0; z-index: 100;
+    background: #fff; border-bottom: 1px solid #f0ede8;
+    padding: 10px 52px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .progress-label {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 11px; color: #999; white-space: nowrap;
+  }
+  .progress-track {
+    flex: 1; height: 4px; background: #f0ede8; border-radius: 2px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: #E31B23; border-radius: 2px;
+    transition: width 0.4s ease; width: 0%;
+  }
+  .progress-pct {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 11px; font-weight: 700; color: #E31B23; white-space: nowrap; min-width: 32px;
+  }
+  .btn-save {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+    background: #0f0f18; color: #fff;
+    border: none; border-radius: 6px; padding: 6px 14px;
+    cursor: pointer; white-space: nowrap; transition: background 0.2s;
+  }
+  .btn-save:hover { background: #333; }
+  .save-toast {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 11px; color: #1a8a4a;
+    opacity: 0; transition: opacity 0.3s;
+  }
+
+  /* ── BOTÃO ENVIAR ─────────────────────── */
+  .submit-wrap {
+    padding: 40px 52px 52px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    border-top: 1px solid #f0ede8;
+  }
+  .btn-submit {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 15px; font-weight: 700; letter-spacing: 0.04em;
+    background: #E31B23; color: #fff;
+    border: none; border-radius: 10px;
+    padding: 16px 48px; cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    width: 100%; max-width: 360px;
+  }
+  .btn-submit:hover { background: #c41520; }
+  .btn-submit:active { transform: scale(0.98); }
+  .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
+  .submit-note {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 12px; color: #aaa; text-align: center;
+  }
+
+  /* ── TELA DE SUCESSO ──────────────────── */
+  .success-screen {
+    display: none;
+    flex-direction: column; align-items: center; justify-content: center;
+    padding: 80px 52px; text-align: center; gap: 20px;
+  }
+  .success-icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: #edfaf4; border: 2px solid #b8e8d0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+  }
+  .success-title {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 22px; font-weight: 700; color: #0f0f18;
+  }
+  .success-sub {
+    font-size: 14.5px; color: #555; line-height: 1.7; max-width: 480px;
+  }
+
+  /* ── CAPA ─────────────────────────────── */
+  .cover {
+    background: #0f0f18;
+    padding: 72px 52px 60px;
+    color: white;
+    position: relative;
+  }
+  .cover-eyebrow {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: #E31B23; margin-bottom: 32px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .cover-eyebrow::after {
+    content: ''; flex: 1; height: 1px; background: #E31B23; opacity: 0.3;
+  }
+  .cover-logo {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 48px;
+  }
+  .logo-mark {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: #E31B23;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 900; font-size: 17px; color: white; flex-shrink: 0;
+  }
+  .logo-text { font-family: 'Segoe UI', sans-serif; }
+  .logo-name { font-size: 18px; font-weight: 700; color: #ffffff; letter-spacing: 0.02em; }
+  .logo-tagline { font-size: 12px; color: #6060a0; margin-top: 2px; }
+
+  .cover-title {
+    font-size: 34px; font-weight: 400; line-height: 1.25;
+    color: #ffffff; margin-bottom: 16px;
+  }
+  .cover-title strong { font-weight: 700; }
+  .cover-sub {
+    font-size: 15px; color: #8080c0; margin-bottom: 56px; line-height: 1.6;
+  }
+  .cover-meta {
+    display: flex; gap: 48px; padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .meta-label { font-family: 'Segoe UI', sans-serif; font-size: 10px; color: #6060a0; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 4px; }
+  .meta-value { font-family: 'Segoe UI', sans-serif; font-size: 13px; color: #a0a0c0; }
+
+  /* ── CORPO ────────────────────────────── */
+  .page-body { padding: 52px 52px 60px; }
+
+  /* ── SEÇÕES ───────────────────────────── */
+  .section { margin-bottom: 48px; }
+  .section:last-child { margin-bottom: 0; }
+
+  .section-number {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 10px; font-weight: 700; color: #E31B23;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .section-title {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 19px; font-weight: 700; color: #0f0f18;
+    margin-bottom: 12px; line-height: 1.3;
+  }
+  .section-divider {
+    height: 2px; background: #f0ebe4;
+    margin-bottom: 24px; position: relative;
+  }
+  .section-divider::before {
+    content: ''; position: absolute; left: 0; top: 0;
+    height: 2px; width: 40px; background: #E31B23;
+  }
+
+  .section-intro {
+    font-size: 14.5px; color: #555; margin-bottom: 24px;
+    line-height: 1.75; font-style: italic;
+    padding: 16px 20px; background: #f9f8f6;
+    border-left: 3px solid #E31B23; border-radius: 0 6px 6px 0;
+  }
+
+  /* ── PERGUNTAS ────────────────────────── */
+  .questions { list-style: none; }
+  .question-item {
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 16px 0; border-bottom: 1px solid #f0ede8;
+  }
+  .question-item:last-child { border-bottom: none; }
+  .q-marker {
+    font-family: 'Segoe UI', sans-serif;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #0f0f18; color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 2px;
+  }
+  .q-marker.answered { background: #E31B23; }
+  .q-content { flex: 1; min-width: 0; }
+  .q-text { font-size: 14.5px; color: #1a1a1a; margin-bottom: 10px; line-height: 1.6; }
+
+  /* ── TEXTAREA DE RESPOSTA ─────────────── */
+  .q-textarea {
+    width: 100%;
+    border: none;
+    border-bottom: 1.5px solid #d1ccc7;
+    background: transparent;
+    font-family: 'Georgia', serif;
+    font-size: 13.5px;
+    color: #1a1a1a;
+    line-height: 1.7;
+    resize: none;
+    outline: none;
+    padding: 4px 0 6px;
+    min-height: 32px;
+    overflow: hidden;
+    display: block;
+    transition: border-color 0.2s;
+  }
+  .q-textarea::placeholder { color: #bbb; font-style: italic; }
+  .q-textarea:focus { border-bottom-color: #E31B23; }
+  .q-textarea.has-value { border-bottom-color: #1a8a4a; }
+
+  /* ── CHECKBOX GRID ────────────────────── */
+  .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+  .check-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; background: #f7f6f3;
+    border: 1px solid #e8e4df; border-radius: 6px;
+    font-size: 13.5px; color: #333;
+    cursor: pointer; transition: background 0.15s, border-color 0.15s;
+    user-select: none;
+  }
+  .check-item:hover { background: #f0ede8; }
+  .check-item.checked {
+    background: #fff5f5; border-color: #E31B23; color: #1a1a1a;
+  }
+  .check-item input[type="checkbox"] {
+    width: 17px; height: 17px; border-radius: 4px;
+    border: 2px solid #ccc; appearance: none;
+    background: white; flex-shrink: 0; cursor: pointer;
+    position: relative; transition: all 0.15s;
+  }
+  .check-item input[type="checkbox"]:checked {
+    background: #E31B23; border-color: #E31B23;
+  }
+  .check-item input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute; top: -2px; left: 2px;
+    font-size: 11px; color: white; font-weight: 700;
+  }
+
+  /* ── DESTAQUE FINAL ───────────────────── */
+  .highlight-box {
+    background: #0f0f18; border-radius: 10px;
+    padding: 28px 32px; color: white; margin-top: 8px;
+  }
+  .highlight-label {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: #E31B23; margin-bottom: 12px;
+  }
+  .highlight-question {
+    font-size: 18px; font-weight: 400; color: #e0e0f0;
+    line-height: 1.5; margin-bottom: 20px;
+  }
+  .highlight-textarea {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    background: transparent;
+    font-family: 'Georgia', serif;
+    font-size: 14px;
+    color: #e0e0f0;
+    line-height: 1.8;
+    resize: none;
+    outline: none;
+    padding: 4px 0 8px;
+    min-height: 80px;
+    overflow: hidden;
+    display: block;
+    transition: border-color 0.2s;
+  }
+  .highlight-textarea::placeholder { color: #4040708a; font-style: italic; }
+  .highlight-textarea:focus { border-bottom-color: rgba(227,27,35,0.5); }
+  .highlight-hint { font-size: 12px; color: #6060a0; font-style: italic; margin-top: 12px; }
+
+  /* ── ENCERRAMENTO ─────────────────────── */
+  .closing-box {
+    background: #f9f8f6; border: 1px solid #e8e4df;
+    border-radius: 10px; padding: 28px 32px;
+  }
+  .closing-box p { font-size: 14.5px; color: #444; line-height: 1.8; margin-bottom: 12px; }
+  .closing-box p:last-child { margin-bottom: 0; }
+  .closing-signature {
+    margin-top: 24px; padding-top: 20px;
+    border-top: 1px solid #e8e4df;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .sig-logo {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: #E31B23; display: flex; align-items: center;
+    justify-content: center; font-family: 'Segoe UI', sans-serif;
+    font-weight: 900; font-size: 13px; color: white; flex-shrink: 0;
+  }
+  .sig-name { font-family: 'Segoe UI', sans-serif; font-size: 14px; font-weight: 700; color: #0f0f18; }
+  .sig-role { font-family: 'Segoe UI', sans-serif; font-size: 12px; color: #999; }
+
+  /* ── RODAPÉ ───────────────────────────── */
+  .page-footer {
+    background: #f7f6f3; border-top: 1px solid #e8e4df;
+    padding: 22px 52px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-left { font-size: 12px; color: #aaa; font-family: 'Segoe UI', sans-serif; }
+  .footer-right { font-family: 'Segoe UI', sans-serif; font-size: 11px; color: #bbb; text-align: right; }
+
+  @media print {
+    body { background: white; }
+    .page { box-shadow: none; margin: 0; border-radius: 0; max-width: 100%; }
+    .progress-bar-wrap { display: none; }
+    .q-textarea, .highlight-textarea {
+      border-bottom-color: #d1ccc7 !important;
+      color: #1a1a1a !important;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── BARRA DE PROGRESSO ─────────────── -->
+  <div class="progress-bar-wrap">
+    <span class="progress-label">Progresso</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-pct" id="progressPct">0%</span>
+    <button class="btn-save" onclick="saveAnswers()">Salvar respostas</button>
+    <span class="save-toast" id="saveToast">✓ Salvo</span>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       CAPA
+  ═══════════════════════════════════════ -->
+  <div class="cover">
+    <div class="cover-eyebrow">Documento Confidencial</div>
+
+    <div class="cover-logo">
+      <div class="logo-mark">LR</div>
+      <div class="logo-text">
+        <div class="logo-name">LocalRise Advisory</div>
+        <div class="logo-tagline">Gestão · Automação · Crescimento</div>
+      </div>
+    </div>
+
+    <div class="cover-title">
+      Levantamento Estratégico<br>
+      <strong>Sistema de Gestão e Automação</strong>
+    </div>
+    <div class="cover-sub">
+      Diagnóstico de negócio · Mapeamento de processos · Estruturação de sistema personalizado
+    </div>
+
+    <div class="cover-meta">
+      <div class="meta-item">
+        <div class="meta-label">Preparado por</div>
+        <div class="meta-value">LocalRise Advisory</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Tipo de documento</div>
+        <div class="meta-value">Levantamento de Requisitos</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Data</div>
+        <div class="meta-value">Abril de 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       CORPO DO DOCUMENTO
+  ═══════════════════════════════════════ -->
+  <form id="levantamentoForm" action="https://formspree.io/f/xpqogwgr" method="POST">
+  <input type="hidden" name="_subject" value="Levantamento Estratégico — Novo preenchimento">
+  <input type="hidden" name="_language" value="pt">
+  <div class="page-body">
+
+    <!-- ── INTRODUÇÃO ─────────────────────── -->
+    <div class="section">
+      <div class="section-number">Introdução</div>
+      <div class="section-title">Por que esse documento existe?</div>
+      <div class="section-divider"></div>
+      <div class="section-intro">
+        Antes de construir qualquer sistema, precisamos entender como o seu negócio funciona de verdade — não do jeito que está no papel, mas do jeito que acontece no dia a dia.
+      </div>
+      <p style="font-size:14.5px;color:#444;line-height:1.8;margin-bottom:14px;">
+        Este documento foi preparado para que você possa nos contar, com suas próprias palavras, como está sua operação hoje. Com isso, vamos conseguir montar um sistema feito sob medida para o seu negócio — sem desperdício de tempo e sem precisar refazer depois.
+      </p>
+      <p style="font-size:14.5px;color:#444;line-height:1.8;margin-bottom:14px;">
+        <strong>Não precisa responder tudo de forma técnica ou perfeita.</strong> Escreva da forma que for mais natural para você. Se não souber exatamente uma resposta, coloque uma estimativa ou explique como funciona atualmente. Qualquer informação já nos ajuda muito.
+      </p>
+      <p style="font-size:14.5px;color:#444;line-height:1.8;">
+        Se preferir responder por áudio ou chamada, podemos adaptar. O importante é que o resultado final funcione exatamente para o que você precisa.
+      </p>
+    </div>
+
+    <!-- ── 1. VISÃO GERAL ──────────────────── -->
+    <div class="section">
+      <div class="section-number">Bloco 1</div>
+      <div class="section-title">Visão Geral do Negócio</div>
+      <div class="section-divider"></div>
+      <div class="section-intro">
+        Queremos entender o que você faz, como funciona e de onde vem o dinheiro. Nada técnico — só nos conte como é o seu dia a dia.
+      </div>
+      <ul class="questions">
+        <li class="question-item">
+          <div class="q-marker" id="m1">1</div>
+          <div class="q-content">
+            <div class="q-text">O que sua empresa faz hoje? Descreva com suas palavras o que você vende ou entrega.</div>
+            <textarea class="q-textarea" id="q1" data-id="q1" name="01. O que sua empresa faz" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m2">2</div>
+          <div class="q-content">
+            <div class="q-text">Quais são seus principais produtos ou serviços? (Liste os mais importantes.)</div>
+            <textarea class="q-textarea" id="q2" data-id="q2" name="02. Principais produtos ou serviços" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m3">3</div>
+          <div class="q-content">
+            <div class="q-text">Como você ganha dinheiro hoje? (Exemplo: venda direta, recorrência, marketplace, atacado…)</div>
+            <textarea class="q-textarea" id="q3" data-id="q3" name="03. Como ganha dinheiro" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── 2. PROCESSO ATUAL ───────────────── -->
+    <div class="section">
+      <div class="section-number">Bloco 2</div>
+      <div class="section-title">Como você Gerencia Hoje?</div>
+      <div class="section-divider"></div>
+      <div class="section-intro">
+        Queremos entender como a operação funciona na prática agora — sem julgar, só para entender o ponto de partida.
+      </div>
+      <ul class="questions">
+        <li class="question-item">
+          <div class="q-marker" id="m4">4</div>
+          <div class="q-content">
+            <div class="q-text">Como você controla seu financeiro hoje? (Planilha, sistema, caderno, aplicativo…)</div>
+            <textarea class="q-textarea" id="q4" data-id="q4" name="04. Controle financeiro atual" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m5">5</div>
+          <div class="q-content">
+            <div class="q-text">Como você acompanha o que entra e o que sai de dinheiro? Existe alguma rotina de controle?</div>
+            <textarea class="q-textarea" id="q5" data-id="q5" name="05. Acompanhamento de entradas e saídas" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m6">6</div>
+          <div class="q-content">
+            <div class="q-text">Como você toma a decisão de quando pode gastar mais e quando precisa segurar? Isso é feito de forma estruturada ou no feeling?</div>
+            <textarea class="q-textarea" id="q6" data-id="q6" name="06. Decisão de quanto gastar" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── 3. FINANCEIRO ──────────────────── -->
+    <div class="section">
+      <div class="section-number">Bloco 3</div>
+      <div class="section-title">Estrutura Financeira</div>
+      <div class="section-divider"></div>
+      <div class="section-intro">
+        Esse é um dos blocos mais importantes. Quanto mais você compartilhar aqui, melhor conseguiremos estruturar o fluxo de caixa e os alertas automáticos.
+      </div>
+      <ul class="questions">
+        <li class="question-item">
+          <div class="q-marker" id="m7">7</div>
+          <div class="q-content">
+            <div class="q-text">Quais são seus principais custos fixos mensais? (Exemplos: aluguel, folha, assinaturas, energia…)</div>
+            <textarea class="q-textarea" id="q7" data-id="q7" name="07. Custos fixos mensais" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m8">8</div>
+          <div class="q-content">
+            <div class="q-text">Quais são seus principais custos variáveis? (Exemplos: insumos, frete, comissões, embalagens…)</div>
+            <textarea class="q-textarea" id="q8" data-id="q8" name="08. Custos variáveis" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m9">9</div>
+          <div class="q-content">
+            <div class="q-text">Você trabalha com prazos de pagamento? (Exemplo: paga fornecedor em 30 dias.) Qual é o prazo médio?</div>
+            <textarea class="q-textarea" id="q9" data-id="q9" name="09. Prazos de pagamento" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m10">10</div>
+          <div class="q-content">
+            <div class="q-text">Você trabalha com prazos de recebimento? (Exemplo: vende parcelado, recebe em 15 dias.) Qual é o prazo médio?</div>
+            <textarea class="q-textarea" id="q10" data-id="q10" name="10. Prazos de recebimento" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m11">11</div>
+          <div class="q-content">
+            <div class="q-text">Hoje você sabe com antecedência quanto vai ter no caixa nos próximos 15 ou 30 dias? Isso é visível para você de alguma forma?</div>
+            <textarea class="q-textarea" id="q11" data-id="q11" name="11. Visibilidade do caixa futuro" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── 4. VENDAS / SHOPIFY ────────────── -->
+    <div class="section">
+      <div class="section-number">Bloco 4</div>
+      <div class="section-title">Vendas e Canal Shopify</div>
+      <div class="section-divider"></div>
+      <div class="section-intro">
+        Queremos entender como funciona o processo de venda para garantir que o sistema integre corretamente com a sua plataforma.
+      </div>
+      <ul class="questions">
+        <li class="question-item">
+          <div class="q-marker" id="m12">12</div>
+          <div class="q-content">
+            <div class="q-text">Você já utiliza o Shopify? Desde quando? É o seu canal principal de vendas ou um dos canais?</div>
+            <textarea class="q-textarea" id="q12" data-id="q12" name="12. Uso do Shopify" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m13">13</div>
+          <div class="q-content">
+            <div class="q-text">Como funciona o processo de venda do início ao fim? (Desde o pedido até o cliente receber.)</div>
+            <textarea class="q-textarea" id="q13" data-id="q13" name="13. Processo de venda do início ao fim" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m14">14</div>
+          <div class="q-content">
+            <div class="q-text">Quando você considera que uma venda está "concluída"? (Exemplo: quando é pago, quando é entregue…)</div>
+            <textarea class="q-textarea" id="q14" data-id="q14" name="14. Quando a venda é considerada concluída" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m15">15</div>
+          <div class="q-content">
+            <div class="q-text">As vendas são à vista, parceladas ou ambas? Quais formas de pagamento você aceita hoje?</div>
+            <textarea class="q-textarea" id="q15" data-id="q15" name="15. Formas de pagamento aceitas" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── 5. OPERAÇÃO / PRODUÇÃO ─────────── -->
+    <div class="section">
+      <div class="section-number">Bloco 5</div>
+      <div class="section-title">Operação e Produção</div>
+      <div class="section-divider"></div>
+      <div class="section-intro">
+        Para sistemas de controle de produção, precisamos entender o ciclo produtivo — do insumo ao produto pronto.
+      </div>
+      <ul class="questions">
+        <li class="question-item">
+          <div class="q-marker" id="m16">16</div>
+          <div class="q-content">
+            <div class="q-text">Você produz seus próprios produtos ou apenas revende? Se produz, o que é produzido internamente?</div>
+            <textarea class="q-textarea" id="q16" data-id="q16" name="16. Produção própria ou revenda" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m17">17</div>
+          <div class="q-content">
+            <div class="q-text">Quanto tempo leva para produzir um lote ou um pedido? Existe variação dependendo do produto?</div>
+            <textarea class="q-textarea" id="q17" data-id="q17" name="17. Tempo de produção por lote" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m18">18</div>
+          <div class="q-content">
+            <div class="q-text">Você trabalha com estoque? Qual é a lógica atual — produz sob demanda, mantém estoque fixo ou misto?</div>
+            <textarea class="q-textarea" id="q18" data-id="q18" name="18. Gestão de estoque" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m19">19</div>
+          <div class="q-content">
+            <div class="q-text">Existe uma quantidade mínima de produção por lote? (Exemplo: produz sempre em múltiplos de 100 unidades.)</div>
+            <textarea class="q-textarea" id="q19" data-id="q19" name="19. Quantidade mínima de produção" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m20">20</div>
+          <div class="q-content">
+            <div class="q-text">Você sabe quanto custa produzir cada lote ou unidade hoje? Esse cálculo é feito de alguma forma?</div>
+            <textarea class="q-textarea" id="q20" data-id="q20" name="20. Custo por lote ou unidade" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── 6. INSUMOS / COMPRAS ───────────── -->
+    <div class="section">
+      <div class="section-number">Bloco 6</div>
+      <div class="section-title">Insumos e Gestão de Compras</div>
+      <div class="section-divider"></div>
+      <div class="section-intro">
+        Essa parte nos ajuda a criar alertas automáticos para que você nunca fique sem insumo e sempre compre na hora certa.
+      </div>
+      <ul class="questions">
+        <li class="question-item">
+          <div class="q-marker" id="m21">21</div>
+          <div class="q-content">
+            <div class="q-text">Quais são os principais insumos que você precisa comprar para sua operação funcionar?</div>
+            <textarea class="q-textarea" id="q21" data-id="q21" name="21. Principais insumos" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m22">22</div>
+          <div class="q-content">
+            <div class="q-text">Existe quantidade mínima de compra por fornecedor? (Exemplo: compra mínima de R$500 ou 50 kg.)</div>
+            <textarea class="q-textarea" id="q22" data-id="q22" name="22. Quantidade mínima de compra" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m23">23</div>
+          <div class="q-content">
+            <div class="q-text">Como você decide quando é hora de comprar mais insumos? Existe alguma lógica ou é feito na observação?</div>
+            <textarea class="q-textarea" id="q23" data-id="q23" name="23. Decisão de quando comprar insumos" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m24">24</div>
+          <div class="q-content">
+            <div class="q-text">Já aconteceu de você ficar sem insumo em um momento crítico? Com que frequência isso ocorre?</div>
+            <textarea class="q-textarea" id="q24" data-id="q24" name="24. Falta de insumo já ocorreu" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── 7. LOGÍSTICA ───────────────────── -->
+    <div class="section">
+      <div class="section-number">Bloco 7</div>
+      <div class="section-title">Logística e Entrega</div>
+      <div class="section-divider"></div>
+      <div class="section-intro">
+        Entender a logística é fundamental para integrar rastreamento de pedidos e automatizar a comunicação com o cliente.
+      </div>
+      <ul class="questions">
+        <li class="question-item">
+          <div class="q-marker" id="m25">25</div>
+          <div class="q-content">
+            <div class="q-text">Como funciona a entrega dos seus produtos hoje? (Correios, transportadora, frota própria, retirada…)</div>
+            <textarea class="q-textarea" id="q25" data-id="q25" name="25. Como funciona a entrega" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m26">26</div>
+          <div class="q-content">
+            <div class="q-text">Você utiliza algum sistema ou plataforma para gerenciar os envios hoje? Qual?</div>
+            <textarea class="q-textarea" id="q26" data-id="q26" name="26. Sistema de gestão de envios" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m27">27</div>
+          <div class="q-content">
+            <div class="q-text">Como você acompanha o status dos pedidos enviados? Isso é feito manualmente ou de forma automatizada?</div>
+            <textarea class="q-textarea" id="q27" data-id="q27" name="27. Acompanhamento de pedidos" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── 8. ALERTAS ─────────────────────── -->
+    <div class="section">
+      <div class="section-number">Bloco 8</div>
+      <div class="section-title">Alertas e Controles Desejados</div>
+      <div class="section-divider"></div>
+      <div class="section-intro">
+        Um bom sistema te avisa antes do problema acontecer. Marque abaixo o que faz sentido para o seu negócio.
+      </div>
+
+      <p style="font-size:14px;color:#555;margin-bottom:16px;">
+        Que tipo de alertas você gostaria de receber automaticamente?
+      </p>
+
+      <div class="check-grid" id="checkGrid">
+        <label class="check-item"><input type="checkbox" data-id="c1" name="Alerta — Saldo baixo no caixa" value="Sim"> Saldo baixo no caixa</label>
+        <label class="check-item"><input type="checkbox" data-id="c2" name="Alerta — Contas a pagar próximas" value="Sim"> Contas a pagar próximas do vencimento</label>
+        <label class="check-item"><input type="checkbox" data-id="c3" name="Alerta — Estoque de insumo baixo" value="Sim"> Estoque de insumo abaixo do mínimo</label>
+        <label class="check-item"><input type="checkbox" data-id="c4" name="Alerta — Necessidade de nova produção" value="Sim"> Necessidade de iniciar nova produção</label>
+        <label class="check-item"><input type="checkbox" data-id="c5" name="Alerta — Pedido parado" value="Sim"> Pedido parado sem movimentação</label>
+        <label class="check-item"><input type="checkbox" data-id="c6" name="Alerta — Meta de vendas não atingida" value="Sim"> Meta de vendas não atingida</label>
+        <label class="check-item"><input type="checkbox" data-id="c7" name="Alerta — Recebimento atrasado" value="Sim"> Recebimento atrasado</label>
+        <label class="check-item"><input type="checkbox" data-id="c8" name="Alerta — Outros" value="Sim"> Outros (descreva abaixo)</label>
+      </div>
+
+      <ul class="questions" style="margin-top:20px;">
+        <li class="question-item">
+          <div class="q-marker" id="m28">28</div>
+          <div class="q-content">
+            <div class="q-text">Você tem algum outro alerta ou controle que gostaria de receber e que não foi listado acima?</div>
+            <textarea class="q-textarea" id="q28" data-id="q28" name="28. Outros alertas desejados" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m29">29</div>
+          <div class="q-content">
+            <div class="q-text">Hoje você tem algum tipo de controle ou alerta sobre sua operação? Como ele funciona?</div>
+            <textarea class="q-textarea" id="q29" data-id="q29" name="29. Controle ou alerta atual" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── 9. ERP / INTEGRAÇÕES ───────────── -->
+    <div class="section">
+      <div class="section-number">Bloco 9</div>
+      <div class="section-title">Sistemas e Integrações Existentes</div>
+      <div class="section-divider"></div>
+      <div class="section-intro">
+        Para conectar tudo corretamente, precisamos saber com quais sistemas você já trabalha ou pretende trabalhar.
+      </div>
+      <ul class="questions">
+        <li class="question-item">
+          <div class="q-marker" id="m30">30</div>
+          <div class="q-content">
+            <div class="q-text">Você utiliza algum ERP hoje? Qual? (Exemplo: Bling, Tiny, SAP, Totvs, OMIE, outro…)</div>
+            <textarea class="q-textarea" id="q30" data-id="q30" name="30. ERP utilizado" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m31">31</div>
+          <div class="q-content">
+            <div class="q-text">Além do Shopify e do ERP, existe alguma outra ferramenta que faz parte da sua operação hoje? (Exemplo: app de logística, gateway de pagamento, WhatsApp Business, plataforma de e-mail…)</div>
+            <textarea class="q-textarea" id="q31" data-id="q31" name="31. Outras ferramentas da operação" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m32">32</div>
+          <div class="q-content">
+            <div class="q-text">Existe alguma ferramenta que você gostaria de eliminar com o novo sistema?</div>
+            <textarea class="q-textarea" id="q32" data-id="q32" name="32. Ferramentas a eliminar" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── 10. PRIORIDADE ─────────────────── -->
+    <div class="section">
+      <div class="section-number">Bloco 10</div>
+      <div class="section-title">O Que Mais Importa Para Você</div>
+      <div class="section-divider"></div>
+
+      <div class="highlight-box">
+        <div class="highlight-label">A Pergunta Mais Importante</div>
+        <div class="highlight-question">
+          Se você pudesse resolver <em>apenas um problema</em> hoje com esse sistema, qual seria?
+        </div>
+        <textarea class="highlight-textarea" id="qh" data-id="qh" name="PRIORIDADE — Problema principal a resolver"
+          placeholder="Escreva como você falaria para um sócio ou amigo…" rows="3"></textarea>
+        <div class="highlight-hint">Não precisa ser técnico. Escreva com suas próprias palavras.</div>
+      </div>
+
+      <ul class="questions" style="margin-top:24px;">
+        <li class="question-item">
+          <div class="q-marker" id="m33">33</div>
+          <div class="q-content">
+            <div class="q-text">Quais são os 3 maiores problemas ou travamentos que você enfrenta na gestão hoje?</div>
+            <textarea class="q-textarea" id="q33" data-id="q33" name="33. Três maiores problemas de gestão" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+        <li class="question-item">
+          <div class="q-marker" id="m34">34</div>
+          <div class="q-content">
+            <div class="q-text">Como seria sua rotina ideal com um sistema funcionando perfeitamente? O que mudaria no seu dia?</div>
+            <textarea class="q-textarea" id="q34" data-id="q34" name="34. Rotina ideal com sistema funcionando" placeholder="Escreva sua resposta aqui…" rows="1"></textarea>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── ENCERRAMENTO ───────────────────── -->
+    <div class="section">
+      <div class="section-number">Finalização</div>
+      <div class="section-title">Muito Obrigado</div>
+      <div class="section-divider"></div>
+
+      <div class="closing-box">
+        <p>
+          Suas respostas são o insumo mais valioso que temos para construir um sistema que realmente funcione para o seu negócio. Não existe resposta certa ou errada aqui — o que importa é entender a realidade da sua operação.
+        </p>
+        <p>
+          Com base neste levantamento, vamos estruturar a proposta técnica, mapear as automações mais relevantes e apresentar um plano de implementação com prioridades claras.
+        </p>
+        <p>
+          <strong>Qualquer dúvida ou ponto que prefira explicar em uma conversa, é só nos chamar.</strong> Podemos agendar uma sessão de alinhamento para complementar este documento.
+        </p>
+
+        <div class="closing-signature">
+          <div class="sig-logo">LR</div>
+          <div class="sig-text">
+            <div class="sig-name">LocalRise Advisory</div>
+            <div class="sig-role">Gestão · Automação · Crescimento</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page-body -->
+
+  <!-- ── BOTÃO DE ENVIO ─────────────────── -->
+  <div class="submit-wrap">
+    <button type="submit" class="btn-submit" id="btnSubmit">
+      Enviar levantamento para a LocalRise
+    </button>
+    <span class="submit-note">Suas respostas serão enviadas com segurança para a equipe LocalRise.</span>
+  </div>
+
+  </form><!-- /levantamentoForm -->
+
+  <!-- ── TELA DE SUCESSO ────────────────── -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">✓</div>
+    <div class="success-title">Levantamento enviado!</div>
+    <div class="success-sub">
+      Recebemos suas respostas. A equipe LocalRise vai analisar tudo e entrar em contato em breve para alinhar os próximos passos.<br><br>
+      <strong>Obrigado pela confiança.</strong>
+    </div>
+    <div style="margin-top:8px;">
+      <div style="width:44px;height:44px;border-radius:10px;background:#E31B23;display:flex;align-items:center;justify-content:center;font-family:'Segoe UI',sans-serif;font-weight:900;font-size:15px;color:white;margin:0 auto 8px;">LR</div>
+      <div style="font-family:'Segoe UI',sans-serif;font-size:13px;font-weight:700;color:#0f0f18;">LocalRise Advisory</div>
+      <div style="font-family:'Segoe UI',sans-serif;font-size:11px;color:#999;">Gestão · Automação · Crescimento</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       RODAPÉ
+  ═══════════════════════════════════════ -->
+  <div class="page-footer">
+    <div class="footer-left">Documento confidencial — uso interno LocalRise e cliente</div>
+    <div class="footer-right">LocalRise Advisory · localrise.com.br</div>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+  const STORAGE_KEY = 'localrise_levantamento_v1';
+
+  // ── Auto-crescimento das textareas ──────────────────────────────────────
+  function autoGrow(el) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }
+
+  document.querySelectorAll('textarea').forEach(ta => {
+    ta.addEventListener('input', () => {
+      autoGrow(ta);
+      updateMarker(ta);
+      updateProgress();
+      autoSave();
+    });
+    ta.addEventListener('focus', () => ta.classList.remove('has-value'));
+    ta.addEventListener('blur', () => {
+      if (ta.value.trim()) ta.classList.add('has-value');
+    });
+  });
+
+  // ── Checkboxes: estilo visual ────────────────────────────────────────────
+  document.querySelectorAll('.check-item input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.closest('.check-item').classList.toggle('checked', cb.checked);
+      autoSave();
+      updateProgress();
+    });
+  });
+
+  // ── Marcador de pergunta respondida ─────────────────────────────────────
+  function updateMarker(ta) {
+    const num = ta.id.replace('q', '').replace('h', '0');
+    const marker = document.getElementById('m' + (ta.id === 'qh' ? '' : num));
+    if (!marker) return;
+    marker.classList.toggle('answered', ta.value.trim().length > 0);
+  }
+
+  // ── Progresso ───────────────────────────────────────────────────────────
+  function updateProgress() {
+    const textareas = document.querySelectorAll('textarea');
+    const checks    = document.querySelectorAll('.check-item input[type="checkbox"]:checked');
+    let answered = 0;
+    textareas.forEach(t => { if (t.value.trim()) answered++; });
+    if (checks.length > 0) answered++;
+
+    const total = textareas.length + 1;
+    const pct = Math.round((answered / total) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+
+  // ── Auto-save no localStorage ────────────────────────────────────────────
+  let saveTimer;
+  function autoSave() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveAnswers, 2000);
+  }
+
+  function saveAnswers() {
+    const data = {};
+    document.querySelectorAll('textarea').forEach(ta => {
+      data[ta.dataset.id] = ta.value;
+    });
+    document.querySelectorAll('.check-item input[type="checkbox"]').forEach(cb => {
+      data[cb.dataset.id] = cb.checked;
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    showToast();
+  }
+
+  function showToast() {
+    const toast = document.getElementById('saveToast');
+    toast.style.opacity = '1';
+    setTimeout(() => toast.style.opacity = '0', 1800);
+  }
+
+  // ── Carregar respostas salvas ────────────────────────────────────────────
+  function loadAnswers() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    document.querySelectorAll('textarea').forEach(ta => {
+      if (data[ta.dataset.id] !== undefined) {
+        ta.value = data[ta.dataset.id];
+        autoGrow(ta);
+        if (ta.value.trim()) ta.classList.add('has-value');
+        updateMarker(ta);
+      }
+    });
+    document.querySelectorAll('.check-item input[type="checkbox"]').forEach(cb => {
+      if (data[cb.dataset.id]) {
+        cb.checked = true;
+        cb.closest('.check-item').classList.add('checked');
+      }
+    });
+    updateProgress();
+  }
+
+  // ── Envio via fetch (sem redirecionar) ───────────────────────────────────
+  document.getElementById('levantamentoForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const btn = document.getElementById('btnSubmit');
+    btn.disabled = true;
+    btn.textContent = 'Enviando…';
+
+    const formData = new FormData(this);
+
+    try {
+      const response = await fetch(this.action, {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (response.ok) {
+        // Esconder formulário e progresso, mostrar sucesso
+        document.getElementById('levantamentoForm').style.display = 'none';
+        document.querySelector('.progress-bar-wrap').style.display = 'none';
+        document.getElementById('successScreen').style.display = 'flex';
+        localStorage.removeItem(STORAGE_KEY);
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'Enviar levantamento para a LocalRise';
+        alert('Erro ao enviar. Verifique sua conexão e tente novamente.');
+      }
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Enviar levantamento para a LocalRise';
+      alert('Erro ao enviar. Verifique sua conexão e tente novamente.');
+    }
+  });
+
+  // ── Init ─────────────────────────────────────────────────────────────────
+  loadAnswers();
+</script>
+</body>
+</html>
