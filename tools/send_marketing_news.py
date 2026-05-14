@@ -1,32 +1,46 @@
 #!/usr/bin/env python3
 """
-Envia o email diario de noticias de marketing e IA da LocalRise.
+Envia o email diario de noticias de marketing e IA da LocalRise via Resend API.
 Uso: python3 tools/send_marketing_news.py /tmp/subject.txt /tmp/body.html
 """
 import sys
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+import json
+import urllib.request
+import urllib.error
 
-SMTP_USER = "localriseai@gmail.com"
-SMTP_PASS = "jamo miir hmpe dqpn"
+RESEND_API_KEY = "re_4BhjbvVa_NgYbnREDjNmaiWwtpXPCbt2o"
+FROM_EMAIL = "LocalRise <noticias@localrise.com.br>"
 RECIPIENTS = ["digui.slater@gmail.com", "julieta.slater@gmail.com"]
 
 
 def send_email(subject, body_html):
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = subject
-    msg["From"] = SMTP_USER
-    msg["To"] = ", ".join(RECIPIENTS)
-    msg.attach(MIMEText(body_html, "html", "utf-8"))
+    payload = json.dumps({
+        "from": FROM_EMAIL,
+        "to": RECIPIENTS,
+        "subject": subject,
+        "html": body_html,
+    }).encode("utf-8")
 
-    with smtplib.SMTP("smtp.gmail.com", 587) as server:
-        server.ehlo()
-        server.starttls()
-        server.login(SMTP_USER, SMTP_PASS)
-        server.sendmail(SMTP_USER, RECIPIENTS, msg.as_string())
+    req = urllib.request.Request(
+        "https://api.resend.com/emails",
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {RESEND_API_KEY}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
 
-    print("Email enviado com sucesso para: " + ", ".join(RECIPIENTS))
+    try:
+        with urllib.request.urlopen(req) as resp:
+            result = json.loads(resp.read().decode())
+            print("Email enviado com sucesso! ID: " + result.get("id", "?"))
+            print("Destinatarios: " + ", ".join(RECIPIENTS))
+    except urllib.error.HTTPError as e:
+        error_body = e.read().decode()
+        print(f"Erro ao enviar email: HTTP {e.code}")
+        print(error_body)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
