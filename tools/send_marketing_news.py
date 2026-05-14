@@ -9,7 +9,7 @@ import urllib.request
 import urllib.error
 
 RESEND_API_KEY = "re_4BhjbvVa_NgYbnREDjNmaiWwtpXPCbt2o"
-FROM_EMAIL = "LocalRise <noticias@localrise.com.br>"
+FROM_EMAIL = "LocalRise <noticias@noticias.localriseadvisory.com>"
 RECIPIENTS = ["digui.slater@gmail.com", "julieta.slater@gmail.com"]
 
 
