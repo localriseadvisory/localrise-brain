@@ -43,7 +43,7 @@ Escreva um email HTML profissional em portugues brasileiro com este layout:
 
 Execute via Bash:
 
-python3 tools/send_marketing_news.py /tmp/email_subject.txt /tmp/email_body.html
+node tools/send_marketing_news.js /tmp/email_subject.txt /tmp/email_body.html
 
-Aguarde o resultado. Se o script retornar "Email enviado com sucesso", a tarefa esta concluida.
-Se retornar erro, mostre a mensagem de erro completa.
+Aguarde o resultado. Se o script retornar "Email enviado com sucesso!", a tarefa esta concluida.
+Se retornar erro, mostre a mensagem de erro completa e encerre.
