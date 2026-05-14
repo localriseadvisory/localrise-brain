@@ -39,11 +39,26 @@ Escreva um email HTML profissional em portugues brasileiro com este layout:
 - Separadores entre cards
 - Rodape: "Curadoria diaria da LocalRise • localrise.com.br"
 
-## PASSO 3 — Enviar o Email
+## PASSO 3 — Diagnostico e Envio do Email
 
-Execute via Bash:
+Primeiro, rode este diagnostico via Bash para saber quais ferramentas estao disponiveis:
 
+which node && node --version || echo "NODE: nao encontrado"
+which python3 && python3 --version || echo "PYTHON3: nao encontrado"
+which curl && curl --version | head -1 || echo "CURL: nao encontrado"
+
+Depois tente enviar o email na seguinte ordem de preferencia:
+
+OPCAO A — Node.js:
 node tools/send_marketing_news.js /tmp/email_subject.txt /tmp/email_body.html
 
-Aguarde o resultado. Se o script retornar "Email enviado com sucesso!", a tarefa esta concluida.
-Se retornar erro, mostre a mensagem de erro completa e encerre.
+OPCAO B — curl (se node falhar):
+Escreva o payload JSON em /tmp/resend_payload.json usando o Write tool com o conteudo:
+{"from":"LocalRise <noticias@noticias.localriseadvisory.com>","to":["digui.slater@gmail.com","julieta.slater@gmail.com"],"subject":"ASSUNTO","html":"HTML"}
+Substitua ASSUNTO e HTML pelos valores reais (HTML deve ter aspas escapadas).
+Entao execute: curl -s -X POST https://api.resend.com/emails -H "Authorization: Bearer re_4BhjbvVa_NgYbnREDjNmaiWwtpXPCbt2o" -H "Content-Type: application/json" -d @/tmp/resend_payload.json
+
+OPCAO C — Python3 (se curl falhar):
+python3 tools/send_marketing_news.py /tmp/email_subject.txt /tmp/email_body.html
+
+Mostre o resultado completo de cada tentativa, incluindo erros. Nao pule etapas.
