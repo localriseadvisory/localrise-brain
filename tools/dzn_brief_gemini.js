@@ -5,7 +5,7 @@ const os = require("os");
 const path = require("path");
 const { execSync } = require("child_process");
 
-const GEMINI_API_KEY = "AIzaSyBzeg6Ps900umSo5celYRdpsKs7qVzn9wQ";
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const MODELS = ["gemini-2.0-flash", "gemini-2.5-flash"];
 
 const today = new Date();
