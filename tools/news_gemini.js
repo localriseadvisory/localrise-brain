@@ -24,10 +24,10 @@ Use o Google Search para buscar as 10 notícias mais relevantes das últimas 48 
 
 Para cada notícia: título em português brasileiro, resumo de 2-3 frases em português, fonte e URL original.
 
-Monte um email HTML completo com:
-- Cabeçalho fundo #1a1a2e, texto branco, título "Marketing e IA — Notícias do Dia", data: ${dayName}, ${dateStr}
-- Para cada notícia: card branco com borda esquerda #1a1a2e, título em negrito, resumo, link "Leia mais →" apontando para a URL real
-- Rodapé: "Curadoria diária da LocalRise • localrise.com.br"
+Monte um email HTML completo usando APENAS estilos inline (sem tag <style>, sem CSS externo). Layout:
+- Cabeçalho: <div style="background:#1a1a2e;padding:24px;text-align:center"><h1 style="color:#fff;margin:0;font-size:22px">Marketing e IA — Notícias do Dia</h1><p style="color:#aaa;margin:8px 0 0">${dayName}, ${dateStr}</p></div>
+- Para cada notícia: <div style="border-left:4px solid #1a1a2e;padding:16px;margin:12px 0;background:#f9f9f9"><h3 style="margin:0 0 8px;color:#1a1a2e">TÍTULO</h3><p style="margin:0 0 8px;color:#333">RESUMO</p><a href="URL" style="color:#1a1a2e;font-weight:bold">Leia mais →</a></div>
+- Rodapé: <div style="text-align:center;padding:16px;color:#999;font-size:12px">Curadoria diária da LocalRise • localrise.com.br</div>
 
 Retorne sua resposta EXATAMENTE neste formato (sem mais nada antes ou depois):
 <SUBJECT>10 Notícias de Marketing e IA — ${dayName}, ${dateStr}</SUBJECT>
@@ -44,7 +44,7 @@ function callGemini(model, prompt) {
     const body = JSON.stringify({
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       tools: [{ googleSearch: {} }],
-      generationConfig: { temperature: 0.3, maxOutputTokens: 16384 }
+      generationConfig: { temperature: 0.3, maxOutputTokens: 32768 }
     });
 
     const req = https.request({
