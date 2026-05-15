@@ -6,7 +6,7 @@ const path = require("path");
 const { execSync } = require("child_process");
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const MODELS = ["gemini-2.0-flash", "gemini-2.5-flash"];
+const MODELS = ["gemini-2.5-flash", "gemini-2.0-flash"];
 
 const today = new Date();
 const DAYS = ["Domingo","Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado"];
@@ -44,7 +44,7 @@ function callGemini(model, prompt) {
     const body = JSON.stringify({
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       tools: [{ googleSearch: {} }],
-      generationConfig: { temperature: 0.3, maxOutputTokens: 8192 }
+      generationConfig: { temperature: 0.3, maxOutputTokens: 16384 }
     });
 
     const req = https.request({
