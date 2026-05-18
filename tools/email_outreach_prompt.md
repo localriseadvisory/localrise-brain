@@ -15,26 +15,37 @@ Execute os passos abaixo SEM pedir confirmação.
 - Sábado: Lojas de Roupas, Calçados e Acessórios
 - Domingo: Serviços Gerais (reformas, elétrica, encanamento, dedetização)
 
-## PASSO 1 — PESQUISAR 20 NEGÓCIOS COM EMAIL
+## PASSO 1 — PESQUISAR NEGÓCIOS COM EMAIL
 
-Use WebSearch + WebFetch para encontrar negócios reais com presença digital ruim.
+Use WebSearch + WebFetch para encontrar negócios reais. A chave para encontrar email é focar em negócios que **têm site** — mesmo que o site seja ruim, é onde o email geralmente está.
 
 Cidades alvo (varie): São Paulo, Campinas, BH, Porto Alegre, Curitiba, Florianópolis, Brasília, Rio de Janeiro, Ribeirão Preto, Joinville, Uberlândia, Sorocaba.
 
-Queries sugeridas:
-- "[nicho] [cidade] contato email"
-- "[nicho] [cidade] sem site"
-- "[nicho] [bairro] [cidade]" → acesse o site ou GMB para encontrar email
-- site:instagram.com "[nicho] [cidade]" → bio com email
-- "[nicho] [cidade]" → clique nos resultados do Google Maps para ver se tem email no perfil
+### Estratégia de busca (siga esta ordem):
+
+**1. Busque negócios com site ruim ou desatualizado:**
+- "[nicho] [cidade]" → abra os resultados que têm URL de site próprio
+- "[nicho] [cidade] site:*.com.br" ou "site:*.com"
+- "[nicho] [bairro] [cidade]" → resultados do Google Maps com link de site
+
+**2. Para cada negócio com site encontrado, use WebFetch para:**
+- Abrir o site e ir direto na página "Contato", "Fale Conosco" ou "Sobre"
+- Extrair o email (formato usuario@dominio.com)
+- Avaliar se o site é ruim: não abre no celular, visual antigo, sem HTTPS, faltam informações
+
+**3. Se não tiver site, tente:**
+- Perfil do Google Maps (às vezes tem email na seção de contato)
+- Bio do Instagram (alguns colocam email)
+- Página do Facebook
 
 Para cada negócio colete:
 - Nome real e cidade/bairro
-- Email de contato (procure no site deles, página "Contato" ou "Fale Conosco", Google Maps, Facebook, Instagram bio)
+- URL do site (se tiver)
+- Email de contato confirmado (não tente adivinhar — tem que estar visível na página)
 - Diagnóstico principal: GMB_FRACO | SEM_SITE | SITE_RUIM | INSTAGRAM_FRACO
 - Evidência concreta do problema (1 frase específica)
 
-PULE o negócio se não encontrar email válido. Meta: 20 negócios com email confirmado.
+PULE o negócio se não encontrar email visível na página. Meta: enviar para o máximo possível — qualidade acima de quantidade.
 
 ## PASSO 2 — ESCREVER EMAIL PERSONALIZADO POR PROBLEMA
 
@@ -116,27 +127,46 @@ contato@localriseadvisory.com
 
 ## PASSO 3 — ENVIAR VIA RESEND API
 
-Primeiro, leia a chave da API Resend do arquivo tools/send_marketing_news.js (variável RESEND_API_KEY na linha 5).
+Use a chave abaixo diretamente (não precisa ler de arquivo):
+
+```
+RESEND_API_KEY=re_4BhjbvVa_NgYbnREDjNmaiWwtpXPCbt2o
+```
 
 Para cada negócio com email encontrado, envie usando curl:
 
-```
+```bash
 curl -s -X POST https://api.resend.com/emails \
-  -H "Authorization: Bearer [CHAVE_LIDA_DO_ARQUIVO]" \
+  -H "Authorization: Bearer re_4BhjbvVa_NgYbnREDjNmaiWwtpXPCbt2o" \
   -H "Content-Type: application/json" \
   -d '{"from":"Nicolas | LocalRise <contato@localriseadvisory.com>","to":["EMAIL_DO_PROSPECT"],"reply_to":["contato@localriseadvisory.com"],"subject":"ASSUNTO","text":"CORPO_DO_EMAIL"}'
 ```
 
 Interpretação dos resultados:
-- HTTP 200 ou 201 → email enviado com sucesso
-- HTTP 403 "domain is not verified" → DNS ainda propagando, registre como PENDENTE
+- HTTP 200 ou 201 com `{"id":"..."}` → email enviado com sucesso
+- HTTP 403 "domain is not verified" → registre como PENDENTE
 - Outro erro → registre o erro e continue para o próximo
 
-## PASSO 4 — RELATÓRIO FINAL
+## PASSO 4 — RELATÓRIO FINAL NO DISCORD
 
-Ao final, exiba um resumo:
-- Total de negócios pesquisados
-- Total com email encontrado
-- Total enviados com sucesso
-- Total com erro/pendente
-- Tabela: Nome | Email | Problema | Status
+Ao final, poste o relatório no Discord via webhook:
+
+```bash
+curl -s -X POST "https://discord.com/api/webhooks/1503563165311434812/Co5f7voaD1HnYKuLB4bU_gEL8vWZ3v-HPjTtIZRd6k3WYaSRb0uHZHXh90n3h9ZAdwEM" \
+  -H "Content-Type: application/json" \
+  -d '{"content": "MENSAGEM_DO_RELATORIO"}'
+```
+
+Formato do relatório (respeite o limite de 2000 chars do Discord, divida se necessário):
+
+```
+📧 EMAIL FRIO — [DATA DD/MM/YYYY]
+🎯 Nicho: [NICHO] | [N] negócios pesquisados
+━━━━━━━━━━━━━━━━━━
+✅ Enviados: [N]
+⏳ Pendentes: [N]
+❌ Sem email: [N]
+
+[Para cada enviado:]
+• [Nome] — [Cidade] → [email] ([Problema])
+```
