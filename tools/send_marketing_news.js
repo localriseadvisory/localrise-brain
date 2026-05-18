@@ -8,7 +8,7 @@ const fs = require("fs");
 
 const RESEND_API_KEY = "re_4BhjbvVa_NgYbnREDjNmaiWwtpXPCbt2o";
 const FROM = "LocalRise <noticias@noticias.localriseadvisory.com>";
-const TO = ["digui.slater@gmail.com", "julieta.slater@gmail.com"];
+const TO = ["digui.slater@gmail.com", "julieta.slater@gmail.com", "contato@localriseadvisory.com"];
 
 if (process.argv.length !== 4) {
   console.error("Uso: node send_marketing_news.js <subject_file> <body_html_file>");
