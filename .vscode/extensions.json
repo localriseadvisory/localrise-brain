@@ -1,5 +1,7 @@
 {
     "recommendations": [
-        "moonshot-ai.kimi-code"
+        "moonshot-ai.kimi-code",
+        "ms-python.python",
+        "ms-python.vscode-pylance"
     ]
 }

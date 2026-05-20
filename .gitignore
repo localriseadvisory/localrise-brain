@@ -1,1 +1,11 @@
 node_modules
+
+# Python — arquivos que NUNCA devem ir para o repositório
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Saídas geradas pela automação da folha (contêm dados sensíveis: CPF, salários)
+tools/folha_consiste/saida/

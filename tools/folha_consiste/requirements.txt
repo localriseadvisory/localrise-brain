@@ -1,0 +1,8 @@
+# Dependências do projeto "folha_consiste".
+# Instale todas de uma vez com:  pip install -r requirements.txt
+
+# pandas: lê, valida e manipula planilhas (Excel/CSV) em formato de tabela.
+pandas>=2.2,<3.0
+
+# openpyxl: motor que o pandas usa para LER e ESCREVER arquivos .xlsx.
+openpyxl>=3.1,<4.0
