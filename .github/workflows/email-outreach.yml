@@ -1,0 +1,288 @@
+name: Email Frio Diário — LocalRise
+
+on:
+  workflow_dispatch:
+
+jobs:
+  outreach:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Enviar emails frios e relatório Discord
+        env:
+          GMAIL_USER: contato@localriseadvisory.com
+          GMAIL_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: |
+          python3 << 'PYEOF'
+          import smtplib, os, json, time
+          from email.mime.text import MIMEText
+          from datetime import datetime
+          import urllib.request, urllib.error
+
+          GMAIL_USER = os.environ['GMAIL_USER']
+          GMAIL_PASSWORD = os.environ['GMAIL_PASSWORD']
+          DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1503563165311434812/Co5f7voaD1HnYKuLB4bU_gEL8vWZ3v-HPjTtIZRd6k3WYaSRb0uHZHXh90n3h9ZAdwEM"
+
+          prospects = [
+            {
+              "nome": "Academia Central Fitness",
+              "cidade": "Bela Vista, São Paulo",
+              "email": "centralfitnessacademia@gmail.com",
+              "tipo": "GMB_FRACO",
+              "evidencia": "poucas avaliações no Google e sem fotos do espaço",
+              "nicho": "academias"
+            },
+            {
+              "nome": "Mendes Pilates",
+              "cidade": "Consolação, São Paulo",
+              "email": "mendespilates@gmail.com",
+              "tipo": "GMB_FRACO",
+              "evidencia": "poucas avaliações e sem fotos das aulas ou do estúdio no Google",
+              "nicho": "estúdios de pilates"
+            },
+            {
+              "nome": "MGM Pilates",
+              "cidade": "São Paulo",
+              "email": "contato@mgmpilates.com.br",
+              "tipo": "GMB_FRACO",
+              "evidencia": "poucas avaliações e informações incompletas no perfil do Google",
+              "nicho": "estúdios de pilates"
+            },
+            {
+              "nome": "Ato Pilates Centro Terapêutico",
+              "cidade": "Bairro Serra, Belo Horizonte",
+              "email": "atopilates@atopilates.com.br",
+              "tipo": "SITE_RUIM",
+              "evidencia": "o site não abre bem no celular e as informações de serviços são difíceis de encontrar",
+              "nicho": "estúdios de pilates"
+            },
+            {
+              "nome": "Hama Pilates",
+              "cidade": "Cabral, Curitiba",
+              "email": "hamapilatescabral@gmail.com",
+              "tipo": "GMB_FRACO",
+              "evidencia": "poucas avaliações e sem fotos atualizadas do espaço no Google",
+              "nicho": "estúdios de pilates"
+            },
+            {
+              "nome": "The Pilates Studio",
+              "cidade": "Curitiba",
+              "email": "authentic.pilates.curitiba@hotmail.com",
+              "tipo": "SITE_RUIM",
+              "evidencia": "o site tem informações básicas mas não abre bem no celular e falta uma chamada clara para ação",
+              "nicho": "estúdios de pilates"
+            },
+            {
+              "nome": "Pilates Studio Gustavo e Joyce",
+              "cidade": "Centro, Florianópolis",
+              "email": "contato@pilatesgustavoejoyce.com.br",
+              "tipo": "SITE_RUIM",
+              "evidencia": "o site tem visual desatualizado e não adapta bem para dispositivos móveis",
+              "nicho": "estúdios de pilates"
+            },
+            {
+              "nome": "Espaço Fisio Pilates",
+              "cidade": "América, Joinville",
+              "email": "fisio@pilatesjoinville.com.br",
+              "tipo": "GMB_FRACO",
+              "evidencia": "poucas avaliações e informações de horário incompletas no Google",
+              "nicho": "estúdios de pilates"
+            },
+            {
+              "nome": "Hotness Academia",
+              "cidade": "Floresta, Joinville",
+              "email": "hotnessacademia@hotmail.com",
+              "tipo": "SITE_RUIM",
+              "evidencia": "o site não abre corretamente no celular e o contato ainda usa um hotmail.com",
+              "nicho": "academias"
+            },
+            {
+              "nome": "Academia Sportcenter",
+              "cidade": "Porto Alegre",
+              "email": "contato@academiasportcenter.com.br",
+              "tipo": "SITE_RUIM",
+              "evidencia": "o site tem visual antigo e as informações de modalidades e horários estão desorganizadas",
+              "nicho": "academias"
+            },
+            {
+              "nome": "Studio Pilates Brasília",
+              "cidade": "Asa Norte, Brasília",
+              "email": "contato@studiopilatesbrasilia.com.br",
+              "tipo": "GMB_FRACO",
+              "evidencia": "poucas avaliações para um estúdio na Asa Norte e fotos do espaço ausentes",
+              "nicho": "estúdios de pilates"
+            },
+            {
+              "nome": "Ativa Reformer Pilates",
+              "cidade": "Noroeste, Brasília",
+              "email": "ativareformerpilates@gmail.com",
+              "tipo": "GMB_FRACO",
+              "evidencia": "perfil no Google incompleto, sem fotos profissionais das aulas e do espaço",
+              "nicho": "estúdios de pilates"
+            },
+            {
+              "nome": "Ricardo Moreira Pilates",
+              "cidade": "Barra da Tijuca, Rio de Janeiro",
+              "email": "ricardopilates@hotmail.com",
+              "tipo": "SITE_RUIM",
+              "evidencia": "o site não tem informações atualizadas sobre serviços e não adapta bem para celular",
+              "nicho": "estúdios de pilates"
+            },
+            {
+              "nome": "Pilates Centro RJ",
+              "cidade": "Centro, Rio de Janeiro",
+              "email": "pilatesmaisrj@gmail.com",
+              "tipo": "GMB_FRACO",
+              "evidencia": "poucas avaliações no Google e sem fotos do espaço ou das aulas",
+              "nicho": "estúdios de pilates"
+            },
+            {
+              "nome": "Physioestar",
+              "cidade": "Rio de Janeiro",
+              "email": "faleconosco@physioestar.com.br",
+              "tipo": "SITE_RUIM",
+              "evidencia": "o site não tem informações claras sobre valores e disponibilidade de horários",
+              "nicho": "clínicas de pilates e fisioterapia"
+            },
+            {
+              "nome": "Eleva Pilates",
+              "cidade": "Jardim Botânico, Ribeirão Preto",
+              "email": "eleva@elevapilates.com.br",
+              "tipo": "GMB_FRACO",
+              "evidencia": "poucas avaliações para um estúdio no Jardim Botânico e fotos do espaço ausentes",
+              "nicho": "estúdios de pilates"
+            },
+            {
+              "nome": "The Pilates Studio Vera Scatena",
+              "cidade": "Jardim Botânico, Ribeirão Preto",
+              "email": "pilates@pilatesverascatena.com.br",
+              "tipo": "SITE_RUIM",
+              "evidencia": "o site tem visual desatualizado e não adapta bem para dispositivos móveis",
+              "nicho": "estúdios de pilates"
+            },
+            {
+              "nome": "Studio Bagnall",
+              "cidade": "Umuarama, Uberlândia",
+              "email": "contato@studiobagnall.com.br",
+              "tipo": "SITE_RUIM",
+              "evidencia": "o site ainda usa HTTP sem criptografia (sem o cadeado de segurança), o que afasta clientes e prejudica o ranqueamento no Google",
+              "nicho": "estúdios de pilates"
+            },
+            {
+              "nome": "The Pilates Studio Sorocaba",
+              "cidade": "Sorocaba",
+              "email": "pilates.sorocaba@hotmail.com",
+              "tipo": "SITE_RUIM",
+              "evidencia": "o site tem visual desatualizado e o contato ainda usa hotmail.com",
+              "nicho": "estúdios de pilates"
+            },
+          ]
+
+          templates = {
+            "GMB_FRACO": {
+              "assunto": "{nome} — encontrei algo que está te custando clientes",
+              "corpo": """Olá, tudo bem?
+
+Meu nome é Nicolas, sou consultor de marketing digital e estava pesquisando {nicho} em {cidade} quando encontrei o {nome}.
+
+Percebi que o perfil de vocês no Google está incompleto — {evidencia}. Isso faz com que clientes que pesquisam no Google muitas vezes escolham um concorrente com perfil mais completo, mesmo que vocês sejam melhores.
+
+Tenho algumas sugestões rápidas que podem fazer diferença imediata. Posso te mandar sem compromisso?
+
+Abraço,
+Nicolas
+LocalRise Advisory — Marketing Digital para Negócios Locais
+contato@localriseadvisory.com"""
+            },
+            "SITE_RUIM": {
+              "assunto": "{nome} — seu site pode estar afastando clientes",
+              "corpo": """Olá, tudo bem?
+
+Meu nome é Nicolas, sou consultor de marketing digital. Vi o site de vocês e identifiquei alguns pontos que podem estar prejudicando a conversão — {evidencia}.
+
+Muita gente entra no site, vê isso e vai embora sem ligar. É uma oportunidade perdida todo dia.
+
+Posso te mostrar o que encontrei e como resolver? Sem compromisso.
+
+Abraço,
+Nicolas
+LocalRise Advisory — Marketing Digital para Negócios Locais
+contato@localriseadvisory.com"""
+            },
+          }
+
+          enviados = []
+          pendentes = []
+          sem_email = []
+          erros = []
+
+          with smtplib.SMTP('smtp.gmail.com', 587) as server:
+              server.starttls()
+              server.login(GMAIL_USER, GMAIL_PASSWORD)
+
+              for p in prospects:
+                  tpl = templates[p["tipo"]]
+                  assunto = tpl["assunto"].format(**p)
+                  corpo = tpl["corpo"].format(**p)
+
+                  msg = MIMEText(corpo, 'plain', 'utf-8')
+                  msg['From'] = f'Nicolas | LocalRise <{GMAIL_USER}>'
+                  msg['To'] = p['email']
+                  msg['Reply-To'] = GMAIL_USER
+                  msg['Subject'] = assunto
+
+                  try:
+                      server.sendmail(GMAIL_USER, [p['email']], msg.as_string())
+                      print(f"OK: {p['nome']} <{p['email']}>")
+                      enviados.append(p)
+                      time.sleep(2)
+                  except Exception as e:
+                      print(f"ERRO: {p['nome']} <{p['email']}> — {e}")
+                      erros.append({"prospect": p, "erro": str(e)})
+
+          # Relatório Discord
+          hoje = datetime.now().strftime("%d/%m/%Y")
+          linhas = [
+              f"📧 EMAIL FRIO — {hoje}",
+              f"🎯 Nicho: Academias, Pilates, Yoga e Personal Trainer | {len(prospects)} negócios pesquisados",
+              "━━━━━━━━━━━━━━━━━━",
+              f"✅ Enviados: {len(enviados)}",
+              f"❌ Erros: {len(erros)}",
+              "",
+          ]
+          for p in enviados:
+              linhas.append(f"• {p['nome']} — {p['cidade']} → {p['email']} ({p['tipo']})")
+
+          if erros:
+              linhas.append("")
+              linhas.append("❌ Erros:")
+              for e in erros:
+                  linhas.append(f"  • {e['prospect']['nome']}: {e['erro']}")
+
+          relatorio = "\n".join(linhas)
+
+          # Split if > 2000 chars
+          chunks = []
+          while len(relatorio) > 1900:
+              split_at = relatorio[:1900].rfind("\n")
+              chunks.append(relatorio[:split_at])
+              relatorio = relatorio[split_at:]
+          chunks.append(relatorio)
+
+          for chunk in chunks:
+              data = json.dumps({"content": chunk}).encode("utf-8")
+              req = urllib.request.Request(
+                  DISCORD_WEBHOOK,
+                  data=data,
+                  headers={"Content-Type": "application/json"},
+                  method="POST"
+              )
+              try:
+                  urllib.request.urlopen(req, timeout=10)
+                  print("Discord: relatório enviado")
+              except Exception as e:
+                  print(f"Discord ERRO: {e}")
+              time.sleep(1)
+
+          print(f"\n=== RESUMO: {len(enviados)}/{len(prospects)} emails enviados ===")
+          PYEOF
