@@ -2,6 +2,9 @@ name: Email Frio Diário — LocalRise
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.trigger-outreach']
 
 jobs:
   outreach:
