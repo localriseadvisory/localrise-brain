@@ -43,11 +43,27 @@ tools/folha_consiste/
 ├── README.md             Este arquivo (documentação do projeto)
 ├── requirements.txt      Lista de bibliotecas que o projeto usa
 ├── verificar_ambiente.py Confere se o ambiente está instalado corretamente
-├── exemplos/             Arquivos de exemplo para testar (origem do Consiste)
+├── leitura.py            Etapa 1: lê a exportação de origem (Excel/CSV)
+├── exemplos/             Arquivos de exemplo para testar
 └── .venv/                Ambiente virtual (NÃO vai para o Git)
 ```
 
+## Como testar a leitura
+
+Com o ambiente ativado:
+
+```powershell
+python leitura.py exemplos\origem_exemplo.csv
+```
+
+Deve imprimir 4 linhas, com a coluna `_linha_origem` indicando a linha no
+arquivo original (usada depois pelo relatório de erros).
+
 ## Status do projeto
 
-Em construção. Etapa atual: **configuração de ambiente** concluída.
-Próxima etapa: definir o layout do Consiste e implementar a leitura dos arquivos.
+- [x] Configuração de ambiente
+- [x] Etapa 1 — leitura de Excel/CSV (`leitura.py`)
+- [ ] Etapa 2 — validação (campos obrigatórios, CPF, etc.)
+- [ ] Etapa 3 — relatório de erros
+- [ ] Etapa 4 — geração do arquivo de importação do Consiste
+      *(depende do layout do Consiste)*
