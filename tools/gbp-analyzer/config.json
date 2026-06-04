@@ -1,0 +1,33 @@
+{
+  "locations": [
+    "Brasília DF",
+    "Taguatinga DF",
+    "Ceilândia DF",
+    "Samambaia DF",
+    "Gama DF",
+    "Campinas SP",
+    "Ribeirão Preto SP",
+    "São José dos Campos SP",
+    "Sorocaba SP",
+    "Santos SP",
+    "Piracicaba SP",
+    "Belo Horizonte MG",
+    "Uberlândia MG",
+    "Contagem MG",
+    "Juiz de Fora MG",
+    "Betim MG",
+    "Goiânia GO",
+    "Aparecida de Goiânia GO"
+  ],
+  "categories": [
+    "clínica veterinária",
+    "clínica de estética",
+    "fisioterapia",
+    "academia funcional",
+    "residencial geriátrico"
+  ],
+  "maxResultsPerQuery": 20,
+  "scoreThreshold": 60,
+  "requireNoWebsite": true,
+  "outputDir": "tools/gbp-analyzer/reports"
+}
