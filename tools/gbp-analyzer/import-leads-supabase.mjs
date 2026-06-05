@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Importa leads reais do crm-history.json para o Supabase (tabela leads)
  * Apaga os leads fictícios e insere os leads reais do Google Places
@@ -171,7 +171,7 @@ function parseLocation(loc) {
 async function main() {
   const raw = JSON.parse(readFileSync(resolve(__dir, "reports/crm-history.json"), "utf8"));
   const leads = raw.filter(l => !l.hasWebsite && l.name);
-  console.log(`📋 Leads sem site encontrados: ${leads.length}`);
+  console.log(`📋 Leads sem site: ${leads.length}`);
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -181,7 +181,6 @@ async function main() {
     const phone = l.phone ? l.phone.replace(/[^0-9]/g, "") || null : null;
     const gbpUrl = l.id ? `https://www.google.com/maps/place/?q=place_id:${l.id}` : null;
     const qualScore = Math.max(0, Math.min(100, 100 - (l.pct || 50)));
-
     return {
       source: "manual",
       business_name: l.name,
@@ -207,29 +206,27 @@ async function main() {
     };
   });
 
-  // Upsert seguro — não apaga leads que o SDR já está trabalhando
-  console.log("
-🔍 Verificando leads existentes...");
+  console.log();
+  console.log("🔍 Verificando leads existentes no CRM...");
   let existingUrls = new Set();
   try {
     const existing = await supabaseRequest("GET", "leads?select=gbp_url&gbp_url=not.is.null", null);
     if (Array.isArray(existing)) existing.forEach(r => existingUrls.add(r.gbp_url));
     console.log(`   ${existingUrls.size} leads já existem no CRM`);
   } catch (e) {
-    console.error("   ⚠️  Erro ao buscar existentes:", e.message.slice(0, 200));
+    console.error("   Erro ao buscar existentes:", e.message.slice(0, 200));
   }
 
   const newRows = rows.filter(r => !r.gbp_url || !existingUrls.has(r.gbp_url));
   console.log(`   ${newRows.length} novos | ${rows.length - newRows.length} já existiam`);
 
   if (newRows.length === 0) {
-    console.log("
-✅ Nenhum lead novo hoje.");
+    console.log("Nenhum lead novo hoje — CRM já está atualizado.");
     return;
   }
 
-  console.log(`
-📤 Inserindo ${newRows.length} leads novos...`);
+  console.log();
+  console.log(`📤 Inserindo ${newRows.length} leads novos no CRM SDR...`);
   let inserted = 0;
   for (let i = 0; i < newRows.length; i += 20) {
     const batch = newRows.slice(i, i + 20);
@@ -238,11 +235,17 @@ async function main() {
       inserted += batch.length;
       process.stdout.write(`   ${inserted}/${newRows.length} inseridos...`);
     } catch (e) {
-      console.error(`
-   ❌ Lote ${i}:`, e.message.slice(0, 300));
+      console.error(`   Erro no lote ${i}:`, e.message.slice(0, 300));
     }
   }
 
-  console.log(`
+  console.log();
+  console.log(`✅ ${inserted} leads novos inseridos no CRM SDR!`);
 
-✅ ${inserted} leads novos inseridos no Supabase!`)
+  const byNiche = {};
+  for (const r of newRows) byNiche[r.niche] = (byNiche[r.niche] || 0) + 1;
+  console.log("📊 Por nicho:");
+  for (const [n, count] of Object.entries(byNiche)) console.log(`   ${n}: ${count}`);
+}
+
+main().catch(console.error);
