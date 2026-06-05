@@ -111,25 +111,28 @@ async function searchOutscraper(query) {
   }
   const json = await res.json();
 
-  // Se a resposta for async (task ID), aguardar e buscar resultado
-  if (json.id && (!json.data || json.status === "Pending" || json.status === "Running")) {
+  // Outscraper sempre retorna um id. Se data[0] está vazio, o job ainda está processando.
+  const firstBatch = json.data?.[0];
+  const isEmpty = !firstBatch || (Array.isArray(firstBatch) && firstBatch.length === 0);
+
+  if (json.id && isEmpty) {
     const taskId = json.id;
-    for (let i = 0; i < 30; i++) {
-      await sleep(3000);
+    for (let i = 0; i < 20; i++) {
+      await sleep(4000);
       const poll = await _fetchWithProxy(`https://api.app.outscraper.com/requests/${taskId}`, {
         headers: { "X-API-KEY": API_KEY },
       });
       const result = await poll.json();
-      if (result.status === "Success" || result.data?.length) {
-        const raw = result.data?.[0] || [];
-        return Array.isArray(raw) ? raw.map(normalizePlace) : [];
+      const batch = result.data?.[0];
+      if (result.status === "Success" && Array.isArray(batch) && batch.length > 0) {
+        return batch.map(normalizePlace);
       }
+      if (result.status === "Failed") throw new Error("outscraper job falhou");
     }
-    throw new Error("outscraper timeout aguardando resultado async");
+    return []; // sem resultados após polling
   }
 
-  const raw = json.data?.[0] ?? [];
-  return Array.isArray(raw) ? raw.map(normalizePlace) : [];
+  return Array.isArray(firstBatch) ? firstBatch.map(normalizePlace) : [];
 }
 
 // ─── SCORING (mesmo da analyzer.mjs) ─────────────────────────────────────────
