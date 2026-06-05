@@ -99,7 +99,6 @@ async function searchOutscraper(query) {
     limit: "20",
     language: "pt",
     region: "BR",
-    dropDuplicates: "true",
     async: "false",
   });
   const res = await _fetchWithProxy(`https://api.app.outscraper.com/maps/search-v3?${params}`, {
