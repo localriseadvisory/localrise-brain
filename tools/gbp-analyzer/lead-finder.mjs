@@ -110,6 +110,7 @@ async function searchOutscraper(query) {
     throw new Error(`outscraper ${res.status}: ${err}`);
   }
   const json = await res.json();
+  console.log(`   [debug] status=${json.status} id=${json.id} d0len=${json.data?.[0]?.length ?? "?"}`);
 
   // Outscraper sempre retorna um id. Se data[0] está vazio, o job ainda está processando.
   const firstBatch = json.data?.[0];
