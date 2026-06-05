@@ -27,3 +27,8 @@ jobs:
           OUTSCRAPER_API_KEY: ${{ secrets.OUTSCRAPER_API_KEY }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
         run: node tools/gbp-analyzer/lead-finder.mjs
+
+      - name: Importar leads novos para CRM SDR (Supabase)
+        env:
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node tools/gbp-analyzer/import-leads-supabase.mjs
