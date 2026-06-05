@@ -43,6 +43,8 @@ function supabaseRequest(method, path, body) {
         "apikey": SUPABASE_KEY,
         "Authorization": `Bearer ${SUPABASE_KEY}`,
         "Prefer": "return=minimal",
+        "Accept-Profile": "public",
+        "Content-Profile": "public",
       },
     };
     const req = https.request(url, options, (res) => {
