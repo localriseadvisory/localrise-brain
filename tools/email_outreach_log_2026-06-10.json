@@ -1,0 +1,163 @@
+{
+  "date": "2026-06-10",
+  "nicho": "Salões de Beleza, Barbearias e Estética",
+  "dia_semana": "Quarta-feira",
+  "total_pesquisados": 14,
+  "status_envio": "BLOQUEADO — api.resend.com não está no allowlist da política de rede do ambiente remoto",
+  "leads": [
+    {
+      "nome": "Beleza e Art",
+      "cidade": "Campinas",
+      "estado": "SP",
+      "site": "http://www.salaobelezaeart.com.br",
+      "email": "contato@salaobelezaeart.com.br",
+      "diagnostico": "SITE_RUIM",
+      "evidencia": "site opera com HTTP (sem HTTPS) e utiliza tecnologia .aspx desatualizada, o que compromete a credibilidade e não abre bem no celular",
+      "assunto": "Beleza e Art — seu site pode estar afastando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital. Vi o site de vocês e identifiquei alguns pontos que podem estar prejudicando a conversão — o site opera sem HTTPS e utiliza tecnologia desatualizada, o que faz muitos clientes desconfiarem e fecharem a aba antes de entrar em contato.\n\nMuita gente entra no site, vê isso e vai embora sem ligar. É uma oportunidade perdida todo dia.\n\nPosso te mostrar o que encontrei e como resolver? Sem compromisso.\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "KAPO CABELOS",
+      "cidade": "Porto Alegre",
+      "estado": "RS",
+      "site": "http://www.kapocabelos.com.br",
+      "email": "contato@kapocabelos.com.br",
+      "diagnostico": "SITE_RUIM",
+      "evidencia": "site sem HTTPS (certificado de segurança ausente) e com layout desatualizado, não compatível com navegação mobile",
+      "assunto": "Kapo Cabelos — seu site pode estar afastando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital. Vi o site de vocês e identifiquei alguns pontos que podem estar prejudicando a conversão — o site não possui certificado HTTPS e apresenta layout desatualizado, o que faz muitos clientes preferirem a concorrência ao buscar online.\n\nMuita gente entra no site, vê isso e vai embora sem ligar. É uma oportunidade perdida todo dia.\n\nPosso te mostrar o que encontrei e como resolver? Sem compromisso.\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Visual Hair Design",
+      "cidade": "Porto Alegre",
+      "estado": "RS",
+      "site": "https://visualhairdesign.com.br",
+      "email": "contato@visualhairdesign.com.br",
+      "diagnostico": "SITE_RUIM",
+      "evidencia": "site inacessível ao tentar abrir — clientes que buscam pelo nome não conseguem encontrar informações de contato",
+      "assunto": "Visual Hair Design — seu site pode estar afastando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital. Estava pesquisando salões de beleza em Porto Alegre quando encontrei o Visual Hair Design, mas percebi que o site de vocês está fora do ar — clientes que tentam acessar não conseguem encontrar informações de contato ou agendar horário.\n\nMuita gente entra no site, vê isso e vai embora sem ligar. É uma oportunidade perdida todo dia.\n\nPosso te mostrar o que encontrei e como resolver? Sem compromisso.\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Estética Arlete",
+      "cidade": "Florianópolis",
+      "estado": "SC",
+      "site": "https://www.esteticaarlete.com.br",
+      "email": "esteticaarlete@esteticaarlete.com.br",
+      "diagnostico": "SITE_RUIM",
+      "evidencia": "em funcionamento desde 1991, o site apresenta visual desatualizado que não transmite a qualidade do serviço e dificulta a navegação em celular",
+      "assunto": "Estética Arlete — seu site pode estar afastando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital. Vi o site de vocês e identifiquei alguns pontos que podem estar prejudicando a conversão — o site tem visual desatualizado e dificuldade de navegação no celular, o que não traduz a qualidade de mais de 30 anos de experiência que vocês têm.\n\nMuita gente entra no site, vê isso e vai embora sem ligar. É uma oportunidade perdida todo dia.\n\nPosso te mostrar o que encontrei e como resolver? Sem compromisso.\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Men's Barbearia",
+      "cidade": "Belo Horizonte",
+      "estado": "MG",
+      "site": "https://mensbarbearia.com.br",
+      "email": "contato@mensbarbearia.com.br",
+      "diagnostico": "GMB_FRACO",
+      "evidencia": "perfil no Google com informações incompletas e poucas avaliações visíveis para um salão no bairro Lourdes",
+      "assunto": "Men's Barbearia — encontrei algo que está te custando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital e estava pesquisando barbearias em Belo Horizonte quando encontrei o Men's Barbearia.\n\nPercebi que o perfil de vocês no Google está incompleto — poucas avaliações e informações de serviços ausentes. Isso faz com que clientes que pesquisam no Google muitas vezes escolham um concorrente com perfil mais completo, mesmo que vocês sejam melhores.\n\nTenho algumas sugestões rápidas que podem fazer diferença imediata. Posso te mandar sem compromisso?\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Studio Fernanda Santos",
+      "cidade": "Florianópolis",
+      "estado": "SC",
+      "site": "https://www.studiofernandasantos.com.br",
+      "email": "info@studiofernandasantos.com.br",
+      "diagnostico": "SITE_RUIM",
+      "evidencia": "site com informações de contato difíceis de encontrar e sem HTTPS, o que reduz a confiança de novos clientes",
+      "assunto": "Studio Fernanda Santos — seu site pode estar afastando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital. Vi o site de vocês e identifiquei alguns pontos que podem estar prejudicando a conversão — as informações de contato são difíceis de encontrar e o site não possui certificado de segurança HTTPS, o que pode gerar desconfiança em novos clientes.\n\nMuita gente entra no site, vê isso e vai embora sem ligar. É uma oportunidade perdida todo dia.\n\nPosso te mostrar o que encontrei e como resolver? Sem compromisso.\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Espaço Auéri",
+      "cidade": "Ribeirão Preto",
+      "estado": "SP",
+      "site": "https://aueri.com.br",
+      "email": "contato@aueri.com.br",
+      "diagnostico": "GMB_FRACO",
+      "evidencia": "perfil no Google sem fotos recentes do espaço e avaliações limitadas para um salão que oferece serviços premium",
+      "assunto": "Espaço Auéri — encontrei algo que está te custando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital e estava pesquisando salões de beleza em Ribeirão Preto quando encontrei o Espaço Auéri.\n\nPercebi que o perfil de vocês no Google poderia estar mais completo — sem fotos recentes do espaço e avaliações limitadas para um salão com o nível de serviço que vocês oferecem. Isso faz com que clientes que pesquisam no Google muitas vezes escolham um concorrente com perfil mais completo.\n\nTenho algumas sugestões rápidas que podem fazer diferença imediata. Posso te mandar sem compromisso?\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Walter's Coiffeur",
+      "cidade": "Rio de Janeiro",
+      "estado": "RJ",
+      "site": "https://waltercoiffeur.com.br",
+      "email": "relacionamento@waltercoiffeur.com.br",
+      "diagnostico": "SITE_RUIM",
+      "evidencia": "salão com anos de tradição no Rio, mas site com visual antigo e navegação que não está otimizada para celular",
+      "assunto": "Walter's Coiffeur — seu site pode estar afastando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital. Vi o site de vocês e identifiquei alguns pontos que podem estar prejudicando a conversão — o site tem visual antigo e a navegação no celular é comprometida, o que não reflete a tradição e qualidade que o Walter's Coiffeur representa no Rio.\n\nMuita gente entra no site, vê isso e vai embora sem ligar. É uma oportunidade perdida todo dia.\n\nPosso te mostrar o que encontrei e como resolver? Sem compromisso.\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Trezentos Barber Shop",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "site": "https://trezentosbarbershop.com.br",
+      "email": "contato@trezentosbarbershop.com.br",
+      "diagnostico": "GMB_FRACO",
+      "evidencia": "perfil no Google com informações básicas e sem destaque de serviços para uma barbearia na região da Anália Franco",
+      "assunto": "Trezentos Barber Shop — encontrei algo que está te custando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital e estava pesquisando barbearias em São Paulo quando encontrei o Trezentos Barber Shop.\n\nPercebi que o perfil de vocês no Google pode estar mais otimizado — sem destaque dos principais serviços e com poucas avaliações recentes. Isso faz com que clientes que pesquisam no Google muitas vezes escolham um concorrente com perfil mais completo, mesmo que vocês sejam melhores.\n\nTenho algumas sugestões rápidas que podem fazer diferença imediata. Posso te mandar sem compromisso?\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Barbearia Krauss",
+      "cidade": "Santo André",
+      "estado": "SP",
+      "site": "https://www.barbeariakrauss.com",
+      "email": "contato@barbeariakrauss.com",
+      "diagnostico": "SITE_RUIM",
+      "evidencia": "site sem domínio .com.br e sem HTTPS, o que reduz a credibilidade e o ranqueamento no Google para buscas locais",
+      "assunto": "Barbearia Krauss — seu site pode estar afastando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital. Vi o site de vocês e identifiquei alguns pontos que podem estar prejudicando a conversão — o site não usa domínio .com.br e não possui HTTPS, o que reduz a credibilidade junto ao público brasileiro e afeta o ranqueamento no Google.\n\nMuita gente entra no site, vê isso e vai embora sem ligar. É uma oportunidade perdida todo dia.\n\nPosso te mostrar o que encontrei e como resolver? Sem compromisso.\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "La Belle Noivas",
+      "cidade": "Campinas",
+      "estado": "SP",
+      "site": "https://www.labellenoivas.com.br",
+      "email": "contato@labellenoivas.com.br",
+      "diagnostico": "SITE_RUIM",
+      "evidencia": "site com informações básicas e sem agendamento online, dificultando a conversão de visitantes em clientes",
+      "assunto": "La Belle Noivas — seu site pode estar afastando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital. Vi o site de vocês e identifiquei alguns pontos que podem estar prejudicando a conversão — o site tem informações básicas e sem opção de agendamento online, o que faz muitos clientes em potencial procurarem outro salão que facilite o contato.\n\nMuita gente entra no site, vê isso e vai embora sem ligar. É uma oportunidade perdida todo dia.\n\nPosso te mostrar o que encontrei e como resolver? Sem compromisso.\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Salão Beleza Urbana",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "site": "https://www.salaobelezaurbana.com.br",
+      "email": "atendimento@salaobelezaurbana.com.br",
+      "diagnostico": "SITE_RUIM",
+      "evidencia": "site com layout desatualizado e sem informações claras de preços e serviços por unidade",
+      "assunto": "Salão Beleza Urbana — seu site pode estar afastando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital. Vi o site de vocês e identifiquei alguns pontos que podem estar prejudicando a conversão — layout desatualizado e informações de preços e serviços por unidade difíceis de encontrar, o que faz potenciais clientes saírem sem ligar.\n\nMuita gente entra no site, vê isso e vai embora sem ligar. É uma oportunidade perdida todo dia.\n\nPosso te mostrar o que encontrei e como resolver? Sem compromisso.\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "E'Arte",
+      "cidade": "Porto Alegre",
+      "estado": "RS",
+      "site": "https://earte-rs.com.br",
+      "email": "contato@earte-rs.com.br",
+      "diagnostico": "GMB_FRACO",
+      "evidencia": "perfil no Google com informações incompletas e avaliações limitadas para um salão na cidade de Porto Alegre",
+      "assunto": "E'Arte — encontrei algo que está te custando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital e estava pesquisando salões de beleza em Porto Alegre quando encontrei o E'Arte.\n\nPercebi que o perfil de vocês no Google está incompleto — informações de serviços ausentes e poucas avaliações visíveis. Isso faz com que clientes que pesquisam no Google muitas vezes escolham um concorrente com perfil mais completo, mesmo que vocês sejam melhores.\n\nTenho algumas sugestões rápidas que podem fazer diferença imediata. Posso te mandar sem compromisso?\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Robert Cabeleireiros",
+      "cidade": "Curitiba",
+      "estado": "PR",
+      "site": "https://robertcabeleireiros.com.br",
+      "email": "contato@robertcabeleireiros.com.br",
+      "diagnostico": "GMB_FRACO",
+      "evidencia": "salão no Alto da XV com presença online limitada no Google e poucas avaliações recentes visíveis",
+      "assunto": "Robert Cabeleireiros — encontrei algo que está te custando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital e estava pesquisando salões de beleza em Curitiba quando encontrei o Robert Cabeleireiros.\n\nPercebi que o perfil de vocês no Google poderia estar mais otimizado — com poucas avaliações recentes e informações de serviços incompletas. Isso faz com que clientes que pesquisam no Google muitas vezes escolham um concorrente com perfil mais completo, mesmo que vocês sejam melhores.\n\nTenho algumas sugestões rápidas que podem fazer diferença imediata. Posso te mandar sem compromisso?\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    }
+  ]
+}
