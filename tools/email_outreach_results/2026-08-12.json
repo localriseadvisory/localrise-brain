@@ -1,0 +1,138 @@
+{
+  "data": "2026-08-12",
+  "nicho": "Salões de Beleza, Barbearias e Estética",
+  "status_envio": "BLOQUEADO — api.resend.com bloqueado pela política de egresso da sessão remota",
+  "total_pesquisados": 14,
+  "emails_prontos": 14,
+  "enviados": 0,
+  "pendentes": 0,
+  "bloqueados": 14,
+  "prospects": [
+    {
+      "nome": "Deluzes Cabeleireiros",
+      "cidade": "Rio de Janeiro",
+      "email": "dlluzes@yahoo.com.br",
+      "diagnostico": "SITE_RUIM",
+      "evidencia": "Site hospedado gratuitamente no Wix sem domínio próprio, e-mail pessoal Yahoo como único contato profissional",
+      "assunto": "Deluzes Cabeleireiros — seu site pode estar afastando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital. Vi o site de vocês e identifiquei alguns pontos que podem estar prejudicando a conversão — site hospedado gratuitamente no Wix sem domínio próprio, com e-mail pessoal Yahoo como único contato profissional.\n\nMuita gente entra no site, vê isso e vai embora sem ligar. É uma oportunidade perdida todo dia.\n\nPosso te mostrar o que encontrei e como resolver? Sem compromisso.\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Beauty Hair Center",
+      "cidade": "Rio de Janeiro",
+      "email": "beauty.hair89@ymail.com",
+      "diagnostico": "SITE_RUIM",
+      "evidencia": "Site gratuito no Webnode sem domínio próprio, e-mail em ymail.com (serviço descontinuado do Yahoo) sem qualquer identidade de marca",
+      "assunto": "Beauty Hair Center — seu site pode estar afastando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital. Vi o site de vocês e identifiquei alguns pontos que podem estar prejudicando a conversão — site gratuito no Webnode sem domínio próprio, com e-mail em ymail.com sem qualquer identidade de marca.\n\nMuita gente entra no site, vê isso e vai embora sem ligar. É uma oportunidade perdida todo dia.\n\nPosso te mostrar o que encontrei e como resolver? Sem compromisso.\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Barbearia Bandeira",
+      "cidade": "Brasília",
+      "email": "goncalves.eliane@yahoo.com.br",
+      "diagnostico": "SITE_RUIM",
+      "evidencia": "Página de contato em arquivo .php de tecnologia dos anos 2000, e-mail pessoal Yahoo da proprietária como contato oficial, site provavelmente sem versão mobile",
+      "assunto": "Barbearia Bandeira — seu site pode estar afastando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital. Vi o site de vocês e identifiquei alguns pontos que podem estar prejudicando a conversão — site com tecnologia dos anos 2000, sem versão mobile, e com e-mail pessoal da proprietária como contato oficial.\n\nMuita gente entra no site, vê isso e vai embora sem ligar. É uma oportunidade perdida todo dia.\n\nPosso te mostrar o que encontrei e como resolver? Sem compromisso.\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Barba Mia Barbearia",
+      "cidade": "Brasília",
+      "email": "barbamiabarbearia@gmail.com",
+      "diagnostico": "GMB_FRACO",
+      "evidencia": "E-mail Gmail pessoal usado como contato oficial no site, sem endereço de e-mail com domínio próprio, ficha do Google Meu Negócio provavelmente incompleta",
+      "assunto": "Barba Mia Barbearia — encontrei algo que está te custando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital e estava pesquisando salão de beleza / barbearia em Brasília quando encontrei o Barba Mia Barbearia.\n\nPercebi que o perfil de vocês no Google está incompleto — e-mail Gmail pessoal como contato oficial e ficha do Google Meu Negócio possivelmente incompleta, sem fotos profissionais do espaço. Isso faz com que clientes que pesquisam no Google muitas vezes escolham um concorrente com perfil mais completo, mesmo que vocês sejam melhores.\n\nTenho algumas sugestões rápidas que podem fazer diferença imediata. Posso te mandar sem compromisso?\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Men's BarberShop",
+      "cidade": "Belo Horizonte",
+      "email": "mensbarbershop.jp@gmail.com",
+      "diagnostico": "SITE_RUIM",
+      "evidencia": "Domínio do site fora do ar (não resolve DNS), e-mail Gmail pessoal como único contato, presença digital praticamente inexistente",
+      "assunto": "Men's BarberShop — seu site pode estar afastando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital. Vi o site de vocês e identifiquei alguns pontos que podem estar prejudicando a conversão — domínio do site fora do ar (não resolve DNS), e-mail Gmail pessoal como único contato, presença digital praticamente inexistente.\n\nMuita gente entra no site, vê isso e vai embora sem ligar. É uma oportunidade perdida todo dia.\n\nPosso te mostrar o que encontrei e como resolver? Sem compromisso.\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Salão de Beleza Castelo",
+      "cidade": "Belo Horizonte",
+      "email": "contato@salaodebelezacastelobh.com.br",
+      "diagnostico": "SITE_RUIM",
+      "evidencia": "Site com dezenas de páginas de SEO automático para bairros vizinhos sem fotos reais ou portfólio dos trabalhos",
+      "assunto": "Salão de Beleza Castelo — seu site pode estar afastando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital. Vi o site de vocês e identifiquei alguns pontos que podem estar prejudicando a conversão — site com dezenas de páginas de conteúdo automático sobre bairros vizinhos, sem fotos reais do trabalho ou portfólio visível.\n\nMuita gente entra no site, vê isso e vai embora sem ligar. É uma oportunidade perdida todo dia.\n\nPosso te mostrar o que encontrei e como resolver? Sem compromisso.\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Barbearia.com Joinville",
+      "cidade": "Joinville",
+      "email": "denilsoassis@hotmail.com",
+      "diagnostico": "SEM_SITE",
+      "evidencia": "Sem site próprio identificado, presente apenas em diretórios de negócios, contato somente por e-mail Hotmail pessoal e telefone",
+      "assunto": "Barbearia.com Joinville — seus clientes não conseguem te encontrar online",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital. Estava pesquisando salão de beleza / barbearia em Joinville e encontrei o Barbearia.com Joinville, mas percebi que vocês ainda não têm site.\n\nHoje mais de 70% das pessoas pesquisam no Google antes de ligar ou visitar um negócio. Sem site, vocês dependem 100% de indicação e ficam invisíveis para quem está procurando agora.\n\nTenho uma proposta simples e direta para resolver isso. Posso te explicar em 5 minutos?\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "IB Barbearia",
+      "cidade": "Joinville",
+      "email": "contato@ibbarbearia.com.br",
+      "diagnostico": "INSTAGRAM_FRACO",
+      "evidencia": "Pequena barbearia local sem redes sociais ativas identificadas na busca, site básico sem galeria de trabalhos ou sistema de agendamento online",
+      "assunto": "IB Barbearia — oportunidade no Instagram que vocês ainda não estão aproveitando",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital. Vi o perfil online de vocês — o negócio claramente existe e tem qualidade, mas a presença online ainda não reflete isso: site básico sem galeria de trabalhos, agendamento online ou redes sociais ativas identificadas.\n\nClientes em potencial visitam o perfil e não conseguem entender o que vocês oferecem. É uma vitrine fechada.\n\nTenho uma proposta simples para mudar isso. Posso te contar em 5 minutos?\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Barão da Barba",
+      "cidade": "Campinas",
+      "email": "falecom@baraodabarba.com.br",
+      "diagnostico": "SITE_RUIM",
+      "evidencia": "Site com apenas 5 páginas estáticas sem galeria de trabalhos, sem sistema de agendamento online e sem integração com plataformas de beleza",
+      "assunto": "Barão da Barba — seu site pode estar afastando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital. Vi o site de vocês e identifiquei alguns pontos que podem estar prejudicando a conversão — site com apenas 5 páginas estáticas, sem galeria de trabalhos ou sistema de agendamento online.\n\nMuita gente entra no site, vê isso e vai embora sem ligar. É uma oportunidade perdida todo dia.\n\nPosso te mostrar o que encontrei e como resolver? Sem compromisso.\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "La Mar Salão de Beleza",
+      "cidade": "Florianópolis",
+      "email": "contato@lamarbeleza.com.br",
+      "diagnostico": "GMB_FRACO",
+      "evidencia": "Horário de funcionamento muito limitado no Google e ficha provavelmente sem fotos atualizadas do espaço e dos trabalhos",
+      "assunto": "La Mar Salão de Beleza — encontrei algo que está te custando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital e estava pesquisando salão de beleza / barbearia em Florianópolis quando encontrei o La Mar Salão de Beleza.\n\nPercebi que o perfil de vocês no Google está incompleto — horário de funcionamento incompleto no Google e ficha provavelmente sem fotos atualizadas do espaço e dos trabalhos. Isso faz com que clientes que pesquisam no Google muitas vezes escolham um concorrente com perfil mais completo, mesmo que vocês sejam melhores.\n\nTenho algumas sugestões rápidas que podem fazer diferença imediata. Posso te mandar sem compromisso?\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Estetic Face Curitiba",
+      "cidade": "Curitiba",
+      "email": "mastercuritiba@esteticface.com.br",
+      "diagnostico": "GMB_FRACO",
+      "evidencia": "Presença no Google fragmentada entre franqueadora e unidade local, sem ficha própria bem preenchida com avaliações",
+      "assunto": "Estetic Face Curitiba — encontrei algo que está te custando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital e estava pesquisando salão de beleza / barbearia em Curitiba quando encontrei o Estetic Face Curitiba.\n\nPercebi que o perfil de vocês no Google está incompleto — presença no Google fragmentada entre a franqueadora e a unidade local, sem ficha própria bem preenchida com avaliações. Isso faz com que clientes que pesquisam no Google muitas vezes escolham um concorrente com perfil mais completo, mesmo que vocês sejam melhores.\n\nTenho algumas sugestões rápidas que podem fazer diferença imediata. Posso te mandar sem compromisso?\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Salão Arquétipo",
+      "cidade": "São Paulo",
+      "email": "contato@salaoarquetipo.com.br",
+      "diagnostico": "GMB_FRACO",
+      "evidencia": "Página de contato do site direciona exclusivamente para WhatsApp, sem sistema de agendamento online integrado e sem presença organizada no Google",
+      "assunto": "Salão Arquétipo — encontrei algo que está te custando clientes",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital e estava pesquisando salão de beleza / barbearia em São Paulo quando encontrei o Salão Arquétipo.\n\nPercebi que o perfil de vocês no Google está incompleto — contato pelo site direciona apenas para WhatsApp, sem sistema de agendamento online e sem presença organizada no Google. Isso faz com que clientes que pesquisam no Google muitas vezes escolham um concorrente com perfil mais completo, mesmo que vocês sejam melhores.\n\nTenho algumas sugestões rápidas que podem fazer diferença imediata. Posso te mandar sem compromisso?\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Barbearia El Cortador",
+      "cidade": "Porto Alegre",
+      "email": "contato@barbeariaelcortador.com.br",
+      "diagnostico": "INSTAGRAM_FRACO",
+      "evidencia": "Aceita agendamentos apenas por telefone, sem sistema de reserva online; site sem integração com plataformas de agendamento ou presença ativa em redes sociais",
+      "assunto": "Barbearia El Cortador — oportunidade no Instagram que vocês ainda não estão aproveitando",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital. Vi o perfil online de vocês — o negócio claramente existe e tem qualidade, mas a presença online ainda não reflete isso: agendamentos apenas por telefone, sem sistema de reserva online ou presença ativa nas redes sociais identificada.\n\nClientes em potencial visitam o perfil e não conseguem entender o que vocês oferecem. É uma vitrine fechada.\n\nTenho uma proposta simples para mudar isso. Posso te contar em 5 minutos?\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    },
+    {
+      "nome": "Espaço Auéri",
+      "cidade": "Ribeirão Preto",
+      "email": "contato@aueri.com.br",
+      "diagnostico": "INSTAGRAM_FRACO",
+      "evidencia": "Salão com site e cadastro em plataformas, mas sem presença ativa identificada no Instagram, sem posts recentes ou fotos de trabalhos nas redes sociais",
+      "assunto": "Espaço Auéri — oportunidade no Instagram que vocês ainda não estão aproveitando",
+      "corpo": "Olá, tudo bem?\n\nMeu nome é Nicolas, sou consultor de marketing digital. Vi o perfil online de vocês — o negócio claramente existe e tem qualidade, mas a presença online ainda não reflete isso: sem presença ativa identificada no Instagram, sem posts recentes ou fotos dos trabalhos nas redes sociais.\n\nClientes em potencial visitam o perfil e não conseguem entender o que vocês oferecem. É uma vitrine fechada.\n\nTenho uma proposta simples para mudar isso. Posso te contar em 5 minutos?\n\nAbraço,\nNicolas\nLocalRise Advisory — Marketing Digital para Negócios Locais\ncontato@localriseadvisory.com"
+    }
+  ]
+}
