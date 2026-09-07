@@ -44,26 +44,45 @@ tools/folha_consiste/
 ├── requirements.txt      Lista de bibliotecas que o projeto usa
 ├── verificar_ambiente.py Confere se o ambiente está instalado corretamente
 ├── leitura.py            Etapa 1: lê a exportação de origem (Excel/CSV)
+├── validacao.py          Etapa 2: valida cada linha (CPF, obrigatórios...)
 ├── exemplos/             Arquivos de exemplo para testar
 └── .venv/                Ambiente virtual (NÃO vai para o Git)
 ```
 
-## Como testar a leitura
+## Como testar
 
-Com o ambiente ativado:
+Com o ambiente ativado, na pasta do projeto:
 
 ```powershell
+# Etapa 1 — só ler o arquivo e mostrar as colunas detectadas:
 python leitura.py exemplos\origem_exemplo.csv
+
+# Etapa 2 — ler + validar. Deve apontar 2 problemas de propósito no CSV
+# de exemplo: linha 4 (CPF em branco) e linha 5 (CPF todos iguais).
+python validacao.py exemplos\origem_exemplo.csv
 ```
 
-Deve imprimir 4 linhas, com a coluna `_linha_origem` indicando a linha no
-arquivo original (usada depois pelo relatório de erros).
+## Regras de validação disponíveis
+
+Definidas em `validacao.py`:
+
+| Regra                | O que checa                                                |
+|----------------------|------------------------------------------------------------|
+| `obrigatorio`        | Campo não pode estar vazio.                                |
+| `cpf_valido`         | CPF passa no algoritmo oficial (dois dígitos verificadores). |
+| `numero_brasileiro`  | Aceita `1.234,56`, `1234,56` ou `1234.56`.                 |
+| `positivo`           | Número maior que zero.                                     |
+
+O conjunto padrão de regras (`REGRAS_PADRAO`) cobre `matricula`, `nome`,
+`cpf` e `valor`. É só uma **base inicial** — vai ser ajustada quando
+tivermos o layout do Consiste e soubermos os campos definitivos.
 
 ## Status do projeto
 
 - [x] Configuração de ambiente
 - [x] Etapa 1 — leitura de Excel/CSV (`leitura.py`)
-- [ ] Etapa 2 — validação (campos obrigatórios, CPF, etc.)
-- [ ] Etapa 3 — relatório de erros
+- [x] Etapa 2 — validação com regras extensíveis (`validacao.py`)
+- [ ] Etapa 3 — relatório de erros em arquivo (Excel/CSV)
 - [ ] Etapa 4 — geração do arquivo de importação do Consiste
       *(depende do layout do Consiste)*
+- [ ] Etapa 5 — script orquestrador (`importar.py`) juntando tudo
